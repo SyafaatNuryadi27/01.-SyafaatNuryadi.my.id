@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
   <!-- Client Database & Storage v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- HEIC/HEIF Browser Decoder -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <style>
     :root {
       --bg: #f8f9fb;
@@ -656,7 +658,6 @@
       animation: cardPopIn 0.45s var(--ease-out) both;
     }
 
-    /* Placeholder skeleton per-kartu saat gambar masih dimuat */
     .photo-card.is-loading-img {
       min-height: 220px;
     }
@@ -1410,6 +1411,7 @@
     const ALLOWED_IMAGE_EXTENSIONS = [
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
     ];
+    const HEIC_EXTENSIONS = ['heic', 'heif'];
 
     const isBackendConfigured =
       SUPABASE_URL.startsWith('https://') &&
@@ -1459,6 +1461,9 @@
     let sortOrder = 'newest';
     let currentIndex = 0;
 
+    const heicConvertedCache = new Map();
+    const heicPendingPromises = new Map();
+
     let scale = 1;
     let panX = 0;
     let panY = 0;
@@ -1499,6 +1504,58 @@
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+    }
+
+    function getExtensionFromUrl(url) {
+      try {
+        const cleanPath = new URL(url).pathname;
+        const ext = (cleanPath.split('.').pop() || '').toLowerCase();
+        if (ALLOWED_IMAGE_EXTENSIONS.includes(ext)) return ext;
+      } catch (_) {}
+      const match = String(url || '').toLowerCase().match(/\.(heic|heif|jpg|jpeg|png|webp|gif|avif|bmp|svg)(?:[?#]|$)/i);
+      return match ? match[1].toLowerCase() : 'jpg';
+    }
+
+    function isHeicUrl(url) {
+      return HEIC_EXTENSIONS.includes(getExtensionFromUrl(url));
+    }
+
+    async function convertHeicUrlToDisplayUrl(url) {
+      if (!url) return url;
+      if (heicConvertedCache.has(url)) {
+        return heicConvertedCache.get(url);
+      }
+      if (heicPendingPromises.has(url)) {
+        return heicPendingPromises.get(url);
+      }
+
+      const promise = (async () => {
+        if (typeof window.heic2any !== 'function') {
+          return url;
+        }
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error('Gagal mengunduh file HEIC');
+          const heicBlob = await response.blob();
+          const convertedResult = await window.heic2any({
+            blob: heicBlob,
+            toType: 'image/jpeg',
+            quality: 0.88
+          });
+          const outputBlob = Array.isArray(convertedResult) ? convertedResult[0] : convertedResult;
+          const objectUrl = URL.createObjectURL(outputBlob);
+          heicConvertedCache.set(url, objectUrl);
+          return objectUrl;
+        } catch (err) {
+          console.warn('Konversi HEIC gagal, memakai URL asli:', err);
+          return url;
+        } finally {
+          heicPendingPromises.delete(url);
+        }
+      })();
+
+      heicPendingPromises.set(url, promise);
+      return promise;
     }
 
     function buildSearchIndex(item) {
@@ -1567,6 +1624,7 @@
         photos = (data || []).map((row, idx) => ({
           id: row.id,
           src: row.image_url,
+          displaySrc: heicConvertedCache.get(row.image_url) || row.image_url,
           isoDate: row.tanggal,
           date: formatIndoDate(row.tanggal),
           desc: row.deskripsi || '',
@@ -1619,18 +1677,44 @@
     function bindCardImageLoadAnimations() {
       photoGrid.querySelectorAll('.photo-card img').forEach(img => {
         const card = img.closest('.photo-card');
-        if (!card) return;
+        const idx = Number(card?.dataset.index);
+        const item = filteredPhotos[idx];
+        if (!card || !item) return;
+
+        let fallbackTried = false;
 
         const markLoaded = () => {
           card.classList.remove('is-loading-img');
           card.style.minHeight = '';
         };
 
+        const handleLoadError = async () => {
+          if (!fallbackTried && isHeicUrl(item.src)) {
+            fallbackTried = true;
+            const convertedUrl = await convertHeicUrlToDisplayUrl(item.src);
+            if (convertedUrl && convertedUrl !== item.src) {
+              item.displaySrc = convertedUrl;
+              img.src = convertedUrl;
+              return;
+            }
+          }
+          markLoaded();
+        };
+
+        if (isHeicUrl(item.src) && !heicConvertedCache.has(item.src)) {
+          convertHeicUrlToDisplayUrl(item.src).then(convertedUrl => {
+            if (convertedUrl && convertedUrl !== item.src && img.isConnected) {
+              item.displaySrc = convertedUrl;
+              img.src = convertedUrl;
+            }
+          });
+        }
+
         if (img.complete && img.naturalWidth > 0) {
           markLoaded();
         } else {
           img.addEventListener('load', markLoaded, { once: true });
-          img.addEventListener('error', markLoaded, { once: true });
+          img.addEventListener('error', handleLoadError, { once: true });
         }
       });
     }
@@ -1688,6 +1772,7 @@
       photoGrid.innerHTML = list.map((item, idx) => {
         const cleanDesc = (item.desc || '').trim();
         const altText = cleanDesc || `Foto ${item.date}`;
+        const activeImgSrc = item.displaySrc || item.src;
         return `
           <div class="photo-card is-loading-img" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
             <div class="card-img-placeholder" aria-hidden="true">
@@ -1697,7 +1782,7 @@
                 <polyline points="21 15 16 10 5 21"></polyline>
               </svg>
             </div>
-            <img src="${item.src}" alt="${escapeHtml(altText)}" loading="lazy" />
+            <img src="${activeImgSrc}" alt="${escapeHtml(altText)}" loading="lazy" />
             <div class="card-overlay">
               <div class="card-meta">
                 <span class="card-date">${item.date}</span>
@@ -1749,15 +1834,6 @@
     }
 
     resetFilterLink.addEventListener('click', resetAllFilters);
-
-    function getExtensionFromUrl(url) {
-      try {
-        const cleanPath = new URL(url).pathname;
-        const ext = (cleanPath.split('.').pop() || '').toLowerCase();
-        if (ALLOWED_IMAGE_EXTENSIONS.includes(ext)) return ext;
-      } catch (_) {}
-      return 'jpg';
-    }
 
     async function downloadPhoto(item, index) {
       const ext = getExtensionFromUrl(item.src);
@@ -1852,15 +1928,25 @@
       applyTransform();
     }
 
-    function updateLightboxContent(item) {
+    async function updateLightboxContent(item) {
       const cleanDesc = (item.desc || '').trim();
-      lightboxImg.src = item.src;
+      const activeSrc = item.displaySrc || item.src;
+      lightboxImg.src = activeSrc;
       lightboxImg.alt = cleanDesc || `Foto ${item.date}`;
-      lightboxBg.style.backgroundImage = `url("${item.src}")`;
+      lightboxBg.style.backgroundImage = `url("${activeSrc}")`;
       lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
       lightboxDate.textContent = item.date;
       lightboxDesc.textContent = cleanDesc;
       lightboxBottom.classList.toggle('is-hidden', !cleanDesc);
+
+      if (isHeicUrl(item.src) && !heicConvertedCache.has(item.src)) {
+        const convertedUrl = await convertHeicUrlToDisplayUrl(item.src);
+        if (convertedUrl && convertedUrl !== item.src && filteredPhotos[currentIndex]?.id === item.id) {
+          item.displaySrc = convertedUrl;
+          lightboxImg.src = convertedUrl;
+          lightboxBg.style.backgroundImage = `url("${convertedUrl}")`;
+        }
+      }
     }
 
     function updateLightbox(index) {
