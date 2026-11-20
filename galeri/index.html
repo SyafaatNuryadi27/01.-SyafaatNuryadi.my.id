@@ -103,9 +103,23 @@
       }
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+    @keyframes shimmerSlide {
+      0% {
+        transform: translateX(-110%);
+      }
+      100% {
+        transform: translateX(110%);
+      }
+    }
+
+    @keyframes imageIconPulse {
+      0%, 100% {
+        opacity: 0.42;
+        transform: translateY(0) scale(0.96);
+      }
+      50% {
+        opacity: 0.92;
+        transform: translateY(-3px) scale(1.06);
       }
     }
 
@@ -535,29 +549,88 @@
       background: var(--text-subtle);
     }
 
+    /* Loading Skeleton Grid Menyerupai Kartu Gambar */
     .loading-state {
       display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 64px 20px;
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      font-weight: 500;
     }
 
     .loading-state.visible {
-      display: flex;
+      display: block;
     }
 
-    .spinner {
-      width: 28px;
-      height: 28px;
-      border: 3px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
+    .skeleton-grid {
+      column-count: 1;
+      column-gap: 18px;
+    }
+
+    .skeleton-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 18px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      overflow: hidden;
+      background: linear-gradient(145deg, #eef2f6 0%, #e2e8f0 100%);
+      border: 1px solid var(--gold-border);
+      border-top: 3px solid var(--gold);
+      border-radius: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .skeleton-card.ratio-tall {
+      aspect-ratio: 4 / 5;
+    }
+
+    .skeleton-card.ratio-landscape {
+      aspect-ratio: 4 / 3;
+    }
+
+    .skeleton-card.ratio-square {
+      aspect-ratio: 1 / 1;
+    }
+
+    .skeleton-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 15%,
+        rgba(255, 255, 255, 0.65) 48%,
+        rgba(226, 189, 107, 0.24) 60%,
+        transparent 85%
+      );
+      animation: shimmerSlide 1.55s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .skeleton-icon-wrap {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #94a3b8;
+      animation: imageIconPulse 1.6s ease-in-out infinite;
+    }
+
+    .skeleton-icon-wrap svg {
+      width: 34px;
+      height: 34px;
+      stroke: currentColor;
+    }
+
+    .skeleton-icon-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #94a3b8;
     }
 
     .photo-grid {
@@ -573,7 +646,7 @@
       break-inside: avoid;
       page-break-inside: avoid;
       overflow: hidden;
-      background: var(--surface-alt);
+      background: linear-gradient(145deg, #eef2f6 0%, #e2e8f0 100%);
       border: 1px solid var(--gold-border);
       border-top: 3px solid var(--gold);
       border-radius: 6px;
@@ -581,6 +654,49 @@
       box-shadow: var(--shadow-sm);
       transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease, border-color 0.25s ease;
       animation: cardPopIn 0.45s var(--ease-out) both;
+    }
+
+    /* Placeholder skeleton per-kartu saat gambar masih dimuat */
+    .photo-card.is-loading-img {
+      min-height: 220px;
+    }
+
+    .photo-card.is-loading-img::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 15%,
+        rgba(255, 255, 255, 0.65) 48%,
+        rgba(226, 189, 107, 0.24) 60%,
+        transparent 85%
+      );
+      animation: shimmerSlide 1.55s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card-img-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      z-index: 1;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .card-img-placeholder svg {
+      width: 32px;
+      height: 32px;
+      animation: imageIconPulse 1.6s ease-in-out infinite;
+    }
+
+    .photo-card:not(.is-loading-img) .card-img-placeholder {
+      opacity: 0;
     }
 
     .photo-card::before {
@@ -613,10 +729,17 @@
     }
 
     .photo-card img {
+      position: relative;
+      z-index: 1;
       width: 100%;
       height: auto;
       display: block;
-      transition: transform 0.55s var(--ease-out);
+      opacity: 1;
+      transition: transform 0.55s var(--ease-out), opacity 0.3s ease;
+    }
+
+    .photo-card.is-loading-img img {
+      opacity: 0;
     }
 
     .photo-card:hover img {
@@ -1022,10 +1145,12 @@
     }
 
     @media (min-width: 520px) {
+      .skeleton-grid,
       .photo-grid {
         column-count: 2;
         column-gap: 20px;
       }
+      .skeleton-card,
       .photo-card {
         margin-bottom: 20px;
       }
@@ -1039,10 +1164,12 @@
       .mobile-nav {
         display: none;
       }
+      .skeleton-grid,
       .photo-grid {
         column-count: 3;
         column-gap: 22px;
       }
+      .skeleton-card,
       .photo-card {
         margin-bottom: 22px;
       }
@@ -1140,7 +1267,7 @@
                 >&times;</button>
               </div>
 
-              <div class="sort-segmented" role="group" aria-label="Urutkan momen">
+              <div class="sort-segmented" role="group" aria-label="Urutkan foto">
                 <button type="button" class="sort-seg-btn active" data-sort="newest">Terbaru</button>
                 <button type="button" class="sort-seg-btn" data-sort="oldest">Terlama</button>
               </div>
@@ -1153,9 +1280,69 @@
     <!-- Area Scroll Khusus Grid Foto -->
     <div class="gallery-scroll-area" id="galleryScrollArea">
       <div class="container">
-        <div class="loading-state visible" id="loadingState">
-          <div class="spinner"></div>
-          <span>Memuat galeri foto...</span>
+        <div class="loading-state visible" id="loadingState" aria-live="polite" aria-label="Memuat foto">
+          <div class="skeleton-grid">
+            <div class="skeleton-card ratio-tall">
+              <div class="skeleton-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="skeleton-icon-label">Memuat foto</span>
+              </div>
+            </div>
+            <div class="skeleton-card ratio-landscape">
+              <div class="skeleton-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="skeleton-icon-label">Memuat foto</span>
+              </div>
+            </div>
+            <div class="skeleton-card ratio-square">
+              <div class="skeleton-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="skeleton-icon-label">Memuat foto</span>
+              </div>
+            </div>
+            <div class="skeleton-card ratio-landscape">
+              <div class="skeleton-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="skeleton-icon-label">Memuat foto</span>
+              </div>
+            </div>
+            <div class="skeleton-card ratio-tall">
+              <div class="skeleton-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="skeleton-icon-label">Memuat foto</span>
+              </div>
+            </div>
+            <div class="skeleton-card ratio-square">
+              <div class="skeleton-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="skeleton-icon-label">Memuat foto</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="photo-grid" id="photoGrid"></div>
@@ -1360,7 +1547,7 @@
 
       if (!dbClient) {
         loadingState.classList.remove('visible');
-        filterSummary.textContent = '0 Momen';
+        filterSummary.textContent = '0 Foto';
         emptyTitle.textContent = 'Konfigurasi Galeri Belum Diisi';
         emptySub.textContent = 'Silakan periksa kembali pengaturan koneksi penyimpanan.';
         emptyActionBtn.style.display = 'none';
@@ -1372,17 +1559,19 @@
         const { data, error } = await dbClient
           .from(TABLE_NAME)
           .select('id, image_url, tanggal, deskripsi, created_at')
-          .order('tanggal', { ascending: false })
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .order('tanggal', { ascending: false });
 
         if (error) throw error;
 
-        photos = (data || []).map(row => ({
+        photos = (data || []).map((row, idx) => ({
           id: row.id,
           src: row.image_url,
           isoDate: row.tanggal,
           date: formatIndoDate(row.tanggal),
-          desc: row.deskripsi || ''
+          desc: row.deskripsi || '',
+          createdAt: row.created_at || '',
+          fallbackOrder: idx
         }));
 
         loadingState.classList.remove('visible');
@@ -1404,6 +1593,48 @@
       }
     }
 
+    function comparePhotoOrder(a, b) {
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : NaN;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : NaN;
+      const hasValidTimeA = !Number.isNaN(timeA);
+      const hasValidTimeB = !Number.isNaN(timeB);
+
+      if (sortOrder === 'newest') {
+        if (hasValidTimeA && hasValidTimeB && timeA !== timeB) {
+          return timeB - timeA;
+        }
+        const dateCmp = (b.isoDate || '').localeCompare(a.isoDate || '');
+        if (dateCmp !== 0) return dateCmp;
+        return a.fallbackOrder - b.fallbackOrder;
+      } else {
+        if (hasValidTimeA && hasValidTimeB && timeA !== timeB) {
+          return timeA - timeB;
+        }
+        const dateCmp = (a.isoDate || '').localeCompare(b.isoDate || '');
+        if (dateCmp !== 0) return dateCmp;
+        return b.fallbackOrder - a.fallbackOrder;
+      }
+    }
+
+    function bindCardImageLoadAnimations() {
+      photoGrid.querySelectorAll('.photo-card img').forEach(img => {
+        const card = img.closest('.photo-card');
+        if (!card) return;
+
+        const markLoaded = () => {
+          card.classList.remove('is-loading-img');
+          card.style.minHeight = '';
+        };
+
+        if (img.complete && img.naturalWidth > 0) {
+          markLoaded();
+        } else {
+          img.addEventListener('load', markLoaded, { once: true });
+          img.addEventListener('error', markLoaded, { once: true });
+        }
+      });
+    }
+
     function applyFiltersAndRender() {
       let list = [...photos];
       const keyword = searchQuery.trim().toLowerCase();
@@ -1419,16 +1650,12 @@
         searchBox.classList.remove('has-value');
       }
 
-      list.sort((a, b) => {
-        return sortOrder === 'newest'
-          ? b.isoDate.localeCompare(a.isoDate)
-          : a.isoDate.localeCompare(b.isoDate);
-      });
+      list.sort(comparePhotoOrder);
 
       resetFilterLink.classList.toggle('visible', Boolean(keyword));
       filterSummary.textContent = keyword
-        ? `${list.length} Momen ditemukan`
-        : `${list.length} Momen`;
+        ? `${list.length} Foto ditemukan`
+        : `${list.length} Foto`;
 
       filteredPhotos = list;
 
@@ -1460,9 +1687,16 @@
       emptyState.classList.remove('visible');
       photoGrid.innerHTML = list.map((item, idx) => {
         const cleanDesc = (item.desc || '').trim();
-        const altText = cleanDesc || `Momen ${item.date}`;
+        const altText = cleanDesc || `Foto ${item.date}`;
         return `
-          <div class="photo-card" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
+          <div class="photo-card is-loading-img" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
+            <div class="card-img-placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
             <img src="${item.src}" alt="${escapeHtml(altText)}" loading="lazy" />
             <div class="card-overlay">
               <div class="card-meta">
@@ -1481,6 +1715,7 @@
         `;
       }).join('');
 
+      bindCardImageLoadAnimations();
       galleryScrollArea.scrollTop = 0;
       requestAnimationFrame(updateScrollUI);
     }
@@ -1620,7 +1855,7 @@
     function updateLightboxContent(item) {
       const cleanDesc = (item.desc || '').trim();
       lightboxImg.src = item.src;
-      lightboxImg.alt = cleanDesc || `Momen ${item.date}`;
+      lightboxImg.alt = cleanDesc || `Foto ${item.date}`;
       lightboxBg.style.backgroundImage = `url("${item.src}")`;
       lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
       lightboxDate.textContent = item.date;
