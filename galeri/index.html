@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galeri — Syafaat Nuryadi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --surface-alt: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #64748b;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --primary: #1d4ed8;
+      --primary-hover: #1e40af;
+      --accent: #2563eb;
+      --accent-soft: #eff6ff;
+      --gold: #c89b3c;
+      --gold-light: #e2bd6b;
+      --gold-soft: #fdf8eb;
+      --gold-border: rgba(200, 155, 60, 0.45);
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 12px 28px -6px rgba(15, 23, 42, 0.09), 0 4px 10px -4px rgba(15, 23, 42, 0.05);
+      --shadow-lg: 0 24px 48px -12px rgba(15, 23, 42, 0.16), 0 8px 20px -6px rgba(15, 23, 42, 0.07);
+      --container: 1100px;
+      --header-h: 64px;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-serif: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes cardPopIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes pulseLine {
+      0%, 100% {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scaleX(1.25);
+      }
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scroll Progress Bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold-light), var(--gold));
+      z-index: 250;
+      transition: width 0.08s linear;
+      pointer-events: none;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-h);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+      transition: box-shadow 0.25s ease, background-color 0.25s ease;
+    }
+
+    .header.is-scrolled {
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .header-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      letter-spacing: -0.02em;
+      transition: transform 0.2s ease;
+    }
+
+    .brand:hover {
+      transform: translateX(2px);
+    }
+
+    .brand-mark {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .nav-desktop {
+      display: none;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-link {
+      position: relative;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s var(--ease-out);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      transform: scaleX(1);
+    }
+
+    .menu-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .menu-btn:active {
+      transform: scale(0.94);
+    }
+
+    .menu-btn svg line {
+      transition: transform 0.25s var(--ease-out), opacity 0.2s ease;
+      transform-origin: center;
+    }
+
+    .menu-btn.open svg line:first-child {
+      transform: translateY(4px) rotate(45deg);
+    }
+
+    .menu-btn.open svg line:last-child {
+      transform: translateY(-4px) rotate(-45deg);
+    }
+
+    /* Mobile Drawer */
+    .mobile-nav {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(-120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s var(--ease-out), opacity 0.25s ease;
+      z-index: 99;
+      box-shadow: var(--shadow-md);
+    }
+
+    .mobile-nav.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-nav a {
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+      color: var(--text);
+      transition: color 0.15s ease, padding-left 0.2s ease;
+    }
+
+    .mobile-nav a:hover,
+    .mobile-nav a.active {
+      color: var(--accent);
+      padding-left: 6px;
+    }
+
+    .mobile-nav a:last-child {
+      border-bottom: none;
+    }
+
+    /* Buttons */
+    .btn {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: 1px solid var(--primary);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
+    }
+
+    .btn:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.22);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(29, 78, 216, 0.28);
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.82rem;
+    }
+
+    /* Gallery Hero */
+    .gallery-hero {
+      padding: 44px 0 48px;
+      background: linear-gradient(180deg, #ffffff 0%, #f1f5fd 55%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-anim-1 { animation: fadeUp 0.6s var(--ease-out) 0.05s both; }
+    .hero-anim-2 { animation: fadeUp 0.6s var(--ease-out) 0.14s both; }
+    .hero-anim-3 { animation: fadeUp 0.6s var(--ease-out) 0.22s both; }
+
+    .breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-subtle);
+      margin-bottom: 18px;
+    }
+
+    .breadcrumb a {
+      color: var(--accent);
+      transition: opacity 0.2s ease;
+    }
+
+    .breadcrumb a:hover {
+      opacity: 0.75;
+    }
+
+    .status-line {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-line::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+      transform-origin: left;
+      animation: pulseLine 2.8s ease-in-out infinite;
+    }
+
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.18;
+      margin-bottom: 14px;
+    }
+
+    .page-desc {
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      max-width: 580px;
+    }
+
+    /* Gallery Main Section */
+    .gallery-section {
+      padding: 48px 0 80px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .filter-btn {
+      padding: 0 0 12px;
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--text-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      margin-bottom: -1px;
+      transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .filter-btn:active {
+      transform: scale(0.95);
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .gallery-count {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-subtle);
+      padding-bottom: 12px;
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .gallery-card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #ffffff 74%, var(--gold-soft) 100%);
+      border: 1px solid var(--gold-border);
+      border-top: 3px solid var(--gold);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease, border-color 0.25s ease;
+      animation: cardPopIn 0.45s var(--ease-out) both;
+    }
+
+    .gallery-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -130%;
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(
+        105deg,
+        transparent 0%,
+        rgba(226, 189, 107, 0.16) 50%,
+        transparent 100%
+      );
+      transform: skewX(-18deg);
+      transition: left 0.7s var(--ease-out);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .gallery-card:hover::before {
+      left: 150%;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold);
+      box-shadow: 0 16px 34px -6px rgba(200, 155, 60, 0.22), 0 4px 10px -4px rgba(15, 23, 42, 0.06);
+    }
+
+    .gallery-thumb {
+      height: 240px;
+      position: relative;
+      overflow: hidden;
+      background: var(--surface-alt);
+      border-bottom: 1px solid var(--gold-border);
+    }
+
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s var(--ease-out);
+    }
+
+    .gallery-card:hover .gallery-thumb img {
+      transform: scale(1.06);
+    }
+
+    .zoom-badge {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(4px);
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
+    }
+
+    .gallery-card:hover .zoom-badge {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gallery-body {
+      padding: 18px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .gallery-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .gallery-meta span:first-child {
+      color: var(--gold);
+    }
+
+    .gallery-meta span:last-child {
+      color: var(--text-subtle);
+    }
+
+    .gallery-body h3 {
+      font-size: 1.04rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    .gallery-body p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 28px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      color: var(--text-subtle);
+    }
+
+    .back-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.2s var(--ease-out), color 0.2s ease;
+    }
+
+    .back-top:hover {
+      transform: translateY(-2px);
+      color: var(--gold) !important;
+    }
+
+    /* Lightbox Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 720px;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border-radius: 6px;
+      padding: 22px;
+      border: 1px solid var(--gold-border);
+      border-top: 3px solid var(--gold);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(18px) scale(0.97);
+      transition: transform 0.3s var(--ease-out);
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+      transition: background 0.15s ease, transform 0.2s var(--ease-out);
+    }
+
+    .modal-close:hover {
+      background: var(--surface-alt);
+      transform: rotate(90deg);
+    }
+
+    .lightbox-stage {
+      position: relative;
+      margin-bottom: 16px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #0f172a;
+    }
+
+    .modal-img {
+      width: 100%;
+      max-height: 440px;
+      object-fit: contain;
+      margin: 0 auto;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(15, 23, 42, 0.72);
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .lightbox-nav:hover {
+      background: var(--primary);
+    }
+
+    .lightbox-nav.prev { left: 10px; }
+    .lightbox-nav.next { right: 10px; }
+
+    .modal-footer-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag-item {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 3px;
+      background: var(--gold-soft);
+      border: 1px solid var(--gold-border);
+      color: #8a6618;
+    }
+
+    /* Responsive */
+    @media (min-width: 640px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-inner {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    @media (min-width: 920px) {
+      .nav-desktop {
+        display: flex;
+      }
+      .menu-btn,
+      .mobile-nav {
+        display: none;
+      }
+      .gallery-hero {
+        padding: 64px 0 60px;
+      }
+      .page-title {
+        font-size: 2.65rem;
+      }
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Header -->
+  <header class="header" id="siteHeader">
+    <div class="container header-inner">
+      <a href="../index.html#beranda" class="brand">
+        <span>Syafaat Nuryadi</span>
+        <span class="brand-mark">/.my.id.</span>
+      </a>
+
+      <nav class="nav-desktop">
+        <a href="../index.html#keahlian" class="nav-link">Keahlian</a>
+        <a href="../index.html#proyek" class="nav-link">Proyek</a>
+        <a href="../index.html#pengalaman" class="nav-link">Pengalaman</a>
+        <a href="./" class="nav-link active">Galeri</a>
+        <a href="../index.html#kontak" class="btn btn-primary btn-sm">Kontak</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn" aria-label="Buka menu navigasi">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="3" y1="8" x2="21" y2="8"></line>
+          <line x1="3" y1="16" x2="21" y2="16"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="../index.html#beranda">Beranda</a>
+    <a href="../index.html#keahlian">Keahlian</a>
+    <a href="../index.html#proyek">Proyek</a>
+    <a href="../index.html#pengalaman">Pengalaman</a>
+    <a href="./" class="active">Galeri</a>
+    <a href="../index.html#kontak">Kontak</a>
+  </nav>
+
+  <main>
+    <!-- Hero Galeri -->
+    <section class="gallery-hero">
+      <div class="container">
+        <nav class="breadcrumb hero-anim-1" aria-label="Breadcrumb">
+          <a href="../index.html">Beranda</a>
+          <span>/</span>
+          <span>Galeri</span>
+        </nav>
+
+        <div class="status-line hero-anim-1">Arsip Visual &amp; Dokumentasi</div>
+        <h1 class="page-title hero-anim-2">Galeri Karya &amp; Aktivitas</h1>
+        <p class="page-desc hero-anim-3">
+          Kumpulan tangkapan layar antarmuka aplikasi, proses pengembangan sistem, dan dokumentasi kegiatan yang pernah dikerjakan.
+        </p>
+      </div>
+    </section>
+
+    <!-- Konten Galeri -->
+    <section class="gallery-section">
+      <div class="container">
+        <div class="toolbar reveal">
+          <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="semua">Semua</button>
+            <button class="filter-btn" data-filter="antarmuka">Antarmuka UI</button>
+            <button class="filter-btn" data-filter="sistem">Sistem &amp; Kode</button>
+            <button class="filter-btn" data-filter="dokumentasi">Dokumentasi</button>
+          </div>
+          <div class="gallery-count" id="galleryCount">6 Item</div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>&copy; <span id="year"></span> Syafaat Nuryadi.</div>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <a href="../index.html" class="mono back-top" style="color: var(--text-muted);">&larr; Kembali ke Beranda</a>
+        <a href="#" class="mono back-top" style="color: var(--accent);">Ke atas &uarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+      <div class="modal-head">
+        <div>
+          <span class="mono" id="lightboxMeta" style="color: var(--gold); display: block; margin-bottom: 4px;">Kategori &bull; 2026</span>
+          <h2 id="lightboxTitle" style="font-size: 1.35rem; font-weight: 700; line-height: 1.25;">Judul Foto</h2>
+        </div>
+        <button class="modal-close" id="lightboxClose" aria-label="Tutup tampilan penuh">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="lightbox-stage">
+        <button class="lightbox-nav prev" id="prevBtn" aria-label="Foto sebelumnya">&larr;</button>
+        <img id="lightboxImg" class="modal-img" src="" alt="" />
+        <button class="lightbox-nav next" id="nextBtn" aria-label="Foto berikutnya">&rarr;</button>
+      </div>
+
+      <p id="lightboxDesc" style="color: var(--text-muted); font-size: 0.92rem;"></p>
+
+      <div class="modal-footer-bar">
+        <div class="tag-list" id="lightboxTags"></div>
+        <span class="mono" id="lightboxCounter" style="color: var(--text-subtle);">1 / 6</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data Galeri (silakan ganti URL foto & keterangan sesuai kebutuhan)
+    const galleryItems = [
+      {
+        id: 1,
+        title: 'Dashboard Operasional Sitenexs',
+        category: 'antarmuka',
+        categoryLabel: 'Antarmuka UI',
+        date: '2026',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+        description: 'Tampilan panel kontrol mobile-first untuk memantau transaksi harian, status layanan, dan laporan ringkas secara real-time.',
+        tags: ['UI Design', 'Mobile-First', 'Dashboard']
+      },
+      {
+        id: 2,
+        title: 'Arsitektur Database & Integrasi API',
+        category: 'sistem',
+        categoryLabel: 'Sistem & Kode',
+        date: '2026',
+        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
+        description: 'Pengembangan struktur tabel PostgreSQL dan endpoint otomatisasi untuk sinkronisasi data aplikasi pelanggan.',
+        tags: ['PostgreSQL', 'REST API', 'Backend']
+      },
+      {
+        id: 3,
+        title: 'Sistem Kasir & Katalog Digital UMKM',
+        category: 'antarmuka',
+        categoryLabel: 'Antarmuka UI',
+        date: '2025',
+        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80',
+        description: 'Antarmuka kasir berbasis web yang dirancang ringan agar lancar dijalankan pada tablet maupun ponsel kasir.',
+        tags: ['POS System', 'HTML5', 'JavaScript']
+      },
+      {
+        id: 4,
+        title: 'Sesi Diskusi & Perancangan Sistem Klien',
+        category: 'dokumentasi',
+        categoryLabel: 'Dokumentasi',
+        date: '2025',
+        image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+        description: 'Pemetaan alur kerja operasional bersama tim mitra sebelum tahap prototyping antarmuka dimulai.',
+        tags: ['Kolaborasi', 'Workflow', 'Riset']
+      },
+      {
+        id: 5,
+        title: 'Sistem Pemesanan QR Meja Kafe',
+        category: 'sistem',
+        categoryLabel: 'Sistem & Kode',
+        date: '2025',
+        image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80',
+        description: 'Alur pemesanan mandiri tanpa instalasi aplikasi tambahan, terhubung langsung ke layar dapur.',
+        tags: ['QR Order', 'Realtime', 'Web App']
+      },
+      {
+        id: 6,
+        title: 'Profil Founder & Studio Pengembangan',
+        category: 'dokumentasi',
+        categoryLabel: 'Dokumentasi',
+        date: '2026',
+        image: 'https://sitenexs.com/assets/founder/founder.png?auto=format&fit=crop&w=1000&q=80',
+        description: 'Dokumentasi profil pribadi Syafaat Nuryadi dalam pengembangan produk digital dan layanan web.',
+        tags: ['Profil', 'Sitenexs', 'Founder']
+      }
+    ];
+
+    const galleryGrid = document.getElementById('galleryGrid');
+    const galleryCount = document.getElementById('galleryCount');
+    const filterBar = document.getElementById('filterBar');
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    const scrollProgress = document.getElementById('scrollProgress');
+    const siteHeader = document.getElementById('siteHeader');
+
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let currentFiltered = [...galleryItems];
+    let currentIndex = 0;
+
+    function renderGallery(filter = 'semua') {
+      currentFiltered = filter === 'semua'
+        ? [...galleryItems]
+        : galleryItems.filter(item => item.category === filter);
+
+      galleryCount.textContent = `${currentFiltered.length} Item`;
+
+      galleryGrid.innerHTML = currentFiltered.map((item, idx) => `
+        <article class="gallery-card" data-index="${idx}" style="animation-delay: ${idx * 0.07}s">
+          <div class="gallery-thumb">
+            <img src="${item.image}" alt="${item.title}" loading="lazy" />
+            <div class="zoom-badge" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="gallery-body">
+            <div class="gallery-meta">
+              <span>${item.categoryLabel}</span>
+              <span>${item.date}</span>
+            </div>
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    renderGallery();
+
+    // Filter Galeri
+    filterBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+
+      filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGallery(btn.dataset.filter);
+    });
+
+    // Lightbox Functions
+    function updateLightbox(index) {
+      if (!currentFiltered.length) return;
+      currentIndex = (index + currentFiltered.length) % currentFiltered.length;
+      const item = currentFiltered[currentIndex];
+
+      document.getElementById('lightboxMeta').textContent = `${item.categoryLabel} • ${item.date}`;
+      document.getElementById('lightboxTitle').textContent = item.title;
+      const imgEl = document.getElementById('lightboxImg');
+      imgEl.src = item.image;
+      imgEl.alt = item.title;
+      document.getElementById('lightboxDesc').textContent = item.description;
+      document.getElementById('lightboxTags').innerHTML = item.tags
+        .map(tag => `<span class="tag-item">${tag}</span>`)
+        .join('');
+      document.getElementById('lightboxCounter').textContent = `${currentIndex + 1} / ${currentFiltered.length}`;
+    }
+
+    function openLightbox(index) {
+      updateLightbox(index);
+      lightboxModal.classList.add('open');
+      lightboxModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeLightbox() {
+      lightboxModal.classList.remove('open');
+      lightboxModal.setAttribute('aria-hidden', 'true');
+    }
+
+    galleryGrid.addEventListener('click', (e) => {
+      const card = e.target.closest('.gallery-card');
+      if (!card) return;
+      openLightbox(Number(card.dataset.index));
+    });
+
+    prevBtn.addEventListener('click', () => updateLightbox(currentIndex - 1));
+    nextBtn.addEventListener('click', () => updateLightbox(currentIndex + 1));
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    lightboxModal.addEventListener('click', (e) => {
+      if (e.target === lightboxModal) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightboxModal.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') updateLightbox(currentIndex - 1);
+      if (e.key === 'ArrowRight') updateLightbox(currentIndex + 1);
+    });
+
+    // Toggle Menu Mobile
+    menuBtn.addEventListener('click', () => {
+      mobileNav.classList.toggle('open');
+      menuBtn.classList.toggle('open');
+    });
+
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        menuBtn.classList.remove('open');
+      });
+    });
+
+    // Scroll Progress & Header Elevation
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      scrollProgress.style.width = `${progress}%`;
+      siteHeader.classList.toggle('is-scrolled', scrollTop > 16);
+    }, { passive: true });
+
+    // Scroll Reveal Observer
+    const revealElements = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+    } else {
+      revealElements.forEach(el => el.classList.add('is-visible'));
+    }
+
+    // Tahun Otomatis
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
