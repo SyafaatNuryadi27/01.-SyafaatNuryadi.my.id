@@ -846,11 +846,13 @@
       letter-spacing: 0.01em;
     }
 
-    /* Halaman Detail Foto Tersendiri */
+    /* Halaman Detail Foto — Background Blur Transparan */
     .photo-detail-page {
       position: fixed;
       inset: 0;
-      background: #0b1120;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -859,7 +861,7 @@
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease, background-color 0.2s ease;
+      transition: opacity 0.2s ease, background-color 0.2s ease, backdrop-filter 0.2s ease;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -870,24 +872,9 @@
     }
 
     .photo-detail-page.is-zoom-active {
-      background: #060913;
-    }
-
-    .detail-bg-img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      opacity: 0.12;
-      pointer-events: none;
-      z-index: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .photo-detail-page.is-zoom-active .detail-bg-img {
-      opacity: 0;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(26px);
+      -webkit-backdrop-filter: blur(26px);
     }
 
     .detail-topbar {
@@ -901,12 +888,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      background: linear-gradient(180deg, rgba(11, 17, 32, 0.92) 0%, rgba(11, 17, 32, 0) 100%);
+      background: transparent;
       z-index: 220;
-    }
-
-    .photo-detail-page.is-zoom-active .detail-topbar {
-      background: linear-gradient(180deg, rgba(6, 9, 19, 0.94) 0%, rgba(6, 9, 19, 0) 100%);
     }
 
     .detail-status {
@@ -921,39 +904,46 @@
       height: 34px;
       padding: 0 12px;
       border-radius: 5px;
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: #ffffff;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      color: var(--text);
       font-size: 0.78rem;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
+      box-shadow: var(--shadow-sm);
       transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
     }
 
     .detail-back-btn:hover {
       border-color: var(--gold);
-      color: var(--gold-light);
-      background: rgba(15, 23, 42, 0.98);
+      color: var(--primary);
+      background: rgba(255, 255, 255, 0.92);
     }
 
     .detail-badge {
       padding: 6px 11px;
       border-radius: 5px;
-      background: rgba(15, 23, 42, 0.86);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #ffffff;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      color: var(--text);
       font-family: var(--font-mono);
       font-size: 0.74rem;
       font-weight: 600;
       letter-spacing: 0.04em;
+      box-shadow: var(--shadow-sm);
     }
 
     .detail-badge.gold {
-      color: var(--gold-light);
+      color: #8a6212;
       border-color: var(--gold-border);
+      background: rgba(253, 248, 235, 0.8);
     }
 
     .detail-badge.zoom-pill {
@@ -966,7 +956,8 @@
     .detail-badge.zoom-pill:hover,
     .photo-detail-page.is-zoom-active .detail-badge.zoom-pill {
       border-color: var(--gold);
-      color: var(--gold-light);
+      color: var(--primary);
+      background: rgba(255, 255, 255, 0.92);
     }
 
     .detail-tools {
@@ -979,21 +970,24 @@
     .detail-icon-btn {
       width: 36px;
       height: 36px;
-      background: rgba(15, 23, 42, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(15, 23, 42, 0.14);
       border-radius: 6px;
-      color: rgba(255, 255, 255, 0.92);
+      color: var(--text);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      box-shadow: var(--shadow-sm);
       transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease;
     }
 
     .detail-icon-btn:hover {
-      color: var(--gold-light);
-      border-color: var(--gold-border);
-      background: rgba(15, 23, 42, 0.96);
+      color: var(--primary);
+      border-color: var(--gold);
+      background: rgba(255, 255, 255, 0.94);
     }
 
     .detail-stage {
@@ -1021,7 +1015,7 @@
       border-radius: 6px;
       border: 1px solid var(--gold-border);
       box-shadow: var(--shadow-lg);
-      background: #0f172a;
+      background: rgba(255, 255, 255, 0.5);
       cursor: zoom-in;
       transform-origin: center center;
       transition: transform 0.2s var(--ease-out), border-radius 0.18s ease, border-color 0.18s ease;
@@ -1046,8 +1040,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 36px 20px 18px;
-      background: linear-gradient(0deg, rgba(11, 17, 32, 0.9) 0%, rgba(11, 17, 32, 0) 100%);
+      padding: 16px 20px 20px;
+      background: transparent;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1068,10 +1062,17 @@
 
     .detail-desc {
       max-width: 640px;
-      font-size: 0.88rem;
-      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      box-shadow: var(--shadow-sm);
+      font-size: 0.86rem;
+      font-weight: 600;
       line-height: 1.45;
-      color: #f8fafc;
+      color: var(--text);
     }
 
     .toast {
@@ -1435,8 +1436,6 @@
 
   <!-- Halaman Detail Foto (URL terpisah ?foto=ID) -->
   <section class="photo-detail-page" id="photoDetailPage" aria-hidden="true" aria-label="Detail Foto">
-    <img id="detailBgImg" class="detail-bg-img" src="" alt="" aria-hidden="true" decoding="async" />
-
     <div class="detail-topbar">
       <div class="detail-status">
         <a href="./" class="detail-back-btn" id="detailBackBtn" title="Kembali ke Galeri (Esc)">
@@ -1546,7 +1545,6 @@
     const toast = document.getElementById('toast');
 
     const photoDetailPage = document.getElementById('photoDetailPage');
-    const detailBgImg = document.getElementById('detailBgImg');
     const detailStage = document.getElementById('detailStage');
     const detailImg = document.getElementById('detailImg');
     const detailCounter = document.getElementById('detailCounter');
@@ -2327,7 +2325,6 @@
     photoGrid.addEventListener('click', (e) => {
       const link = e.target.closest('.photo-card-link');
       if (!link) return;
-      // Biarkan Ctrl+Click / Cmd+Click / Middle Click membuka tab baru secara native
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
       e.preventDefault();
       openPhotoPage(Number(link.dataset.index), { updateHistory: true, replaceHistory: false });
@@ -2437,7 +2434,6 @@
       if (IS_NATIVE_HEIC_BROWSER || !isHeicUrl(item.src)) {
         detailImg.src = item.src;
         detailImg.alt = seoAlt;
-        detailBgImg.src = item.src;
         return;
       }
 
@@ -2456,7 +2452,6 @@
         item.displaySrc = activeSrc;
         detailImg.src = activeSrc;
         detailImg.alt = seoAlt;
-        detailBgImg.src = activeSrc;
         prefetchNeighborHeic(currentIndex);
       }
     }
