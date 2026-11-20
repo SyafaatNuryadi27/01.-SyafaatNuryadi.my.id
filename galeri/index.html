@@ -367,126 +367,190 @@
       opacity: 0.75;
     }
 
-    /* Filter Tanggal Bar (Rapi & Ringkas) */
-    .filter-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 24px;
-      padding: 12px 16px;
+    /* Panel Filter Pencarian Momen */
+    .filter-panel {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-top: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 26px;
       box-shadow: var(--shadow-sm);
     }
 
-    .filter-summary {
-      display: inline-flex;
+    .filter-bar {
+      display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.83rem;
-      font-weight: 600;
-      color: var(--text-muted);
+      justify-content: space-between;
+      gap: 14px;
     }
 
-    .filter-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--gold);
+    .filter-status-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       flex-shrink: 0;
+    }
+
+    .filter-summary {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    .filter-reset-link {
+      display: none;
+      background: transparent;
+      border: none;
+      padding: 2px 0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      transition: color 0.18s ease;
+    }
+
+    .filter-reset-link.visible {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .filter-reset-link:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
     }
 
     .filter-controls {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      justify-content: flex-end;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
     }
 
-    .date-field-group {
+    /* Kotak Pencarian Otomatis (Tanggal, Bulan, Tahun, atau Deskripsi) */
+    .search-box {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      height: 36px;
-      padding: 0 10px;
-      border-radius: 4px;
+      height: 38px;
+      width: 100%;
+      max-width: 390px;
+      padding: 0 12px;
+      border-radius: 6px;
       border: 1px solid var(--border);
-      background: var(--surface-alt);
-      gap: 8px;
+      background: var(--bg);
+      gap: 9px;
       transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
     }
 
-    .date-field-group:hover,
-    .date-field-group:focus-within {
-      border-color: var(--accent);
+    .search-box:hover {
+      border-color: var(--border-strong);
+    }
+
+    .search-box:focus-within {
       background: var(--surface);
+      border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
-    .date-field-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-subtle);
-      white-space: nowrap;
-      user-select: none;
+    .search-box.has-value {
+      background: var(--surface);
+      border-color: var(--gold-border);
+      box-shadow: 0 0 0 3px var(--gold-soft);
     }
 
-    .filter-date-input {
+    .search-icon {
+      color: var(--text-subtle);
+      flex-shrink: 0;
+      transition: color 0.18s ease;
+    }
+
+    .search-box:focus-within .search-icon {
+      color: var(--accent);
+    }
+
+    .search-box.has-value .search-icon {
+      color: #9a6e17;
+    }
+
+    .search-input {
+      width: 100%;
       border: none;
       background: transparent;
-      color: var(--text);
-      font-size: 0.81rem;
-      font-weight: 600;
       outline: none;
-      cursor: pointer;
-    }
-
-    .filter-select {
-      height: 36px;
-      padding: 0 12px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      font-size: 0.82rem;
+      font-weight: 500;
       color: var(--text);
-      font-size: 0.81rem;
-      font-weight: 600;
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
     }
 
-    .filter-select:hover,
-    .filter-select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
+    .search-input::placeholder {
+      color: var(--text-subtle);
     }
 
-    .filter-reset-btn {
-      height: 36px;
-      padding: 0 13px;
+    .search-clear-btn {
+      width: 22px;
+      height: 22px;
+      border: none;
       border-radius: 4px;
-      border: 1px solid var(--gold-border);
-      background: var(--gold-soft);
-      color: #855e14;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
+      background: rgba(15, 23, 42, 0.08);
+      color: var(--text);
+      font-size: 0.95rem;
+      line-height: 1;
       display: none;
-      align-items: center;
-      gap: 5px;
-      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s ease, color 0.15s ease;
     }
 
-    .filter-reset-btn.visible {
-      display: inline-flex;
+    .search-box.has-value .search-clear-btn {
+      display: grid;
     }
 
-    .filter-reset-btn:hover {
+    .search-clear-btn:hover {
       background: var(--gold);
-      border-color: var(--gold);
       color: #0f172a;
+    }
+
+    /* Segmented Toggle Urutan (Terbaru | Terlama) */
+    .sort-segmented {
+      display: inline-flex;
+      align-items: center;
+      height: 38px;
+      padding: 3px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .sort-seg-btn {
+      height: 30px;
+      padding: 0 12px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.79rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .sort-seg-btn:hover {
+      color: var(--text);
+    }
+
+    .sort-seg-btn.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
     }
 
     /* Photo Grid Section (Masonry agar Portrait & Landscape Muat Penuh) */
@@ -557,64 +621,79 @@
       transform: scale(1.03);
     }
 
-    .card-overlay-bar {
+    /* Overlay Deskripsi, Tanggal & Ikon Download */
+    .card-overlay {
       position: absolute;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
+      inset: auto 0 0 0;
+      padding: 40px 14px 13px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.88) 100%);
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
-      gap: 8px;
+      gap: 12px;
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(4px);
       transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
       z-index: 3;
     }
 
-    .photo-card:hover .card-overlay-bar {
+    .photo-card:hover .card-overlay {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .card-date-pill {
-      height: 36px;
-      padding: 0 11px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(4px);
-      color: var(--gold-light);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      display: inline-flex;
-      align-items: center;
+    .card-meta {
+      flex: 1;
+      min-width: 0;
     }
 
+    .card-date {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 3px;
+    }
+
+    .card-desc {
+      font-size: 0.81rem;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #f8fafc;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Tombol Download Murni Ikon (Tanpa Kotak/Card) */
     .card-icon-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(4px);
+      background: transparent;
+      border: none;
+      padding: 4px;
       color: #ffffff;
-      display: grid;
-      place-items: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+      transition: color 0.2s ease, transform 0.18s var(--ease-out);
     }
 
     .card-icon-btn:hover {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #0f172a;
-      transform: scale(1.06);
+      color: var(--gold-light);
+      transform: scale(1.15);
     }
 
-    /* Empty State saat Filter Tidak Ditemukan */
+    .card-icon-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Empty State saat Pencarian Tidak Ditemukan */
     .empty-state {
       display: none;
       text-align: center;
@@ -712,7 +791,7 @@
       left: 0;
       right: 0;
       height: 62px;
-      padding: 0 16px;
+      padding: 0 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -756,54 +835,30 @@
     .lightbox-tools {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 14px;
     }
 
-    .lb-tool-btn {
-      height: 38px;
-      min-width: 38px;
-      padding: 0 12px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(6px);
-      color: #ffffff;
+    /* Tombol Aksi Lightbox Murni Ikon (Tanpa Kotak/Card) */
+    .lb-icon-btn {
+      background: transparent;
+      border: none;
+      padding: 6px;
+      color: rgba(255, 255, 255, 0.92);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.15s ease;
+      filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.7));
+      transition: color 0.18s ease, transform 0.18s var(--ease-out);
     }
 
-    .lb-tool-btn:hover {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #0f172a;
+    .lb-icon-btn:hover {
+      color: var(--gold-light);
+      transform: scale(1.15);
     }
 
-    .lb-tool-btn:active {
-      transform: scale(0.94);
-    }
-
-    .lb-tool-btn.download-btn {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #ffffff;
-    }
-
-    .lb-tool-btn.download-btn:hover {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #0f172a;
-    }
-
-    .lb-btn-label {
-      display: none;
+    .lb-icon-btn:active {
+      transform: scale(0.92);
     }
 
     /* Interactive Zoom Viewport */
@@ -816,7 +871,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 68px 16px 54px;
+      padding: 68px 46px 88px;
       touch-action: none;
     }
 
@@ -843,48 +898,65 @@
       transition: none;
     }
 
+    /* Tombol Navigasi Kiri & Kanan Murni Ikon (Tanpa Kotak/Card) */
     .lightbox-nav {
       position: fixed;
       top: 50%;
       transform: translateY(-50%);
-      width: 42px;
-      height: 42px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      background: rgba(15, 23, 42, 0.72);
-      backdrop-filter: blur(6px);
-      color: #ffffff;
-      display: grid;
-      place-items: center;
+      background: transparent;
+      border: none;
+      padding: 10px;
+      color: rgba(255, 255, 255, 0.9);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       z-index: 215;
-      transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.75));
+      transition: color 0.2s ease, transform 0.2s var(--ease-out), opacity 0.2s ease;
     }
 
     .lightbox-nav:hover {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #0f172a;
+      color: var(--gold-light);
+      transform: translateY(-50%) scale(1.16);
     }
 
-    .lightbox-nav.prev { left: 16px; }
-    .lightbox-nav.next { right: 16px; }
+    .lightbox-nav:active {
+      transform: translateY(-50%) scale(0.92);
+    }
 
-    .lightbox-hint {
+    .lightbox-nav.prev { left: 10px; }
+    .lightbox-nav.next { right: 10px; }
+
+    /* Deskripsi & Petunjuk Bawah Lightbox */
+    .lightbox-bottom {
       position: fixed;
-      bottom: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 5px 12px;
-      border-radius: 4px;
-      background: rgba(15, 23, 42, 0.68);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 0.74rem;
-      white-space: nowrap;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 28px 20px 14px;
+      background: linear-gradient(0deg, rgba(15, 23, 42, 0.84) 0%, rgba(15, 23, 42, 0) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
       z-index: 215;
       pointer-events: none;
+    }
+
+    .lightbox-desc {
+      max-width: 640px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.45;
+      color: #f8fafc;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+    }
+
+    .lightbox-hint {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.72rem;
     }
 
     /* Toast */
@@ -912,14 +984,33 @@
     }
 
     /* Responsive */
-    @media (max-width: 519px) {
-      .filter-controls {
-        width: 100%;
+    @media (max-width: 680px) {
+      .filter-panel {
+        padding: 13px 14px;
       }
-      .date-field-group {
-        flex: 1 1 auto;
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .filter-status-group {
         justify-content: space-between;
       }
+      .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-box {
+        max-width: none;
+      }
+      .sort-segmented {
+        align-self: flex-start;
+      }
+      .lightbox-stage {
+        padding: 66px 36px 94px;
+      }
+      .lightbox-nav.prev { left: 4px; }
+      .lightbox-nav.next { right: 4px; }
     }
 
     @media (min-width: 520px) {
@@ -933,9 +1024,6 @@
       .footer-inner {
         flex-direction: row;
         align-items: center;
-      }
-      .lb-btn-label {
-        display: inline;
       }
     }
 
@@ -960,7 +1048,7 @@
     }
 
     @media (hover: none) {
-      .card-overlay-bar {
+      .card-overlay {
         opacity: 1;
         transform: translateY(0);
       }
@@ -1028,44 +1116,56 @@
       </div>
     </section>
 
-    <!-- Filter Tanggal & Grid Foto -->
+    <!-- Filter Pencarian Momen & Grid Foto -->
     <section class="gallery-section">
       <div class="container">
-        <!-- Toolbar Filter Tanggal Ringkas -->
-        <div class="filter-toolbar" aria-label="Filter tanggal foto">
-          <div class="filter-summary">
-            <span class="filter-dot" aria-hidden="true"></span>
-            <span id="filterSummary">Menampilkan 7 foto</span>
-          </div>
-
-          <div class="filter-controls">
-            <div class="date-field-group">
-              <label for="exactDateInput" class="date-field-label">Tanggal</label>
-              <input
-                type="date"
-                id="exactDateInput"
-                class="filter-date-input"
-                aria-label="Pilih tanggal foto"
-              />
+        <!-- Panel Filter Pencarian Otomatis -->
+        <div class="filter-panel" aria-label="Filter pencarian foto">
+          <div class="filter-bar">
+            <div class="filter-status-group">
+              <span class="filter-summary" id="filterSummary">7 Momen</span>
+              <button type="button" class="filter-reset-link" id="resetFilterLink">Reset</button>
             </div>
 
-            <select id="sortOrderSelect" class="filter-select" aria-label="Urutan tanggal">
-              <option value="newest">Terbaru</option>
-              <option value="oldest">Terlama</option>
-            </select>
+            <div class="filter-controls">
+              <!-- Pencarian Tanggal, Bulan, Tahun, atau Deskripsi -->
+              <div class="search-box" id="searchBox">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input
+                  type="text"
+                  id="searchInput"
+                  class="search-input"
+                  placeholder="Cari tanggal, bulan, tahun, atau deskripsi..."
+                  aria-label="Cari tanggal, bulan, tahun, atau deskripsi foto"
+                  autocomplete="off"
+                />
+                <button
+                  type="button"
+                  id="clearSearchBtn"
+                  class="search-clear-btn"
+                  title="Hapus pencarian"
+                  aria-label="Hapus pencarian"
+                >&times;</button>
+              </div>
 
-            <button type="button" id="resetFilterBtn" class="filter-reset-btn">
-              Reset
-            </button>
+              <!-- Segmented Control Urutan -->
+              <div class="sort-segmented" role="group" aria-label="Urutkan momen">
+                <button type="button" class="sort-seg-btn active" data-sort="newest">Terbaru</button>
+                <button type="button" class="sort-seg-btn" data-sort="oldest">Terlama</button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Masonry Grid Foto (Mendukung Foto Portrait Tegak & Landscape) -->
         <div class="photo-grid" id="photoGrid"></div>
 
-        <!-- Tampilan Kosong jika Tanggal Tidak Cocok -->
+        <!-- Tampilan Kosong jika Pencarian Tidak Cocok -->
         <div class="empty-state" id="emptyState">
-          <p>Tidak ada foto pada tanggal yang dipilih.</p>
+          <p>Tidak ada foto yang cocok dengan kata kunci pencarian.</p>
           <button type="button" class="btn btn-primary btn-sm" id="emptyResetBtn">Tampilkan Semua Foto</button>
         </div>
       </div>
@@ -1097,17 +1197,16 @@
       </div>
 
       <div class="lightbox-tools">
-        <button class="lb-tool-btn download-btn" id="downloadBtn" title="Unduh foto" aria-label="Unduh foto">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="lb-icon-btn" id="downloadBtn" title="Unduh foto" aria-label="Unduh foto">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          <span class="lb-btn-label">Unduh</span>
         </button>
 
-        <button class="lb-tool-btn" id="lightboxClose" title="Tutup (Esc)" aria-label="Tutup foto">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="lb-icon-btn" id="lightboxClose" title="Tutup (Esc)" aria-label="Tutup foto">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -1115,69 +1214,91 @@
       </div>
     </div>
 
-    <!-- Tombol Navigasi -->
-    <button class="lightbox-nav prev" id="prevBtn" aria-label="Foto sebelumnya">&larr;</button>
+    <!-- Tombol Navigasi Kiri & Kanan (Murni Ikon) -->
+    <button class="lightbox-nav prev" id="prevBtn" aria-label="Foto sebelumnya">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
 
     <!-- Area Foto Zoom & Pan -->
     <div class="lightbox-stage" id="lightboxStage">
       <img id="lightboxImg" class="lightbox-img" src="" alt="Foto galeri" draggable="false" />
     </div>
 
-    <button class="lightbox-nav next" id="nextBtn" aria-label="Foto berikutnya">&rarr;</button>
+    <button class="lightbox-nav next" id="nextBtn" aria-label="Foto berikutnya">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
 
-    <div class="lightbox-hint" id="lightboxHint">Klik atau scroll pada foto untuk zoom</div>
+    <!-- Deskripsi Foto & Petunjuk Zoom -->
+    <div class="lightbox-bottom">
+      <p class="lightbox-desc" id="lightboxDesc"></p>
+      <span class="lightbox-hint" id="lightboxHint">Klik atau scroll pada foto untuk zoom</span>
+    </div>
   </div>
 
   <!-- Toast Notifikasi -->
   <div class="toast" id="toast">Mengunduh foto...</div>
 
   <script>
-    // Daftar Foto & Tanggal (isoDate format YYYY-MM-DD agar filter tanggal & urutan akurat)
+    // Daftar Foto, Tanggal & Deskripsi Momen
     const photos = [
       {
         src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=85',
         date: '18 Nov 2026',
-        isoDate: '2026-11-18'
+        isoDate: '2026-11-18',
+        desc: 'Tampilan antarmuka analitik dan pemantauan performa sistem berbasis web.'
       },
       {
         src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=85',
         date: '11 Nov 2026',
-        isoDate: '2026-11-11'
+        isoDate: '2026-11-11',
+        desc: 'Sesi dokumentasi potret kasual dengan pencahayaan alami.'
       },
       {
         src: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=85',
         date: '04 Nov 2026',
-        isoDate: '2026-11-04'
+        isoDate: '2026-11-04',
+        desc: 'Eksplorasi struktur kode dan pengembangan fitur antarmuka responsif.'
       },
       {
         src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1400&q=85',
         date: '22 Okt 2026',
-        isoDate: '2026-10-22'
+        isoDate: '2026-10-22',
+        desc: 'Pengujian alur transaksi digital dan integrasi sistem pembayaran.'
       },
       {
         src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=85',
         date: '10 Okt 2026',
-        isoDate: '2026-10-10'
+        isoDate: '2026-10-10',
+        desc: 'Diskusi kolaborasi tim dalam merancang solusi produk digital.'
       },
       {
         src: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1400&q=85',
         date: '28 Sep 2026',
-        isoDate: '2026-09-28'
+        isoDate: '2026-09-28',
+        desc: 'Suasana ruang kerja yang tenang untuk fokus merancang desain UI.'
       },
       {
         src: 'https://sitenexs.com/assets/founder/founder.png?auto=format&fit=crop&w=1200&q=85',
         date: '15 Sep 2026',
-        isoDate: '2026-09-15'
+        isoDate: '2026-09-15',
+        desc: 'Potret profil founder dan pengembang utama di balik Sitenexs.'
       }
     ];
 
     const photoGrid = document.getElementById('photoGrid');
     const emptyState = document.getElementById('emptyState');
-    const exactDateInput = document.getElementById('exactDateInput');
-    const sortOrderSelect = document.getElementById('sortOrderSelect');
-    const resetFilterBtn = document.getElementById('resetFilterBtn');
-    const emptyResetBtn = document.getElementById('emptyResetBtn');
     const filterSummary = document.getElementById('filterSummary');
+    const resetFilterLink = document.getElementById('resetFilterLink');
+
+    const searchBox = document.getElementById('searchBox');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const sortButtons = document.querySelectorAll('.sort-seg-btn');
+    const emptyResetBtn = document.getElementById('emptyResetBtn');
 
     const menuBtn = document.getElementById('menuBtn');
     const mobileNav = document.getElementById('mobileNav');
@@ -1191,6 +1312,7 @@
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCounter = document.getElementById('lightboxCounter');
     const lightboxDate = document.getElementById('lightboxDate');
+    const lightboxDesc = document.getElementById('lightboxDesc');
     const lightboxHint = document.getElementById('lightboxHint');
     const zoomLevelEl = document.getElementById('zoomLevel');
 
@@ -1200,7 +1322,7 @@
     const nextBtn = document.getElementById('nextBtn');
 
     // State Filter & Lightbox
-    let exactDateFilter = '';
+    let searchQuery = '';
     let sortOrder = 'newest';
     let filteredPhotos = [...photos];
     let currentIndex = 0;
@@ -1220,7 +1342,34 @@
     let initialPinchScale = 1;
     let touchUsed = false;
 
-    const bulanNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const bulanShort = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
+    const bulanFull = [
+      'januari', 'februari', 'maret', 'april', 'mei', 'juni',
+      'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
+    ];
+
+    // Bangun indeks teks pencarian lengkap (tanggal, bulan singkat/lengkap, tahun, deskripsi)
+    function buildSearchIndex(item) {
+      const [year, monthStr, dayStr] = item.isoDate.split('-');
+      const monthIdx = Number(monthStr) - 1;
+      const dayNum = String(Number(dayStr));
+      const mShort = bulanShort[monthIdx] || '';
+      const mFull = bulanFull[monthIdx] || '';
+
+      return [
+        item.date,
+        item.isoDate,
+        `${dayStr}/${monthStr}/${year}`,
+        `${dayStr}-${monthStr}-${year}`,
+        `${dayNum} ${mShort} ${year}`,
+        `${dayNum} ${mFull} ${year}`,
+        `${dayStr} ${mFull} ${year}`,
+        mFull,
+        mShort,
+        year,
+        item.desc
+      ].join(' ').toLowerCase();
+    }
 
     function showToast(msg) {
       toast.textContent = msg;
@@ -1229,12 +1378,20 @@
       toast._timer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
-    // Terapkan Filter Tanggal & Render Ulang Galeri
+    // Terapkan Filter Pencarian Otomatis & Render Ulang Galeri
     function applyFiltersAndRender() {
       let list = [...photos];
+      const keyword = searchQuery.trim().toLowerCase();
 
-      if (exactDateFilter) {
-        list = list.filter(item => item.isoDate === exactDateFilter);
+      if (keyword) {
+        searchBox.classList.add('has-value');
+        const tokens = keyword.split(/\s+/).filter(Boolean);
+        list = list.filter(item => {
+          const indexText = buildSearchIndex(item);
+          return tokens.every(token => indexText.includes(token));
+        });
+      } else {
+        searchBox.classList.remove('has-value');
       }
 
       list.sort((a, b) => {
@@ -1243,17 +1400,12 @@
           : a.isoDate.localeCompare(b.isoDate);
       });
 
+      resetFilterLink.classList.toggle('visible', Boolean(keyword));
+      filterSummary.textContent = keyword
+        ? `${list.length} Momen ditemukan`
+        : `${list.length} Momen`;
+
       filteredPhotos = list;
-
-      const hasFilter = Boolean(exactDateFilter) || sortOrder !== 'newest';
-      resetFilterBtn.classList.toggle('visible', hasFilter);
-
-      if (exactDateFilter) {
-        const [y, m, d] = exactDateFilter.split('-');
-        filterSummary.textContent = `Menampilkan ${list.length} foto • ${Number(d)} ${bulanNames[Number(m) - 1]} ${y}`;
-      } else {
-        filterSummary.textContent = `Menampilkan ${list.length} foto`;
-      }
 
       if (!list.length) {
         photoGrid.innerHTML = '';
@@ -1264,11 +1416,14 @@
       emptyState.classList.remove('visible');
       photoGrid.innerHTML = list.map((item, idx) => `
         <div class="photo-card" data-index="${idx}" style="animation-delay: ${idx * 0.05}s">
-          <img src="${item.src}" alt="Foto ${item.date}" loading="lazy" />
-          <div class="card-overlay-bar">
-            <span class="card-date-pill">${item.date}</span>
+          <img src="${item.src}" alt="${item.desc}" loading="lazy" />
+          <div class="card-overlay">
+            <div class="card-meta">
+              <span class="card-date">${item.date}</span>
+              <p class="card-desc">${item.desc}</p>
+            </div>
             <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto" aria-label="Unduh foto ${item.date}">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -1279,27 +1434,37 @@
       `).join('');
     }
 
-    // Event Filter Tanggal Spesifik
-    exactDateInput.addEventListener('change', (e) => {
-      exactDateFilter = e.target.value;
+    // Filter Otomatis Saat Mengetik Kata Kunci
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
       applyFiltersAndRender();
     });
 
-    // Event Urutan Terbaru / Terlama
-    sortOrderSelect.addEventListener('change', (e) => {
-      sortOrder = e.target.value;
+    clearSearchBtn.addEventListener('click', () => {
+      searchQuery = '';
+      searchInput.value = '';
+      searchInput.focus();
       applyFiltersAndRender();
+    });
+
+    // Event Segmented Control Urutan (Terbaru / Terlama)
+    sortButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sortOrder = btn.dataset.sort;
+        sortButtons.forEach(b => b.classList.toggle('active', b === btn));
+        applyFiltersAndRender();
+      });
     });
 
     function resetAllFilters() {
-      exactDateFilter = '';
-      exactDateInput.value = '';
+      searchQuery = '';
+      searchInput.value = '';
       sortOrder = 'newest';
-      sortOrderSelect.value = 'newest';
+      sortButtons.forEach(b => b.classList.toggle('active', b.dataset.sort === 'newest'));
       applyFiltersAndRender();
     }
 
-    resetFilterBtn.addEventListener('click', resetAllFilters);
+    resetFilterLink.addEventListener('click', resetAllFilters);
     emptyResetBtn.addEventListener('click', resetAllFilters);
 
     // Fungsi Unduh Foto Langsung
@@ -1389,10 +1554,11 @@
 
       resetZoom();
       lightboxImg.src = item.src;
-      lightboxImg.alt = `Foto ${item.date}`;
+      lightboxImg.alt = item.desc;
       lightboxBg.style.backgroundImage = `url("${item.src}")`;
       lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
       lightboxDate.textContent = item.date;
+      lightboxDesc.textContent = item.desc;
     }
 
     function openLightbox(index) {
