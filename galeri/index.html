@@ -69,7 +69,9 @@
       text-decoration: none;
     }
 
-    button {
+    button,
+    input,
+    select {
       font-family: inherit;
     }
 
@@ -365,21 +367,146 @@
       opacity: 0.75;
     }
 
-    /* Photo Grid Section */
+    /* Filter Tanggal Bar (Rapi & Ringkas) */
+    .filter-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .filter-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .filter-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-field-group {
+      display: inline-flex;
+      align-items: center;
+      height: 36px;
+      padding: 0 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      gap: 8px;
+      transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .date-field-group:hover,
+    .date-field-group:focus-within {
+      border-color: var(--accent);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .date-field-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-subtle);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .filter-date-input {
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 0.81rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-select {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.81rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .filter-select:hover,
+    .filter-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .filter-reset-btn {
+      height: 36px;
+      padding: 0 13px;
+      border-radius: 4px;
+      border: 1px solid var(--gold-border);
+      background: var(--gold-soft);
+      color: #855e14;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .filter-reset-btn.visible {
+      display: inline-flex;
+    }
+
+    .filter-reset-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0f172a;
+    }
+
+    /* Photo Grid Section (Masonry agar Portrait & Landscape Muat Penuh) */
     .gallery-section {
-      padding: 36px 0 76px;
+      padding: 28px 0 76px;
     }
 
     .photo-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
+      column-count: 1;
+      column-gap: 18px;
     }
 
     .photo-card {
       position: relative;
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 18px;
+      break-inside: avoid;
+      page-break-inside: avoid;
       overflow: hidden;
-      aspect-ratio: 4 / 3;
       background: var(--surface-alt);
       border: 1px solid var(--gold-border);
       border-top: 3px solid var(--gold);
@@ -421,13 +548,13 @@
 
     .photo-card img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      display: block;
       transition: transform 0.55s var(--ease-out);
     }
 
     .photo-card:hover img {
-      transform: scale(1.06);
+      transform: scale(1.03);
     }
 
     .card-overlay-bar {
@@ -485,6 +612,26 @@
       border-color: var(--gold);
       color: #0f172a;
       transform: scale(1.06);
+    }
+
+    /* Empty State saat Filter Tidak Ditemukan */
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 52px 20px;
+      background: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: 6px;
+    }
+
+    .empty-state.visible {
+      display: block;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 14px;
     }
 
     /* Footer */
@@ -765,10 +912,23 @@
     }
 
     /* Responsive */
+    @media (max-width: 519px) {
+      .filter-controls {
+        width: 100%;
+      }
+      .date-field-group {
+        flex: 1 1 auto;
+        justify-content: space-between;
+      }
+    }
+
     @media (min-width: 520px) {
       .photo-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        column-count: 2;
+        column-gap: 20px;
+      }
+      .photo-card {
+        margin-bottom: 20px;
       }
       .footer-inner {
         flex-direction: row;
@@ -791,8 +951,11 @@
         font-size: 2.1rem;
       }
       .photo-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 22px;
+        column-count: 3;
+        column-gap: 22px;
+      }
+      .photo-card {
+        margin-bottom: 22px;
       }
     }
 
@@ -865,10 +1028,46 @@
       </div>
     </section>
 
-    <!-- Grid Foto -->
+    <!-- Filter Tanggal & Grid Foto -->
     <section class="gallery-section">
       <div class="container">
+        <!-- Toolbar Filter Tanggal Ringkas -->
+        <div class="filter-toolbar" aria-label="Filter tanggal foto">
+          <div class="filter-summary">
+            <span class="filter-dot" aria-hidden="true"></span>
+            <span id="filterSummary">Menampilkan 7 foto</span>
+          </div>
+
+          <div class="filter-controls">
+            <div class="date-field-group">
+              <label for="exactDateInput" class="date-field-label">Tanggal</label>
+              <input
+                type="date"
+                id="exactDateInput"
+                class="filter-date-input"
+                aria-label="Pilih tanggal foto"
+              />
+            </div>
+
+            <select id="sortOrderSelect" class="filter-select" aria-label="Urutan tanggal">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+            </select>
+
+            <button type="button" id="resetFilterBtn" class="filter-reset-btn">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Masonry Grid Foto (Mendukung Foto Portrait Tegak & Landscape) -->
         <div class="photo-grid" id="photoGrid"></div>
+
+        <!-- Tampilan Kosong jika Tanggal Tidak Cocok -->
+        <div class="empty-state" id="emptyState">
+          <p>Tidak ada foto pada tanggal yang dipilih.</p>
+          <button type="button" class="btn btn-primary btn-sm" id="emptyResetBtn">Tampilkan Semua Foto</button>
+        </div>
       </div>
     </section>
   </main>
@@ -892,8 +1091,8 @@
     <!-- Toolbar Atas -->
     <div class="lightbox-topbar">
       <div class="lightbox-status">
-        <span class="lightbox-badge" id="lightboxCounter">1 / 6</span>
-        <span class="lightbox-badge gold" id="lightboxDate">20 Nov 2026</span>
+        <span class="lightbox-badge" id="lightboxCounter">1 / 7</span>
+        <span class="lightbox-badge gold" id="lightboxDate">18 Nov 2026</span>
         <span class="lightbox-badge zoom-pill" id="zoomLevel" title="Klik untuk reset zoom">100%</span>
       </div>
 
@@ -933,35 +1132,53 @@
   <div class="toast" id="toast">Mengunduh foto...</div>
 
   <script>
-    // Daftar Foto & Tanggal (cukup tambah atau ganti URL dan tanggal di sini)
+    // Daftar Foto & Tanggal (isoDate format YYYY-MM-DD agar filter tanggal & urutan akurat)
     const photos = [
       {
         src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=85',
-        date: '18 Nov 2026'
+        date: '18 Nov 2026',
+        isoDate: '2026-11-18'
+      },
+      {
+        src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=85',
+        date: '11 Nov 2026',
+        isoDate: '2026-11-11'
       },
       {
         src: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=85',
-        date: '04 Nov 2026'
+        date: '04 Nov 2026',
+        isoDate: '2026-11-04'
       },
       {
         src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1400&q=85',
-        date: '22 Okt 2026'
+        date: '22 Okt 2026',
+        isoDate: '2026-10-22'
       },
       {
         src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=85',
-        date: '10 Okt 2026'
+        date: '10 Okt 2026',
+        isoDate: '2026-10-10'
       },
       {
         src: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1400&q=85',
-        date: '28 Sep 2026'
+        date: '28 Sep 2026',
+        isoDate: '2026-09-28'
       },
       {
         src: 'https://sitenexs.com/assets/founder/founder.png?auto=format&fit=crop&w=1200&q=85',
-        date: '15 Sep 2026'
+        date: '15 Sep 2026',
+        isoDate: '2026-09-15'
       }
     ];
 
     const photoGrid = document.getElementById('photoGrid');
+    const emptyState = document.getElementById('emptyState');
+    const exactDateInput = document.getElementById('exactDateInput');
+    const sortOrderSelect = document.getElementById('sortOrderSelect');
+    const resetFilterBtn = document.getElementById('resetFilterBtn');
+    const emptyResetBtn = document.getElementById('emptyResetBtn');
+    const filterSummary = document.getElementById('filterSummary');
+
     const menuBtn = document.getElementById('menuBtn');
     const mobileNav = document.getElementById('mobileNav');
     const scrollProgress = document.getElementById('scrollProgress');
@@ -982,6 +1199,10 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
+    // State Filter & Lightbox
+    let exactDateFilter = '';
+    let sortOrder = 'newest';
+    let filteredPhotos = [...photos];
     let currentIndex = 0;
 
     // State Zoom & Geser (Pan)
@@ -999,6 +1220,8 @@
     let initialPinchScale = 1;
     let touchUsed = false;
 
+    const bulanNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
     function showToast(msg) {
       toast.textContent = msg;
       toast.classList.add('show');
@@ -1006,13 +1229,86 @@
       toast._timer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
+    // Terapkan Filter Tanggal & Render Ulang Galeri
+    function applyFiltersAndRender() {
+      let list = [...photos];
+
+      if (exactDateFilter) {
+        list = list.filter(item => item.isoDate === exactDateFilter);
+      }
+
+      list.sort((a, b) => {
+        return sortOrder === 'newest'
+          ? b.isoDate.localeCompare(a.isoDate)
+          : a.isoDate.localeCompare(b.isoDate);
+      });
+
+      filteredPhotos = list;
+
+      const hasFilter = Boolean(exactDateFilter) || sortOrder !== 'newest';
+      resetFilterBtn.classList.toggle('visible', hasFilter);
+
+      if (exactDateFilter) {
+        const [y, m, d] = exactDateFilter.split('-');
+        filterSummary.textContent = `Menampilkan ${list.length} foto • ${Number(d)} ${bulanNames[Number(m) - 1]} ${y}`;
+      } else {
+        filterSummary.textContent = `Menampilkan ${list.length} foto`;
+      }
+
+      if (!list.length) {
+        photoGrid.innerHTML = '';
+        emptyState.classList.add('visible');
+        return;
+      }
+
+      emptyState.classList.remove('visible');
+      photoGrid.innerHTML = list.map((item, idx) => `
+        <div class="photo-card" data-index="${idx}" style="animation-delay: ${idx * 0.05}s">
+          <img src="${item.src}" alt="Foto ${item.date}" loading="lazy" />
+          <div class="card-overlay-bar">
+            <span class="card-date-pill">${item.date}</span>
+            <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto" aria-label="Unduh foto ${item.date}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Event Filter Tanggal Spesifik
+    exactDateInput.addEventListener('change', (e) => {
+      exactDateFilter = e.target.value;
+      applyFiltersAndRender();
+    });
+
+    // Event Urutan Terbaru / Terlama
+    sortOrderSelect.addEventListener('change', (e) => {
+      sortOrder = e.target.value;
+      applyFiltersAndRender();
+    });
+
+    function resetAllFilters() {
+      exactDateFilter = '';
+      exactDateInput.value = '';
+      sortOrder = 'newest';
+      sortOrderSelect.value = 'newest';
+      applyFiltersAndRender();
+    }
+
+    resetFilterBtn.addEventListener('click', resetAllFilters);
+    emptyResetBtn.addEventListener('click', resetAllFilters);
+
     // Fungsi Unduh Foto Langsung
-    async function downloadPhoto(url, index) {
-      const fileName = `galeri-syafaat-${index + 1}.jpg`;
+    async function downloadPhoto(item, index) {
+      const fileName = `galeri-syafaat-${item.isoDate || index + 1}.jpg`;
       showToast('Menyiapkan unduhan foto...');
 
       try {
-        const response = await fetch(url, { mode: 'cors' });
+        const response = await fetch(item.src, { mode: 'cors' });
         if (!response.ok) throw new Error('Gagal mengambil file');
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
@@ -1028,7 +1324,7 @@
         showToast('Foto berhasil diunduh!');
       } catch (err) {
         const link = document.createElement('a');
-        link.href = url;
+        link.href = item.src;
         link.download = fileName;
         link.target = '_blank';
         link.rel = 'noopener';
@@ -1039,30 +1335,13 @@
       }
     }
 
-    // Render Grid Foto
-    photoGrid.innerHTML = photos.map((item, idx) => `
-      <div class="photo-card" data-index="${idx}" style="animation-delay: ${idx * 0.06}s">
-        <img src="${item.src}" alt="Foto ${idx + 1}" loading="lazy" />
-        <div class="card-overlay-bar">
-          <span class="card-date-pill">${item.date}</span>
-          <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto" aria-label="Unduh foto ${idx + 1}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-          </button>
-        </div>
-      </div>
-    `).join('');
-
     // Klik Kartu Foto atau Tombol Download di Grid
     photoGrid.addEventListener('click', (e) => {
       const dlBtn = e.target.closest('.card-download');
       if (dlBtn) {
         e.stopPropagation();
         const idx = Number(dlBtn.dataset.index);
-        downloadPhoto(photos[idx].src, idx);
+        downloadPhoto(filteredPhotos[idx], idx);
         return;
       }
 
@@ -1102,17 +1381,17 @@
       applyTransform();
     }
 
-    // Lightbox Open / Close / Navigate
+    // Lightbox Open / Close / Navigate (Mengikuti Hasil Filter Aktif)
     function updateLightbox(index) {
-      if (!photos.length) return;
-      currentIndex = (index + photos.length) % photos.length;
-      const item = photos[currentIndex];
+      if (!filteredPhotos.length) return;
+      currentIndex = (index + filteredPhotos.length) % filteredPhotos.length;
+      const item = filteredPhotos[currentIndex];
 
       resetZoom();
       lightboxImg.src = item.src;
-      lightboxImg.alt = `Foto ${currentIndex + 1}`;
+      lightboxImg.alt = `Foto ${item.date}`;
       lightboxBg.style.backgroundImage = `url("${item.src}")`;
-      lightboxCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+      lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
       lightboxDate.textContent = item.date;
     }
 
@@ -1129,7 +1408,7 @@
     }
 
     zoomLevelEl.addEventListener('click', resetZoom);
-    downloadBtn.addEventListener('click', () => downloadPhoto(photos[currentIndex].src, currentIndex));
+    downloadBtn.addEventListener('click', () => downloadPhoto(filteredPhotos[currentIndex], currentIndex));
 
     prevBtn.addEventListener('click', () => updateLightbox(currentIndex - 1));
     nextBtn.addEventListener('click', () => updateLightbox(currentIndex + 1));
@@ -1172,7 +1451,6 @@
       isDragging = false;
       lightboxImg.classList.remove('is-dragging');
 
-      // Jika hanya diklik tanpa digeser, toggle zoom 100% <-> 220%
       if (!hasMoved) {
         setZoom(scale === 1 ? 2.2 : 1);
       }
@@ -1280,8 +1558,9 @@
       siteHeader.classList.toggle('is-scrolled', scrollTop > 16);
     }, { passive: true });
 
-    // Tahun Otomatis
+    // Inisialisasi Awal
     document.getElementById('year').textContent = new Date().getFullYear();
+    applyFiltersAndRender();
   </script>
 </body>
 </html>
