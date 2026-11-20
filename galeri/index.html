@@ -893,7 +893,7 @@
       background: #060913;
     }
 
-    /* Foto Latar Belakang Lightbox yang Lurus, Simetris, dan Bersih */
+    /* Foto Latar Belakang Lightbox yang Lurus, Simetris, dan Tanpa Blur */
     .lightbox-bg-img {
       position: absolute;
       inset: 0;
@@ -901,12 +901,10 @@
       height: 100%;
       object-fit: cover;
       object-position: center center;
-      opacity: 0.16;
-      filter: blur(22px) saturate(1.15);
-      transform: scale(1.04);
+      opacity: 0.12;
       pointer-events: none;
       z-index: 0;
-      transition: opacity 0.22s ease;
+      transition: opacity 0.2s ease;
     }
 
     .modal-backdrop.is-zoom-active .lightbox-bg-img {
@@ -1021,8 +1019,8 @@
       background: #0f172a;
       cursor: zoom-in;
       transform-origin: center center;
-      transition: transform 0.2s var(--ease-out), opacity 0.18s ease, border-radius 0.18s ease, border-color 0.18s ease;
-      will-change: transform, opacity;
+      transition: transform 0.2s var(--ease-out), border-radius 0.18s ease, border-color 0.18s ease;
+      will-change: transform;
     }
 
     .modal-backdrop.is-zoom-active .lightbox-img {
@@ -2349,8 +2347,8 @@
       isTransitioningSlide = true;
 
       lightboxImg.classList.remove('is-dragging');
-      lightboxImg.style.transform = `translate3d(${direction * -80}px, 0, 0) scale(0.98)`;
-      lightboxImg.style.opacity = '0';
+      lightboxImg.style.transform = `translate3d(${direction * -120}px, 0, 0) scale(1)`;
+      lightboxImg.style.opacity = '1';
 
       setTimeout(async () => {
         currentIndex = (currentIndex + direction + filteredPhotos.length) % filteredPhotos.length;
@@ -2366,8 +2364,8 @@
         lightboxImg.classList.add('is-dragging');
         await updateLightboxContent(item);
 
-        lightboxImg.style.transform = `translate3d(${direction * 65}px, 0, 0) scale(0.98)`;
-        lightboxImg.style.opacity = '0';
+        lightboxImg.style.transform = `translate3d(${direction * 120}px, 0, 0) scale(1)`;
+        lightboxImg.style.opacity = '1';
 
         void lightboxImg.offsetWidth;
 
@@ -2378,7 +2376,7 @@
         setTimeout(() => {
           isTransitioningSlide = false;
         }, 200);
-      }, 120);
+      }, 110);
     }
 
     function openLightbox(index) {
@@ -2433,7 +2431,7 @@
         const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
         swipeOffsetX = dx * resistance;
         lightboxImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
-        lightboxImg.style.opacity = `${Math.max(0.45, 1 - Math.abs(swipeOffsetX) / 420)}`;
+        lightboxImg.style.opacity = '1';
       }
     });
 
@@ -2516,7 +2514,7 @@
           const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
           swipeOffsetX = dx * resistance;
           lightboxImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
-          lightboxImg.style.opacity = `${Math.max(0.45, 1 - Math.abs(swipeOffsetX) / 360)}`;
+          lightboxImg.style.opacity = '1';
         }
       }
     }, { passive: true });
