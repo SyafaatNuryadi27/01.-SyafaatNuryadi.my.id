@@ -592,8 +592,8 @@
     }
 
     .skeleton-grid {
-      column-count: 1;
-      column-gap: 18px;
+      column-count: 2;
+      column-gap: 12px;
     }
 
     .skeleton-card {
@@ -602,14 +602,14 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       break-inside: avoid;
       page-break-inside: avoid;
       overflow: hidden;
       background: linear-gradient(145deg, #eef2f6 0%, #e2e8f0 100%);
       border: 1px solid var(--gold-border);
       border-top: 3px solid var(--gold);
-      border-radius: 6px;
+      border-radius: 5px;
       box-shadow: var(--shadow-sm);
       contain: layout style;
     }
@@ -669,22 +669,22 @@
     }
 
     .photo-grid {
-      column-count: 1;
-      column-gap: 18px;
+      column-count: 2;
+      column-gap: 12px;
     }
 
     .photo-card {
       position: relative;
       display: inline-block;
       width: 100%;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       break-inside: avoid;
       page-break-inside: avoid;
       overflow: hidden;
       background: linear-gradient(145deg, #eef2f6 0%, #e2e8f0 100%);
       border: 1px solid var(--gold-border);
       border-top: 3px solid var(--gold);
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
       box-shadow: var(--shadow-sm);
       transition: transform 0.22s var(--ease-out), box-shadow 0.22s ease, border-color 0.2s ease;
@@ -696,7 +696,7 @@
     }
 
     .photo-card.is-loading-img {
-      min-height: 210px;
+      min-height: 150px;
     }
 
     .photo-card.is-loading-img::after {
@@ -1107,6 +1107,9 @@
     }
 
     @media (max-width: 680px) {
+      .container {
+        padding: 0 14px;
+      }
       .filter-dock {
         padding: 7px 0;
       }
@@ -1130,6 +1133,37 @@
         max-width: none;
         flex: 1;
       }
+      .gallery-scroll-area {
+        padding: 14px 0 24px;
+      }
+      .card-overlay {
+        padding: 24px 10px 9px;
+        gap: 8px;
+      }
+      .card-date {
+        font-size: 0.63rem;
+        margin-bottom: 2px;
+      }
+      .card-desc {
+        font-size: 0.74rem;
+        line-height: 1.35;
+        -webkit-line-clamp: 2;
+      }
+      .card-icon-btn {
+        padding: 3px;
+      }
+      .card-icon-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .skeleton-icon-wrap svg,
+      .card-img-placeholder svg {
+        width: 26px;
+        height: 26px;
+      }
+      .skeleton-icon-label {
+        font-size: 0.62rem;
+      }
       .lightbox-topbar {
         padding: 0 12px;
       }
@@ -1152,11 +1186,15 @@
       .skeleton-grid,
       .photo-grid {
         column-count: 2;
-        column-gap: 20px;
+        column-gap: 18px;
       }
       .skeleton-card,
       .photo-card {
-        margin-bottom: 20px;
+        margin-bottom: 18px;
+        border-radius: 6px;
+      }
+      .photo-card.is-loading-img {
+        min-height: 190px;
       }
     }
 
@@ -1170,12 +1208,16 @@
       }
       .skeleton-grid,
       .photo-grid {
-        column-count: 3;
-        column-gap: 22px;
+        column-count: 2;
+        column-gap: 24px;
       }
       .skeleton-card,
       .photo-card {
-        margin-bottom: 22px;
+        margin-bottom: 24px;
+        border-radius: 6px;
+      }
+      .photo-card.is-loading-img {
+        min-height: 230px;
       }
     }
 
