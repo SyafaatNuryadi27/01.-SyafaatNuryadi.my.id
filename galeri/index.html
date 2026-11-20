@@ -23,8 +23,6 @@
       --primary-hover: #1e40af;
       --accent: #2563eb;
       --accent-soft: #eff6ff;
-      --danger: #dc2626;
-      --danger-hover: #b91c1c;
       --gold: #c89b3c;
       --gold-light: #e2bd6b;
       --gold-soft: #fdf8eb;
@@ -78,9 +76,7 @@
     }
 
     button,
-    input,
-    select,
-    textarea {
+    input {
       font-family: inherit;
     }
 
@@ -96,7 +92,6 @@
       padding: 0 20px;
     }
 
-    /* Keyframes */
     @keyframes cardPopIn {
       from {
         opacity: 0;
@@ -127,7 +122,7 @@
       pointer-events: none;
     }
 
-    /* Header (Tetap / Tidak Ikut Scroll) */
+    /* Header */
     .header {
       position: relative;
       flex-shrink: 0;
@@ -301,34 +296,17 @@
       transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
     }
 
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
     .btn-primary {
       background: var(--primary);
       color: #ffffff;
       box-shadow: 0 4px 12px rgba(29, 78, 216, 0.22);
     }
 
-    .btn-primary:hover:not(:disabled) {
+    .btn-primary:hover {
       background: var(--primary-hover);
       border-color: var(--primary-hover);
       transform: translateY(-2px);
       box-shadow: 0 10px 20px rgba(29, 78, 216, 0.28);
-    }
-
-    .btn-outline {
-      background: var(--surface);
-      color: var(--text);
-      border-color: var(--border-strong);
-    }
-
-    .btn-outline:hover:not(:disabled) {
-      background: var(--surface-alt);
-      border-color: var(--text-subtle);
     }
 
     .btn-sm {
@@ -336,7 +314,7 @@
       font-size: 0.82rem;
     }
 
-    /* Area Filter Tetap & Ringkas (Tidak Ikut Scroll) */
+    /* Filter Bar */
     .filter-dock {
       flex-shrink: 0;
       background: var(--bg);
@@ -398,7 +376,6 @@
       text-decoration: underline;
     }
 
-    /* Pencarian, Filter Urutan & Tombol Tambah Foto */
     .filter-controls {
       display: flex;
       align-items: center;
@@ -414,7 +391,7 @@
       align-items: center;
       height: 31px;
       width: 100%;
-      max-width: 300px;
+      max-width: 320px;
       padding: 0 9px;
       border-radius: 5px;
       border: 1px solid var(--border);
@@ -494,7 +471,6 @@
       color: #0f172a;
     }
 
-    /* Segmented Toggle Urutan (Terbaru | Terlama) */
     .sort-segmented {
       display: inline-flex;
       align-items: center;
@@ -531,34 +507,6 @@
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     }
 
-    /* Tombol Tambah Foto Ringkas di Filter Bar */
-    .add-photo-btn {
-      height: 31px;
-      padding: 0 11px;
-      border: 1px solid var(--primary);
-      border-radius: 5px;
-      background: var(--primary);
-      color: #ffffff;
-      font-size: 0.74rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: background 0.18s ease, transform 0.18s var(--ease-out);
-    }
-
-    .add-photo-btn:hover {
-      background: var(--primary-hover);
-      border-color: var(--primary-hover);
-    }
-
-    .add-photo-btn:active {
-      transform: scale(0.96);
-    }
-
     /* Area Scroll Khusus Foto */
     .gallery-scroll-area {
       flex: 1 1 auto;
@@ -587,7 +535,6 @@
       background: var(--text-subtle);
     }
 
-    /* Loading State */
     .loading-state {
       display: none;
       flex-direction: column;
@@ -676,7 +623,6 @@
       transform: scale(1.03);
     }
 
-    /* Overlay Deskripsi, Tanggal & Ikon Download */
     .card-overlay {
       position: absolute;
       inset: auto 0 0 0;
@@ -747,7 +693,6 @@
       transform: scale(0.92);
     }
 
-    /* Empty State */
     .empty-state {
       display: none;
       text-align: center;
@@ -775,7 +720,6 @@
       margin: -6px auto 16px;
     }
 
-    /* Footer Ringkas & Rapi (Tetap) */
     .footer {
       flex-shrink: 0;
       border-top: 1px solid var(--border);
@@ -794,328 +738,7 @@
       letter-spacing: 0.01em;
     }
 
-    /* Modal Form Tambah / Edit Foto (Mendukung Multi-Upload) */
-    .form-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 230;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.22s ease;
-    }
-
-    .form-backdrop.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .form-card {
-      width: 100%;
-      max-width: 540px;
-      max-height: 92vh;
-      overflow-y: auto;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 3px solid var(--gold);
-      border-radius: 8px;
-      box-shadow: var(--shadow-lg);
-      padding: 20px;
-      transform: translateY(12px) scale(0.98);
-      transition: transform 0.25s var(--ease-out);
-    }
-
-    .form-backdrop.open .form-card {
-      transform: translateY(0) scale(1);
-    }
-
-    .form-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .form-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .form-close {
-      width: 30px;
-      height: 30px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      background: var(--bg);
-      color: var(--text-muted);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .form-close:hover {
-      background: var(--surface-alt);
-      color: var(--text);
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-label-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-
-    .form-label-row .form-label {
-      margin-bottom: 0;
-    }
-
-    .clear-queue-btn {
-      display: none;
-      background: transparent;
-      border: none;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--danger);
-      cursor: pointer;
-    }
-
-    .clear-queue-btn.visible {
-      display: inline-block;
-    }
-
-    .clear-queue-btn:hover {
-      text-decoration: underline;
-    }
-
-    .file-dropzone {
-      position: relative;
-      border: 1.5px dashed var(--border-strong);
-      border-radius: 6px;
-      background: var(--bg);
-      padding: 18px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .file-dropzone:hover,
-    .file-dropzone.dragover {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .file-dropzone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .file-dropzone-text {
-      font-size: 0.83rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .file-dropzone-sub {
-      font-size: 0.72rem;
-      color: var(--text-subtle);
-      margin-top: 3px;
-    }
-
-    /* Pratinjau Multi-Foto yang Dipilih */
-    .multi-preview-wrap {
-      display: none;
-      margin-top: 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--bg);
-      padding: 10px;
-    }
-
-    .multi-preview-wrap.visible {
-      display: block;
-    }
-
-    .multi-preview-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.73rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .multi-preview-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
-      max-height: 240px;
-      overflow-y: auto;
-      padding-right: 2px;
-    }
-
-    .multi-preview-item {
-      position: relative;
-      background: var(--surface);
-      border: 1px solid var(--gold-border);
-      border-radius: 5px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .multi-preview-thumb {
-      position: relative;
-      height: 92px;
-      background: var(--surface-alt);
-    }
-
-    .multi-preview-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .remove-file-btn {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      width: 22px;
-      height: 22px;
-      border: none;
-      border-radius: 4px;
-      background: rgba(15, 23, 42, 0.78);
-      color: #ffffff;
-      font-size: 0.9rem;
-      line-height: 1;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transition: background 0.15s ease;
-    }
-
-    .remove-file-btn:hover {
-      background: var(--danger);
-    }
-
-    .multi-preview-info {
-      padding: 6px 7px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .multi-file-name {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .multi-file-size {
-      font-size: 0.66rem;
-      color: var(--text-subtle);
-    }
-
-    .multi-item-caption {
-      width: 100%;
-      padding: 4px 6px;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      font-size: 0.7rem;
-      color: var(--text);
-      background: var(--bg);
-      outline: none;
-    }
-
-    .multi-item-caption:focus {
-      border-color: var(--accent);
-      background: var(--surface);
-    }
-
-    /* Single Preview untuk Mode Edit */
-    .preview-box {
-      display: none;
-      margin-top: 10px;
-      position: relative;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid var(--gold-border);
-      background: var(--surface-alt);
-    }
-
-    .preview-box.visible {
-      display: block;
-    }
-
-    .preview-box img {
-      width: 100%;
-      max-height: 190px;
-      object-fit: cover;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 9px 11px;
-      border: 1px solid var(--border-strong);
-      border-radius: 5px;
-      background: var(--surface);
-      color: var(--text);
-      font-size: 0.84rem;
-      outline: none;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 74px;
-    }
-
-    .form-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-    }
-
-    /* =========================================================================
-       LIGHTBOX MODAL & TAMPILAN ZOOM YANG RAPI
-       ========================================================================= */
+    /* Lightbox */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -1159,7 +782,6 @@
       opacity: 0.22;
     }
 
-    /* Top Lightbox Toolbar */
     .lightbox-topbar {
       position: fixed;
       top: 0;
@@ -1247,16 +869,10 @@
       transform: scale(1.06);
     }
 
-    .lb-icon-btn.danger:hover {
-      color: #fca5a5;
-      border-color: rgba(248, 113, 113, 0.45);
-    }
-
     .lb-icon-btn:active {
       transform: scale(0.94);
     }
 
-    /* Interactive Swipe & Zoom Viewport */
     .lightbox-stage {
       position: relative;
       z-index: 1;
@@ -1272,7 +888,6 @@
       transition: padding 0.24s var(--ease-out);
     }
 
-    /* Saat zoom aktif, stage memakai 100% layar penuh tanpa padding */
     .modal-backdrop.is-zoom-active .lightbox-stage {
       padding: 0;
     }
@@ -1291,7 +906,6 @@
       will-change: transform, opacity;
     }
 
-    /* Saat zoom aktif, hilangkan border/radius/shadow agar tampilan menyatu bersih dengan layar */
     .modal-backdrop.is-zoom-active .lightbox-img {
       border-radius: 0;
       border-color: transparent;
@@ -1305,7 +919,6 @@
       transition: none !important;
     }
 
-    /* Deskripsi Bawah Lightbox */
     .lightbox-bottom {
       position: fixed;
       bottom: 0;
@@ -1327,7 +940,6 @@
       display: none;
     }
 
-    /* Sembunyikan deskripsi bawah saat foto di-zoom agar fokus penuh pada detail gambar */
     .modal-backdrop.is-zoom-active .lightbox-bottom {
       opacity: 0;
       transform: translateY(14px);
@@ -1342,7 +954,6 @@
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     }
 
-    /* Toast */
     .toast {
       position: fixed;
       bottom: 24px;
@@ -1368,7 +979,6 @@
       opacity: 1;
     }
 
-    /* Responsive */
     @media (max-width: 680px) {
       .filter-dock {
         padding: 7px 0;
@@ -1459,7 +1069,7 @@
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- Header (Tetap) -->
+  <!-- Header -->
   <header class="header" id="siteHeader">
     <div class="container header-inner">
       <a href="../index.html#beranda" class="brand">
@@ -1472,6 +1082,7 @@
         <a href="../index.html#proyek" class="nav-link">Proyek</a>
         <a href="../index.html#pengalaman" class="nav-link">Pengalaman</a>
         <a href="./" class="nav-link active">Galeri</a>
+        <a href="./admin.html" class="nav-link">Admin</a>
         <a href="../index.html#kontak" class="btn btn-primary btn-sm">Kontak</a>
       </nav>
 
@@ -1491,11 +1102,12 @@
     <a href="../index.html#proyek">Proyek</a>
     <a href="../index.html#pengalaman">Pengalaman</a>
     <a href="./" class="active">Galeri</a>
+    <a href="./admin.html">Admin</a>
     <a href="../index.html#kontak">Kontak</a>
   </nav>
 
   <main>
-    <!-- Panel Filter Pencarian Ringkas (Tetap / Tidak Ikut Scroll) -->
+    <!-- Panel Filter Pencarian Ringkas -->
     <div class="filter-dock">
       <div class="container">
         <div class="filter-panel" aria-label="Filter pencarian foto">
@@ -1506,7 +1118,6 @@
             </div>
 
             <div class="filter-controls">
-              <!-- Pencarian Tanggal, Bulan, Tahun, atau Deskripsi -->
               <div class="search-box" id="searchBox">
                 <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <circle cx="11" cy="11" r="8"></circle>
@@ -1529,20 +1140,10 @@
                 >&times;</button>
               </div>
 
-              <!-- Segmented Control Urutan -->
               <div class="sort-segmented" role="group" aria-label="Urutkan momen">
                 <button type="button" class="sort-seg-btn active" data-sort="newest">Terbaru</button>
                 <button type="button" class="sort-seg-btn" data-sort="oldest">Terlama</button>
               </div>
-
-              <!-- Tombol Tambah Foto -->
-              <button type="button" class="add-photo-btn" id="openAddModalBtn" title="Unggah satu atau banyak foto ke galeri">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>Tambah</span>
-              </button>
             </div>
           </div>
         </div>
@@ -1552,106 +1153,32 @@
     <!-- Area Scroll Khusus Grid Foto -->
     <div class="gallery-scroll-area" id="galleryScrollArea">
       <div class="container">
-        <!-- Indikator Memuat Data Galeri -->
         <div class="loading-state visible" id="loadingState">
           <div class="spinner"></div>
           <span>Memuat galeri foto...</span>
         </div>
 
-        <!-- Masonry Grid Foto -->
         <div class="photo-grid" id="photoGrid"></div>
 
-        <!-- Tampilan Kosong -->
         <div class="empty-state" id="emptyState">
           <p id="emptyTitle">Belum ada foto tersimpan di galeri.</p>
-          <p class="empty-sub" id="emptySub">Klik tombol "+ Tambah" di atas untuk mengunggah satu atau banyak foto sekaligus.</p>
-          <button type="button" class="btn btn-primary btn-sm" id="emptyActionBtn">+ Tambah Foto Pertama</button>
+          <p class="empty-sub" id="emptySub">Foto yang diunggah melalui halaman Admin akan tampil di sini.</p>
+          <a href="./admin.html" class="btn btn-primary btn-sm" id="emptyActionBtn">Buka Halaman Admin</a>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Footer Ringkas & Rapi (Tetap) -->
   <footer class="footer">
     <div class="container footer-inner">
       <span>&copy; <span id="year"></span> Syafaat Nuryadi.</span>
     </div>
   </footer>
 
-  <!-- Modal Tambah / Edit Foto (Unggah File Langsung) -->
-  <div class="form-backdrop" id="photoFormModal" aria-hidden="true">
-    <div class="form-card" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
-      <div class="form-header">
-        <h2 class="form-title" id="formModalTitle">Unggah Foto ke Galeri</h2>
-        <button type="button" class="form-close" id="closeFormModalBtn" aria-label="Tutup form">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      <form id="photoForm">
-        <input type="hidden" id="editPhotoId" value="" />
-
-        <div class="form-group">
-          <div class="form-label-row">
-            <label class="form-label" for="photoFileInput" id="fileFieldLabel">Pilih File Foto (Bisa Banyak Sekaligus)</label>
-            <button type="button" class="clear-queue-btn" id="clearSelectedFilesBtn">Hapus Semua Pilihan</button>
-          </div>
-          <div class="file-dropzone" id="fileDropzone">
-            <input
-              type="file"
-              id="photoFileInput"
-              accept="image/*,.png,.jpg,.jpeg,.webp,.gif,.avif,.bmp,.svg,.heic,.heif,.tiff,.tif"
-              multiple
-            />
-            <div class="file-dropzone-text" id="dropzoneText">Klik atau seret banyak foto ke sini</div>
-            <div class="file-dropzone-sub">Format: PNG, JPG, JPEG, WebP, GIF, AVIF, SVG, HEIC, dll.</div>
-          </div>
-
-          <!-- Daftar Pratinjau Multi-Foto -->
-          <div class="multi-preview-wrap" id="multiPreviewWrap">
-            <div class="multi-preview-meta">
-              <span id="multiPreviewCount">0 foto dipilih</span>
-              <span id="multiPreviewTotalSize">0 MB</span>
-            </div>
-            <div class="multi-preview-list" id="multiPreviewList"></div>
-          </div>
-
-          <!-- Pratinjau Tunggal (Untuk Mode Edit) -->
-          <div class="preview-box" id="previewBox">
-            <img id="previewImg" src="" alt="Pratinjau foto" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="photoDateInput">Tanggal Momen</label>
-          <input type="date" id="photoDateInput" class="form-control" required />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="photoDescInput" id="descFieldLabel">Deskripsi Foto (Opsional)</label>
-          <textarea
-            id="photoDescInput"
-            class="form-control"
-            placeholder="Tulis keterangan momen (opsional, berlaku untuk semua foto yang dipilih atau isi keterangan khusus pada tiap foto di atas)..."
-          ></textarea>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline btn-sm" id="cancelFormBtn">Batal</button>
-          <button type="submit" class="btn btn-primary btn-sm" id="submitFormBtn">Unggah Foto</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Lightbox Foto dengan Tampilan Zoom Rapi, Geser Kiri/Kanan, Edit, Hapus & Download -->
+  <!-- Lightbox Foto -->
   <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
     <div class="lightbox-bg" id="lightboxBg" aria-hidden="true"></div>
 
-    <!-- Toolbar Atas -->
     <div class="lightbox-topbar">
       <div class="lightbox-status">
         <span class="lightbox-badge" id="lightboxCounter">1 / 1</span>
@@ -1660,20 +1187,6 @@
       </div>
 
       <div class="lightbox-tools">
-        <button class="lb-icon-btn" id="editPhotoBtn" title="Edit tanggal & deskripsi" aria-label="Edit foto">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-        </button>
-
-        <button class="lb-icon-btn danger" id="deletePhotoBtn" title="Hapus foto dari galeri" aria-label="Hapus foto">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          </svg>
-        </button>
-
         <button class="lb-icon-btn" id="downloadBtn" title="Unduh foto" aria-label="Unduh foto">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1691,30 +1204,22 @@
       </div>
     </div>
 
-    <!-- Area Geser (Swipe), Zoom & Pan -->
     <div class="lightbox-stage" id="lightboxStage">
       <img id="lightboxImg" class="lightbox-img" src="" alt="Foto galeri" draggable="false" />
     </div>
 
-    <!-- Deskripsi Foto -->
     <div class="lightbox-bottom" id="lightboxBottom">
       <p class="lightbox-desc" id="lightboxDesc"></p>
     </div>
   </div>
 
-  <!-- Toast Notifikasi -->
   <div class="toast" id="toast">Memproses...</div>
 
   <script>
-    // =========================================================================
-    // KONFIGURASI PENYIMPANAN & DATABASE GALERI
-    // =========================================================================
     const SUPABASE_URL = 'https://ixfokmldbkmgjsjcuxpy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_65c36nE8s8kER37H-vQOUg_a06QfX_4';
-    const STORAGE_BUCKET = 'galeri';
     const TABLE_NAME = 'galeri_foto';
 
-    const MAX_FILE_SIZE_BYTES = Infinity;
     const ALLOWED_IMAGE_EXTENSIONS = [
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
     ];
@@ -1728,7 +1233,6 @@
       ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       : null;
 
-    // Elemen DOM Utama
     const galleryScrollArea = document.getElementById('galleryScrollArea');
     const loadingState = document.getElementById('loadingState');
     const photoGrid = document.getElementById('photoGrid');
@@ -1750,31 +1254,6 @@
     const siteHeader = document.getElementById('siteHeader');
     const toast = document.getElementById('toast');
 
-    // Elemen Modal Form Tambah/Edit Foto
-    const openAddModalBtn = document.getElementById('openAddModalBtn');
-    const photoFormModal = document.getElementById('photoFormModal');
-    const formModalTitle = document.getElementById('formModalTitle');
-    const closeFormModalBtn = document.getElementById('closeFormModalBtn');
-    const cancelFormBtn = document.getElementById('cancelFormBtn');
-    const photoForm = document.getElementById('photoForm');
-    const editPhotoIdInput = document.getElementById('editPhotoId');
-    const fileFieldLabel = document.getElementById('fileFieldLabel');
-    const clearSelectedFilesBtn = document.getElementById('clearSelectedFilesBtn');
-    const fileDropzone = document.getElementById('fileDropzone');
-    const photoFileInput = document.getElementById('photoFileInput');
-    const dropzoneText = document.getElementById('dropzoneText');
-    const multiPreviewWrap = document.getElementById('multiPreviewWrap');
-    const multiPreviewCount = document.getElementById('multiPreviewCount');
-    const multiPreviewTotalSize = document.getElementById('multiPreviewTotalSize');
-    const multiPreviewList = document.getElementById('multiPreviewList');
-    const previewBox = document.getElementById('previewBox');
-    const previewImg = document.getElementById('previewImg');
-    const photoDateInput = document.getElementById('photoDateInput');
-    const descFieldLabel = document.getElementById('descFieldLabel');
-    const photoDescInput = document.getElementById('photoDescInput');
-    const submitFormBtn = document.getElementById('submitFormBtn');
-
-    // Elemen Lightbox
     const lightboxModal = document.getElementById('lightboxModal');
     const lightboxBg = document.getElementById('lightboxBg');
     const lightboxStage = document.getElementById('lightboxStage');
@@ -1784,21 +1263,15 @@
     const lightboxBottom = document.getElementById('lightboxBottom');
     const lightboxDesc = document.getElementById('lightboxDesc');
     const zoomLevelEl = document.getElementById('zoomLevel');
-    const editPhotoBtn = document.getElementById('editPhotoBtn');
-    const deletePhotoBtn = document.getElementById('deletePhotoBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const lightboxClose = document.getElementById('lightboxClose');
 
-    // State Data, Antrean File & Filter
     let photos = [];
     let filteredPhotos = [];
-    let selectedUploadQueue = []; // [{ uid, file, previewUrl, customDesc }]
     let searchQuery = '';
     let sortOrder = 'newest';
     let currentIndex = 0;
-    let isUploading = false;
 
-    // State Zoom, Geser (Swipe) & Pan
     let scale = 1;
     let panX = 0;
     let panY = 0;
@@ -1833,21 +1306,6 @@
       return `${dayStr} ${monthName} ${year}`;
     }
 
-    function formatBytes(bytes) {
-      if (!bytes) return '0 B';
-      const mb = bytes / (1024 * 1024);
-      if (mb >= 1) return `${mb.toFixed(2)} MB`;
-      const kb = bytes / 1024;
-      return `${Math.round(kb)} KB`;
-    }
-
-    function isValidImageFile(file) {
-      if (!file) return false;
-      if (file.type && file.type.startsWith('image/')) return true;
-      const ext = (file.name.split('.').pop() || '').toLowerCase();
-      return ALLOWED_IMAGE_EXTENSIONS.includes(ext);
-    }
-
     function escapeHtml(text) {
       return String(text || '')
         .replace(/&/g, '&amp;')
@@ -1880,13 +1338,11 @@
       ].join(' ').toLowerCase();
     }
 
-    function showToast(msg, persist = false) {
+    function showToast(msg) {
       toast.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toast._timer);
-      if (!persist) {
-        toast._timer = setTimeout(() => toast.classList.remove('show'), 3200);
-      }
+      toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
     function updateScrollUI() {
@@ -1896,149 +1352,6 @@
       scrollProgress.style.width = `${progress}%`;
       siteHeader.classList.toggle('is-scrolled', scrollTop > 8);
     }
-
-    // =========================================================================
-    // MANAJEMEN ANTREAN MULTI-FOTO
-    // =========================================================================
-
-    function clearUploadQueue() {
-      selectedUploadQueue.forEach(entry => {
-        if (entry.previewUrl) URL.revokeObjectURL(entry.previewUrl);
-      });
-      selectedUploadQueue = [];
-      photoFileInput.value = '';
-      renderUploadQueue();
-    }
-
-    function addFilesToQueue(fileList) {
-      const incoming = Array.from(fileList || []);
-      if (!incoming.length) return;
-
-      const isEditMode = Boolean(editPhotoIdInput.value.trim());
-      if (isEditMode) {
-        clearUploadQueue();
-      }
-
-      const rejectedFormat = [];
-      let addedCount = 0;
-
-      const filesToProcess = isEditMode ? [incoming[0]] : incoming;
-
-      for (const file of filesToProcess) {
-        if (!isValidImageFile(file)) {
-          rejectedFormat.push(file.name);
-          continue;
-        }
-        if (file.size > MAX_FILE_SIZE_BYTES) {
-          continue;
-        }
-
-        const uid = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        selectedUploadQueue.push({
-          uid,
-          file,
-          previewUrl: URL.createObjectURL(file),
-          customDesc: ''
-        });
-        addedCount++;
-      }
-
-      photoFileInput.value = '';
-      renderUploadQueue();
-
-      if (rejectedFormat.length) {
-        showToast(`${rejectedFormat.length} file dilewati karena tipe file bukan gambar.`);
-      } else if (addedCount > 1) {
-        showToast(`${addedCount} foto siap diunggah.`);
-      }
-    }
-
-    function removeFileFromQueue(uid) {
-      const idx = selectedUploadQueue.findIndex(item => item.uid === uid);
-      if (idx === -1) return;
-      if (selectedUploadQueue[idx].previewUrl) {
-        URL.revokeObjectURL(selectedUploadQueue[idx].previewUrl);
-      }
-      selectedUploadQueue.splice(idx, 1);
-      renderUploadQueue();
-    }
-
-    function renderUploadQueue() {
-      const isEditMode = Boolean(editPhotoIdInput.value.trim());
-      const count = selectedUploadQueue.length;
-
-      if (count === 0) {
-        multiPreviewWrap.classList.remove('visible');
-        clearSelectedFilesBtn.classList.remove('visible');
-        multiPreviewList.innerHTML = '';
-        dropzoneText.textContent = isEditMode
-          ? 'Klik atau seret 1 foto pengganti ke sini'
-          : 'Klik atau seret banyak foto ke sini (bisa tambah lagi)';
-        if (!isEditMode) {
-          submitFormBtn.textContent = 'Unggah Foto';
-        }
-        return;
-      }
-
-      previewBox.classList.remove('visible');
-      multiPreviewWrap.classList.add('visible');
-      clearSelectedFilesBtn.classList.toggle('visible', !isEditMode);
-
-      const totalBytes = selectedUploadQueue.reduce((sum, item) => sum + item.file.size, 0);
-      multiPreviewCount.textContent = `${count} foto dipilih`;
-      multiPreviewTotalSize.textContent = `Total: ${formatBytes(totalBytes)}`;
-      dropzoneText.textContent = isEditMode
-        ? selectedUploadQueue[0].file.name
-        : `${count} foto dipilih — klik untuk menambah foto lagi`;
-
-      if (!isEditMode) {
-        submitFormBtn.textContent = count > 1
-          ? `Unggah ${count} Foto`
-          : 'Unggah Foto';
-      }
-
-      multiPreviewList.innerHTML = selectedUploadQueue.map((item, idx) => `
-        <div class="multi-preview-item" data-uid="${item.uid}">
-          <div class="multi-preview-thumb">
-            <img src="${item.previewUrl}" alt="${escapeHtml(item.file.name)}" />
-            <button type="button" class="remove-file-btn" data-uid="${item.uid}" title="Hapus foto ini dari daftar">&times;</button>
-          </div>
-          <div class="multi-preview-info">
-            <div class="multi-file-name" title="${escapeHtml(item.file.name)}">${idx + 1}. ${escapeHtml(item.file.name)}</div>
-            <div class="multi-file-size">${formatBytes(item.file.size)}</div>
-            ${!isEditMode ? `
-              <input
-                type="text"
-                class="multi-item-caption"
-                data-uid="${item.uid}"
-                value="${escapeHtml(item.customDesc)}"
-                placeholder="Keterangan khusus (opsional)..."
-              />
-            ` : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    multiPreviewList.addEventListener('click', (e) => {
-      const removeBtn = e.target.closest('.remove-file-btn');
-      if (!removeBtn) return;
-      e.stopPropagation();
-      removeFileFromQueue(removeBtn.dataset.uid);
-    });
-
-    multiPreviewList.addEventListener('input', (e) => {
-      const captionInput = e.target.closest('.multi-item-caption');
-      if (!captionInput) return;
-      const target = selectedUploadQueue.find(item => item.uid === captionInput.dataset.uid);
-      if (target) target.customDesc = captionInput.value;
-    });
-
-    clearSelectedFilesBtn.addEventListener('click', clearUploadQueue);
-
-    // =========================================================================
-    // OPERASI DATABASE & STORAGE GALERI
-    // =========================================================================
 
     async function loadPhotosFromGallery() {
       loadingState.classList.add('visible');
@@ -2058,7 +1371,7 @@
       try {
         const { data, error } = await dbClient
           .from(TABLE_NAME)
-          .select('id, image_url, storage_path, tanggal, deskripsi, created_at')
+          .select('id, image_url, tanggal, deskripsi, created_at')
           .order('tanggal', { ascending: false })
           .order('created_at', { ascending: false });
 
@@ -2067,7 +1380,6 @@
         photos = (data || []).map(row => ({
           id: row.id,
           src: row.image_url,
-          storagePath: row.storage_path || null,
           isoDate: row.tanggal,
           date: formatIndoDate(row.tanggal),
           desc: row.deskripsi || ''
@@ -2082,234 +1394,15 @@
         emptyTitle.textContent = 'Gagal memuat galeri foto';
         emptySub.textContent = err.message || 'Periksa koneksi internet dan coba muat ulang halaman.';
         emptyActionBtn.textContent = 'Coba Muat Ulang';
+        emptyActionBtn.href = '#';
         emptyActionBtn.style.display = 'inline-flex';
-        emptyActionBtn.onclick = loadPhotosFromGallery;
+        emptyActionBtn.onclick = (e) => {
+          e.preventDefault();
+          loadPhotosFromGallery();
+        };
         emptyState.classList.add('visible');
       }
     }
-
-    async function uploadFileToStorage(file, indexOffset = 0) {
-      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-      const safeBase = file.name
-        .replace(/\.[^/.]+$/, '')
-        .replace(/[^a-zA-Z0-9-_]/g, '-')
-        .slice(0, 36);
-      const uniqueSuffix = `${Date.now()}-${indexOffset}-${Math.random().toString(36).slice(2, 7)}`;
-      const storagePath = `momen/${uniqueSuffix}-${safeBase || 'foto'}.${ext}`;
-
-      const { error: uploadError } = await dbClient.storage
-        .from(STORAGE_BUCKET)
-        .upload(storagePath, file, {
-          contentType: file.type || undefined,
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicData } = dbClient.storage
-        .from(STORAGE_BUCKET)
-        .getPublicUrl(storagePath);
-
-      return {
-        imageUrl: publicData.publicUrl,
-        storagePath
-      };
-    }
-
-    async function savePhotoToGallery(e) {
-      e.preventDefault();
-      if (isUploading) return;
-      if (!dbClient) {
-        showToast('Koneksi penyimpanan galeri belum siap.');
-        return;
-      }
-
-      const editId = editPhotoIdInput.value.trim();
-      const tanggal = photoDateInput.value;
-      const defaultDeskripsi = photoDescInput.value.trim();
-
-      if (!tanggal) {
-        showToast('Tanggal momen wajib diisi.');
-        return;
-      }
-
-      if (!editId && selectedUploadQueue.length === 0) {
-        showToast('Pilih minimal satu file foto untuk diunggah.');
-        return;
-      }
-
-      // Salin antrean sebelum modal ditutup dan antrean dibersihkan
-      const queueSnapshot = selectedUploadQueue.map(entry => ({
-        file: entry.file,
-        customDesc: entry.customDesc
-      }));
-
-      // Tutup halaman/modal upload segera setelah tombol ditekan
-      closePhotoFormModal(true);
-
-      isUploading = true;
-      openAddModalBtn.disabled = true;
-
-      try {
-        if (editId) {
-          showToast('Menyimpan perubahan foto...', true);
-          const existing = photos.find(p => String(p.id) === String(editId));
-          const updatePayload = {
-            tanggal,
-            deskripsi: defaultDeskripsi
-          };
-
-          if (queueSnapshot.length > 0) {
-            const uploaded = await uploadFileToStorage(queueSnapshot[0].file, 0);
-            updatePayload.image_url = uploaded.imageUrl;
-            updatePayload.storage_path = uploaded.storagePath;
-
-            if (existing && existing.storagePath) {
-              await dbClient.storage.from(STORAGE_BUCKET).remove([existing.storagePath]);
-            }
-          }
-
-          const { data, error } = await dbClient
-            .from(TABLE_NAME)
-            .update(updatePayload)
-            .eq('id', editId)
-            .select()
-            .single();
-
-          if (error) throw error;
-
-          const idx = photos.findIndex(p => String(p.id) === String(editId));
-          if (idx !== -1) {
-            photos[idx] = {
-              id: data.id,
-              src: data.image_url,
-              storagePath: data.storage_path || null,
-              isoDate: data.tanggal,
-              date: formatIndoDate(data.tanggal),
-              desc: data.deskripsi || ''
-            };
-          }
-
-          applyFiltersAndRender();
-
-          if (lightboxModal.classList.contains('open')) {
-            const updatedFilteredIdx = filteredPhotos.findIndex(p => String(p.id) === String(editId));
-            if (updatedFilteredIdx !== -1) {
-              updateLightbox(updatedFilteredIdx);
-            } else {
-              closeLightbox();
-            }
-          }
-          showToast('Perubahan foto berhasil disimpan!');
-        } else {
-          const totalFiles = queueSnapshot.length;
-          const newlyInserted = [];
-          const failedFiles = [];
-
-          for (let i = 0; i < totalFiles; i++) {
-            const entry = queueSnapshot[i];
-            showToast(
-              totalFiles > 1
-                ? `Mengunggah foto ${i + 1} dari ${totalFiles}...`
-                : 'Mengunggah foto ke galeri...',
-              true
-            );
-
-            try {
-              const uploaded = await uploadFileToStorage(entry.file, i);
-              const caption = (entry.customDesc || '').trim() || defaultDeskripsi || '';
-
-              const { data, error } = await dbClient
-                .from(TABLE_NAME)
-                .insert([
-                  {
-                    image_url: uploaded.imageUrl,
-                    storage_path: uploaded.storagePath,
-                    tanggal,
-                    deskripsi: caption
-                  }
-                ])
-                .select()
-                .single();
-
-              if (error) throw error;
-
-              newlyInserted.push({
-                id: data.id,
-                src: data.image_url,
-                storagePath: data.storage_path || null,
-                isoDate: data.tanggal,
-                date: formatIndoDate(data.tanggal),
-                desc: data.deskripsi || ''
-              });
-            } catch (fileErr) {
-              console.error(`Gagal unggah ${entry.file.name}:`, fileErr);
-              failedFiles.push({ name: entry.file.name, reason: fileErr.message });
-            }
-          }
-
-          if (newlyInserted.length > 0) {
-            photos = [...newlyInserted.reverse(), ...photos];
-          }
-
-          applyFiltersAndRender();
-
-          if (failedFiles.length === 0) {
-            showToast(
-              newlyInserted.length > 1
-                ? `${newlyInserted.length} foto berhasil diunggah ke galeri!`
-                : 'Foto berhasil diunggah ke galeri!'
-            );
-          } else {
-            showToast(
-              `${newlyInserted.length} berhasil, ${failedFiles.length} gagal (${failedFiles[0].reason}).`
-            );
-          }
-        }
-      } catch (err) {
-        console.error('Gagal menyimpan foto:', err);
-        showToast(`Gagal menyimpan: ${err.message || 'Terjadi kesalahan'}`);
-      } finally {
-        isUploading = false;
-        openAddModalBtn.disabled = false;
-      }
-    }
-
-    async function deleteCurrentPhoto() {
-      const item = filteredPhotos[currentIndex];
-      if (!item || !dbClient) return;
-
-      const confirmed = confirm(`Hapus foto momen "${item.date}" secara permanen dari galeri?`);
-      if (!confirmed) return;
-
-      showToast('Menghapus foto dari galeri...', true);
-
-      try {
-        if (item.storagePath) {
-          await dbClient.storage.from(STORAGE_BUCKET).remove([item.storagePath]);
-        }
-
-        const { error } = await dbClient
-          .from(TABLE_NAME)
-          .delete()
-          .eq('id', item.id);
-
-        if (error) throw error;
-
-        photos = photos.filter(p => String(p.id) !== String(item.id));
-        closeLightbox();
-        applyFiltersAndRender();
-        showToast('Foto berhasil dihapus dari galeri.');
-      } catch (err) {
-        console.error('Gagal menghapus foto:', err);
-        showToast(`Gagal menghapus: ${err.message || 'Terjadi kesalahan'}`);
-      }
-    }
-
-    // =========================================================================
-    // RENDER & FILTER GALERI
-    // =========================================================================
 
     function applyFiltersAndRender() {
       let list = [...photos];
@@ -2345,14 +1438,19 @@
           emptyTitle.textContent = 'Tidak ada foto yang cocok dengan kata kunci pencarian.';
           emptySub.textContent = 'Coba gunakan kata kunci tanggal, bulan, tahun, atau deskripsi yang berbeda.';
           emptyActionBtn.textContent = 'Tampilkan Semua Foto';
+          emptyActionBtn.href = '#';
           emptyActionBtn.style.display = 'inline-flex';
-          emptyActionBtn.onclick = resetAllFilters;
+          emptyActionBtn.onclick = (e) => {
+            e.preventDefault();
+            resetAllFilters();
+          };
         } else {
           emptyTitle.textContent = 'Belum ada foto tersimpan di galeri.';
-          emptySub.textContent = 'Klik tombol "+ Tambah" untuk mengunggah satu atau banyak foto sekaligus.';
-          emptyActionBtn.textContent = '+ Tambah Foto Pertama';
+          emptySub.textContent = 'Unggah foto melalui halaman Admin agar tampil di galeri.';
+          emptyActionBtn.textContent = 'Buka Halaman Admin';
+          emptyActionBtn.href = './admin.html';
           emptyActionBtn.style.display = 'inline-flex';
-          emptyActionBtn.onclick = () => openPhotoFormModal();
+          emptyActionBtn.onclick = null;
         }
         emptyState.classList.add('visible');
         updateScrollUI();
@@ -2416,94 +1514,6 @@
     }
 
     resetFilterLink.addEventListener('click', resetAllFilters);
-
-    // =========================================================================
-    // MODAL FORM TAMBAH & EDIT FOTO
-    // =========================================================================
-
-    function openPhotoFormModal(itemToEdit = null) {
-      if (isUploading) {
-        showToast('Sedang mengunggah foto sebelumnya, harap tunggu sebentar...');
-        return;
-      }
-      photoForm.reset();
-      clearUploadQueue();
-      previewBox.classList.remove('visible');
-      previewImg.src = '';
-
-      if (itemToEdit) {
-        formModalTitle.textContent = 'Edit Momen Foto';
-        editPhotoIdInput.value = itemToEdit.id;
-        photoFileInput.removeAttribute('multiple');
-        fileFieldLabel.textContent = 'Ganti File Foto (Opsional)';
-        dropzoneText.textContent = 'Klik atau seret 1 foto pengganti ke sini';
-        photoDateInput.value = itemToEdit.isoDate;
-        descFieldLabel.textContent = 'Deskripsi Foto (Opsional)';
-        photoDescInput.value = itemToEdit.desc || '';
-        previewImg.src = itemToEdit.src;
-        previewBox.classList.add('visible');
-        submitFormBtn.textContent = 'Simpan Perubahan';
-      } else {
-        formModalTitle.textContent = 'Unggah Foto ke Galeri';
-        editPhotoIdInput.value = '';
-        photoFileInput.setAttribute('multiple', 'multiple');
-        fileFieldLabel.textContent = 'Pilih File Foto (Bisa Banyak Sekaligus)';
-        dropzoneText.textContent = 'Klik atau seret banyak foto ke sini (bisa tambah lagi)';
-        photoDateInput.value = new Date().toISOString().split('T')[0];
-        descFieldLabel.textContent = 'Deskripsi Foto (Opsional)';
-        submitFormBtn.textContent = 'Unggah Foto';
-      }
-
-      photoFormModal.classList.add('open');
-      photoFormModal.setAttribute('aria-hidden', 'false');
-    }
-
-    function closePhotoFormModal(force = false) {
-      if (isUploading && !force) return;
-      clearUploadQueue();
-      photoFormModal.classList.remove('open');
-      photoFormModal.setAttribute('aria-hidden', 'true');
-    }
-
-    openAddModalBtn.addEventListener('click', () => openPhotoFormModal());
-    closeFormModalBtn.addEventListener('click', () => closePhotoFormModal());
-    cancelFormBtn.addEventListener('click', () => closePhotoFormModal());
-
-    photoFormModal.addEventListener('click', (e) => {
-      if (e.target === photoFormModal) closePhotoFormModal();
-    });
-
-    photoFileInput.addEventListener('change', () => {
-      if (photoFileInput.files && photoFileInput.files.length > 0) {
-        addFilesToQueue(photoFileInput.files);
-      }
-    });
-
-    ['dragenter', 'dragover'].forEach(evtName => {
-      fileDropzone.addEventListener(evtName, (e) => {
-        e.preventDefault();
-        fileDropzone.classList.add('dragover');
-      });
-    });
-
-    ['dragleave', 'drop'].forEach(evtName => {
-      fileDropzone.addEventListener(evtName, (e) => {
-        e.preventDefault();
-        fileDropzone.classList.remove('dragover');
-      });
-    });
-
-    fileDropzone.addEventListener('drop', (e) => {
-      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-        addFilesToQueue(e.dataTransfer.files);
-      }
-    });
-
-    photoForm.addEventListener('submit', savePhotoToGallery);
-
-    // =========================================================================
-    // UNDUH FOTO & LIGHTBOX SWIPE / ZOOM RAPI
-    // =========================================================================
 
     function getExtensionFromUrl(url) {
       try {
@@ -2679,8 +1689,6 @@
     }
 
     zoomLevelEl.addEventListener('click', resetZoom);
-    editPhotoBtn.addEventListener('click', () => openPhotoFormModal(filteredPhotos[currentIndex]));
-    deletePhotoBtn.addEventListener('click', deleteCurrentPhoto);
     downloadBtn.addEventListener('click', () => downloadPhoto(filteredPhotos[currentIndex], currentIndex));
     lightboxClose.addEventListener('click', closeLightbox);
 
@@ -2836,10 +1844,6 @@
     }, { passive: true });
 
     document.addEventListener('keydown', (e) => {
-      if (photoFormModal.classList.contains('open')) {
-        if (e.key === 'Escape') closePhotoFormModal();
-        return;
-      }
       if (!lightboxModal.classList.contains('open')) return;
       if (e.key === 'Escape') {
         if (scale > 1) {
@@ -2875,7 +1879,6 @@
       }
     }, { passive: true });
 
-    // Inisialisasi Awal
     document.getElementById('year').textContent = new Date().getFullYear();
     loadPhotosFromGallery();
   </script>
