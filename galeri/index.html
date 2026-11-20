@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Galeri — Syafaat Nuryadi</title>
+  <title>Galeri Foto — Syafaat Nuryadi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
@@ -27,11 +27,10 @@
       --gold-border: rgba(200, 155, 60, 0.45);
       --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
       --shadow-md: 0 12px 28px -6px rgba(15, 23, 42, 0.09), 0 4px 10px -4px rgba(15, 23, 42, 0.05);
-      --shadow-lg: 0 24px 48px -12px rgba(15, 23, 42, 0.16), 0 8px 20px -6px rgba(15, 23, 42, 0.07);
+      --shadow-lg: 0 24px 48px -12px rgba(15, 23, 42, 0.25), 0 8px 20px -6px rgba(15, 23, 42, 0.12);
       --container: 1100px;
       --header-h: 64px;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-serif: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     }
@@ -48,6 +47,10 @@
     }
 
     body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
       font-family: var(--font-sans);
       background-color: var(--bg);
       color: var(--text);
@@ -55,6 +58,10 @@
       font-size: 15px;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      flex: 1 0 auto;
     }
 
     a {
@@ -90,7 +97,7 @@
     @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(22px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -107,30 +114,6 @@
         opacity: 1;
         transform: translateY(0) scale(1);
       }
-    }
-
-    @keyframes pulseLine {
-      0%, 100% {
-        opacity: 1;
-        transform: scaleX(1);
-      }
-      50% {
-        opacity: 0.5;
-        transform: scaleX(1.25);
-      }
-    }
-
-    /* Scroll Reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
-      will-change: opacity, transform;
-    }
-
-    .reveal.is-visible {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     /* Scroll Progress Bar */
@@ -307,8 +290,6 @@
 
     /* Buttons */
     .btn {
-      position: relative;
-      overflow: hidden;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -320,10 +301,6 @@
       border: 1px solid var(--primary);
       cursor: pointer;
       transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
-    }
-
-    .btn:active {
-      transform: translateY(0) scale(0.97);
     }
 
     .btn-primary {
@@ -339,35 +316,33 @@
       box-shadow: 0 10px 20px rgba(29, 78, 216, 0.28);
     }
 
-    .btn-outline {
-      background: var(--surface);
-      color: var(--text);
-      border-color: var(--border-strong);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .btn-outline:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
     .btn-sm {
       padding: 8px 16px;
       font-size: 0.82rem;
     }
 
-    /* Gallery Hero */
-    .gallery-hero {
-      padding: 44px 0 48px;
-      background: linear-gradient(180deg, #ffffff 0%, #f1f5fd 55%, var(--bg) 100%);
+    /* Compact Gallery Header */
+    .gallery-top {
+      padding: 36px 0 28px;
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
       border-bottom: 1px solid var(--border);
+      animation: fadeUp 0.55s var(--ease-out) both;
     }
 
-    .hero-anim-1 { animation: fadeUp 0.6s var(--ease-out) 0.05s both; }
-    .hero-anim-2 { animation: fadeUp 0.6s var(--ease-out) 0.14s both; }
-    .hero-anim-3 { animation: fadeUp 0.6s var(--ease-out) 0.22s both; }
+    .gallery-top-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
 
     .breadcrumb {
       display: inline-flex;
@@ -379,7 +354,6 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-subtle);
-      margin-bottom: 18px;
     }
 
     .breadcrumb a {
@@ -391,121 +365,32 @@
       opacity: 0.75;
     }
 
-    .status-line {
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .status-line::before {
-      content: "";
-      width: 24px;
-      height: 1px;
-      background: var(--gold);
-      transform-origin: left;
-      animation: pulseLine 2.8s ease-in-out infinite;
-    }
-
-    .page-title {
-      font-family: var(--font-serif);
-      font-size: 2.1rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.18;
-      margin-bottom: 14px;
-    }
-
-    .page-desc {
-      color: var(--text-muted);
-      font-size: 0.96rem;
-      max-width: 580px;
-    }
-
-    /* Gallery Main Section */
+    /* Photo Grid Section */
     .gallery-section {
-      padding: 48px 0 80px;
+      padding: 36px 0 76px;
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .filter-btn {
-      padding: 0 0 12px;
-      border: none;
-      border-bottom: 2px solid transparent;
-      background: transparent;
-      color: var(--text-subtle);
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      margin-bottom: -1px;
-      transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-    }
-
-    .filter-btn:active {
-      transform: scale(0.95);
-    }
-
-    .filter-btn.active,
-    .filter-btn:hover {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-    }
-
-    .gallery-count {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-subtle);
-      padding-bottom: 12px;
-    }
-
-    /* Gallery Grid */
-    .gallery-grid {
+    .photo-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 24px;
+      gap: 18px;
     }
 
-    .gallery-card {
+    .photo-card {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(180deg, #ffffff 74%, var(--gold-soft) 100%);
+      aspect-ratio: 4 / 3;
+      background: var(--surface-alt);
       border: 1px solid var(--gold-border);
       border-top: 3px solid var(--gold);
       border-radius: 6px;
-      display: flex;
-      flex-direction: column;
       cursor: pointer;
       box-shadow: var(--shadow-sm);
       transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease, border-color 0.25s ease;
       animation: cardPopIn 0.45s var(--ease-out) both;
     }
 
-    .gallery-card::before {
+    .photo-card::before {
       content: "";
       position: absolute;
       top: 0;
@@ -515,7 +400,7 @@
       background: linear-gradient(
         105deg,
         transparent 0%,
-        rgba(226, 189, 107, 0.16) 50%,
+        rgba(226, 189, 107, 0.22) 50%,
         transparent 100%
       );
       transform: skewX(-18deg);
@@ -524,98 +409,87 @@
       z-index: 2;
     }
 
-    .gallery-card:hover::before {
+    .photo-card:hover::before {
       left: 150%;
     }
 
-    .gallery-card:hover {
-      transform: translateY(-5px);
+    .photo-card:hover {
+      transform: translateY(-4px);
       border-color: var(--gold);
-      box-shadow: 0 16px 34px -6px rgba(200, 155, 60, 0.22), 0 4px 10px -4px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 16px 34px -6px rgba(200, 155, 60, 0.22), 0 4px 10px -4px rgba(15, 23, 42, 0.08);
     }
 
-    .gallery-thumb {
-      height: 240px;
-      position: relative;
-      overflow: hidden;
-      background: var(--surface-alt);
-      border-bottom: 1px solid var(--gold-border);
-    }
-
-    .gallery-thumb img {
+    .photo-card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.55s var(--ease-out);
     }
 
-    .gallery-card:hover .gallery-thumb img {
+    .photo-card:hover img {
       transform: scale(1.06);
     }
 
-    .zoom-badge {
+    .card-overlay-bar {
       position: absolute;
+      left: 12px;
       right: 12px;
       bottom: 12px;
-      width: 34px;
-      height: 34px;
-      border-radius: 4px;
-      background: rgba(15, 23, 42, 0.72);
-      backdrop-filter: blur(4px);
-      color: #ffffff;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       opacity: 0;
       transform: translateY(6px);
       transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
+      z-index: 3;
     }
 
-    .gallery-card:hover .zoom-badge {
+    .photo-card:hover .card-overlay-bar {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .gallery-body {
-      padding: 18px 20px 20px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .gallery-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
+    .card-date-pill {
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(4px);
+      color: var(--gold-light);
       font-family: var(--font-mono);
       font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: center;
     }
 
-    .gallery-meta span:first-child {
-      color: var(--gold);
+    .card-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(4px);
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
     }
 
-    .gallery-meta span:last-child {
-      color: var(--text-subtle);
-    }
-
-    .gallery-body h3 {
-      font-size: 1.04rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin-bottom: 6px;
-    }
-
-    .gallery-body p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.55;
+    .card-icon-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0f172a;
+      transform: scale(1.06);
     }
 
     /* Footer */
     .footer {
+      margin-top: auto;
       border-top: 1px solid var(--border);
       background: var(--surface);
       padding: 28px 0;
@@ -643,19 +517,22 @@
       color: var(--gold) !important;
     }
 
-    /* Lightbox Modal */
+    /* Lightbox Modal dengan Latar Foto Blur Dinamis */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(6px);
-      display: grid;
-      place-items: center;
-      padding: 16px;
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
       z-index: 200;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .modal-backdrop.open {
@@ -663,132 +540,246 @@
       pointer-events: auto;
     }
 
-    .modal {
-      width: 100%;
-      max-width: 720px;
-      max-height: 92vh;
-      overflow-y: auto;
-      background: var(--surface);
-      border-radius: 6px;
-      padding: 22px;
-      border: 1px solid var(--gold-border);
-      border-top: 3px solid var(--gold);
-      box-shadow: var(--shadow-lg);
-      transform: translateY(18px) scale(0.97);
-      transition: transform 0.3s var(--ease-out);
+    /* Latar Belakang Mengikuti Foto Utama & Di-Blur */
+    .lightbox-bg {
+      position: absolute;
+      inset: -48px;
+      background-size: cover;
+      background-position: center;
+      filter: blur(28px) brightness(0.45) saturate(1.15);
+      transform: scale(1.08);
+      transition: background-image 0.35s ease, transform 0.35s var(--ease-out), filter 0.35s ease;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    .modal-backdrop.open .modal {
-      transform: translateY(0) scale(1);
+    .modal-backdrop.is-zoom-active .lightbox-bg {
+      filter: blur(36px) brightness(0.32) saturate(1.25);
+      transform: scale(1.18);
     }
 
-    .modal-head {
+    /* Top Lightbox Toolbar */
+    .lightbox-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 62px;
+      padding: 0 16px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 14px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0) 100%);
+      z-index: 220;
     }
 
-    .modal-close {
-      width: 34px;
-      height: 34px;
+    .lightbox-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lightbox-badge {
+      padding: 6px 11px;
       border-radius: 4px;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .lightbox-badge.gold {
+      color: var(--gold-light);
+      border-color: var(--gold-border);
+    }
+
+    .lightbox-badge.zoom-pill {
       cursor: pointer;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      color: var(--text);
-      box-shadow: var(--shadow-sm);
-      transition: background 0.15s ease, transform 0.2s var(--ease-out);
+      transition: background 0.18s ease, border-color 0.18s ease;
     }
 
-    .modal-close:hover {
-      background: var(--surface-alt);
-      transform: rotate(90deg);
+    .lightbox-badge.zoom-pill:hover {
+      border-color: var(--gold);
     }
 
+    .lightbox-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lb-tool-btn {
+      height: 38px;
+      min-width: 38px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.15s ease;
+    }
+
+    .lb-tool-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0f172a;
+    }
+
+    .lb-tool-btn:active {
+      transform: scale(0.94);
+    }
+
+    .lb-tool-btn.download-btn {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .lb-tool-btn.download-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0f172a;
+    }
+
+    .lb-btn-label {
+      display: none;
+    }
+
+    /* Interactive Zoom Viewport */
     .lightbox-stage {
       position: relative;
-      margin-bottom: 16px;
-      border-radius: 4px;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
-      border: 1px solid var(--border);
-      background: #0f172a;
+      padding: 68px 16px 54px;
+      touch-action: none;
     }
 
-    .modal-img {
-      width: 100%;
-      max-height: 440px;
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
-      margin: 0 auto;
+      border-radius: 6px;
+      border: 1px solid var(--gold-border);
+      box-shadow: var(--shadow-lg);
+      background: #0f172a;
+      cursor: zoom-in;
+      transform-origin: center center;
+      transition: transform 0.22s var(--ease-out);
+      will-change: transform;
+    }
+
+    .lightbox-img.is-zoomed {
+      cursor: grab;
+    }
+
+    .lightbox-img.is-dragging {
+      cursor: grabbing;
+      transition: none;
     }
 
     .lightbox-nav {
-      position: absolute;
+      position: fixed;
       top: 50%;
       transform: translateY(-50%);
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
       border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(6px);
       color: #ffffff;
       display: grid;
       place-items: center;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease;
+      z-index: 215;
+      transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
     }
 
     .lightbox-nav:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0f172a;
+    }
+
+    .lightbox-nav.prev { left: 16px; }
+    .lightbox-nav.next { right: 16px; }
+
+    .lightbox-hint {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 5px 12px;
+      border-radius: 4px;
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.74rem;
+      white-space: nowrap;
+      z-index: 215;
+      pointer-events: none;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(90px) scale(0.95);
       background: var(--primary);
-    }
-
-    .lightbox-nav.prev { left: 10px; }
-    .lightbox-nav.next { right: 10px; }
-
-    .modal-footer-bar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-    }
-
-    .tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .tag-item {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
+      color: #ffffff;
+      padding: 11px 18px;
+      border-radius: 4px;
+      font-size: 0.84rem;
       font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 3px;
-      background: var(--gold-soft);
-      border: 1px solid var(--gold-border);
-      color: #8a6618;
+      box-shadow: var(--shadow-lg);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s var(--ease-out), opacity 0.25s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 1;
     }
 
     /* Responsive */
-    @media (min-width: 640px) {
-      .gallery-grid {
+    @media (min-width: 520px) {
+      .photo-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
       }
       .footer-inner {
         flex-direction: row;
         align-items: center;
       }
+      .lb-btn-label {
+        display: inline;
+      }
     }
 
-    @media (min-width: 920px) {
+    @media (min-width: 900px) {
       .nav-desktop {
         display: flex;
       }
@@ -796,14 +787,19 @@
       .mobile-nav {
         display: none;
       }
-      .gallery-hero {
-        padding: 64px 0 60px;
-      }
       .page-title {
-        font-size: 2.65rem;
+        font-size: 2.1rem;
       }
-      .gallery-grid {
+      .photo-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+      }
+    }
+
+    @media (hover: none) {
+      .card-overlay-bar {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
@@ -812,10 +808,6 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-      }
-      .reveal {
-        opacity: 1;
-        transform: none;
       }
     }
   </style>
@@ -861,37 +853,22 @@
   </nav>
 
   <main>
-    <!-- Hero Galeri -->
-    <section class="gallery-hero">
-      <div class="container">
-        <nav class="breadcrumb hero-anim-1" aria-label="Breadcrumb">
+    <!-- Header Halaman -->
+    <section class="gallery-top">
+      <div class="container gallery-top-inner">
+        <h1 class="page-title">Galeri Foto</h1>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="../index.html">Beranda</a>
           <span>/</span>
           <span>Galeri</span>
         </nav>
-
-        <div class="status-line hero-anim-1">Arsip Visual &amp; Dokumentasi</div>
-        <h1 class="page-title hero-anim-2">Galeri Karya &amp; Aktivitas</h1>
-        <p class="page-desc hero-anim-3">
-          Kumpulan tangkapan layar antarmuka aplikasi, proses pengembangan sistem, dan dokumentasi kegiatan yang pernah dikerjakan.
-        </p>
       </div>
     </section>
 
-    <!-- Konten Galeri -->
+    <!-- Grid Foto -->
     <section class="gallery-section">
       <div class="container">
-        <div class="toolbar reveal">
-          <div class="filter-bar" id="filterBar">
-            <button class="filter-btn active" data-filter="semua">Semua</button>
-            <button class="filter-btn" data-filter="antarmuka">Antarmuka UI</button>
-            <button class="filter-btn" data-filter="sistem">Sistem &amp; Kode</button>
-            <button class="filter-btn" data-filter="dokumentasi">Dokumentasi</button>
-          </div>
-          <div class="gallery-count" id="galleryCount">6 Item</div>
-        </div>
-
-        <div class="gallery-grid" id="galleryGrid"></div>
+        <div class="photo-grid" id="photoGrid"></div>
       </div>
     </section>
   </main>
@@ -907,178 +884,236 @@
     </div>
   </footer>
 
-  <!-- Lightbox Modal -->
+  <!-- Lightbox Foto dengan Latar Blur Foto Utama & Download -->
   <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
-      <div class="modal-head">
-        <div>
-          <span class="mono" id="lightboxMeta" style="color: var(--gold); display: block; margin-bottom: 4px;">Kategori &bull; 2026</span>
-          <h2 id="lightboxTitle" style="font-size: 1.35rem; font-weight: 700; line-height: 1.25;">Judul Foto</h2>
-        </div>
-        <button class="modal-close" id="lightboxClose" aria-label="Tutup tampilan penuh">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <!-- Latar Belakang Mengikuti Foto Utama & Di-Blur -->
+    <div class="lightbox-bg" id="lightboxBg" aria-hidden="true"></div>
+
+    <!-- Toolbar Atas -->
+    <div class="lightbox-topbar">
+      <div class="lightbox-status">
+        <span class="lightbox-badge" id="lightboxCounter">1 / 6</span>
+        <span class="lightbox-badge gold" id="lightboxDate">20 Nov 2026</span>
+        <span class="lightbox-badge zoom-pill" id="zoomLevel" title="Klik untuk reset zoom">100%</span>
+      </div>
+
+      <div class="lightbox-tools">
+        <button class="lb-tool-btn download-btn" id="downloadBtn" title="Unduh foto" aria-label="Unduh foto">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span class="lb-btn-label">Unduh</span>
+        </button>
+
+        <button class="lb-tool-btn" id="lightboxClose" title="Tutup (Esc)" aria-label="Tutup foto">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
-
-      <div class="lightbox-stage">
-        <button class="lightbox-nav prev" id="prevBtn" aria-label="Foto sebelumnya">&larr;</button>
-        <img id="lightboxImg" class="modal-img" src="" alt="" />
-        <button class="lightbox-nav next" id="nextBtn" aria-label="Foto berikutnya">&rarr;</button>
-      </div>
-
-      <p id="lightboxDesc" style="color: var(--text-muted); font-size: 0.92rem;"></p>
-
-      <div class="modal-footer-bar">
-        <div class="tag-list" id="lightboxTags"></div>
-        <span class="mono" id="lightboxCounter" style="color: var(--text-subtle);">1 / 6</span>
-      </div>
     </div>
+
+    <!-- Tombol Navigasi -->
+    <button class="lightbox-nav prev" id="prevBtn" aria-label="Foto sebelumnya">&larr;</button>
+
+    <!-- Area Foto Zoom & Pan -->
+    <div class="lightbox-stage" id="lightboxStage">
+      <img id="lightboxImg" class="lightbox-img" src="" alt="Foto galeri" draggable="false" />
+    </div>
+
+    <button class="lightbox-nav next" id="nextBtn" aria-label="Foto berikutnya">&rarr;</button>
+
+    <div class="lightbox-hint" id="lightboxHint">Klik atau scroll pada foto untuk zoom</div>
   </div>
 
+  <!-- Toast Notifikasi -->
+  <div class="toast" id="toast">Mengunduh foto...</div>
+
   <script>
-    // Data Galeri (silakan ganti URL foto & keterangan sesuai kebutuhan)
-    const galleryItems = [
+    // Daftar Foto & Tanggal (cukup tambah atau ganti URL dan tanggal di sini)
+    const photos = [
       {
-        id: 1,
-        title: 'Dashboard Operasional Sitenexs',
-        category: 'antarmuka',
-        categoryLabel: 'Antarmuka UI',
-        date: '2026',
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-        description: 'Tampilan panel kontrol mobile-first untuk memantau transaksi harian, status layanan, dan laporan ringkas secara real-time.',
-        tags: ['UI Design', 'Mobile-First', 'Dashboard']
+        src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=85',
+        date: '18 Nov 2026'
       },
       {
-        id: 2,
-        title: 'Arsitektur Database & Integrasi API',
-        category: 'sistem',
-        categoryLabel: 'Sistem & Kode',
-        date: '2026',
-        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
-        description: 'Pengembangan struktur tabel PostgreSQL dan endpoint otomatisasi untuk sinkronisasi data aplikasi pelanggan.',
-        tags: ['PostgreSQL', 'REST API', 'Backend']
+        src: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=85',
+        date: '04 Nov 2026'
       },
       {
-        id: 3,
-        title: 'Sistem Kasir & Katalog Digital UMKM',
-        category: 'antarmuka',
-        categoryLabel: 'Antarmuka UI',
-        date: '2025',
-        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80',
-        description: 'Antarmuka kasir berbasis web yang dirancang ringan agar lancar dijalankan pada tablet maupun ponsel kasir.',
-        tags: ['POS System', 'HTML5', 'JavaScript']
+        src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1400&q=85',
+        date: '22 Okt 2026'
       },
       {
-        id: 4,
-        title: 'Sesi Diskusi & Perancangan Sistem Klien',
-        category: 'dokumentasi',
-        categoryLabel: 'Dokumentasi',
-        date: '2025',
-        image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-        description: 'Pemetaan alur kerja operasional bersama tim mitra sebelum tahap prototyping antarmuka dimulai.',
-        tags: ['Kolaborasi', 'Workflow', 'Riset']
+        src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=85',
+        date: '10 Okt 2026'
       },
       {
-        id: 5,
-        title: 'Sistem Pemesanan QR Meja Kafe',
-        category: 'sistem',
-        categoryLabel: 'Sistem & Kode',
-        date: '2025',
-        image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80',
-        description: 'Alur pemesanan mandiri tanpa instalasi aplikasi tambahan, terhubung langsung ke layar dapur.',
-        tags: ['QR Order', 'Realtime', 'Web App']
+        src: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1400&q=85',
+        date: '28 Sep 2026'
       },
       {
-        id: 6,
-        title: 'Profil Founder & Studio Pengembangan',
-        category: 'dokumentasi',
-        categoryLabel: 'Dokumentasi',
-        date: '2026',
-        image: 'https://sitenexs.com/assets/founder/founder.png?auto=format&fit=crop&w=1000&q=80',
-        description: 'Dokumentasi profil pribadi Syafaat Nuryadi dalam pengembangan produk digital dan layanan web.',
-        tags: ['Profil', 'Sitenexs', 'Founder']
+        src: 'https://sitenexs.com/assets/founder/founder.png?auto=format&fit=crop&w=1200&q=85',
+        date: '15 Sep 2026'
       }
     ];
 
-    const galleryGrid = document.getElementById('galleryGrid');
-    const galleryCount = document.getElementById('galleryCount');
-    const filterBar = document.getElementById('filterBar');
+    const photoGrid = document.getElementById('photoGrid');
     const menuBtn = document.getElementById('menuBtn');
     const mobileNav = document.getElementById('mobileNav');
     const scrollProgress = document.getElementById('scrollProgress');
     const siteHeader = document.getElementById('siteHeader');
+    const toast = document.getElementById('toast');
 
     const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxBg = document.getElementById('lightboxBg');
+    const lightboxStage = document.getElementById('lightboxStage');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+    const lightboxDate = document.getElementById('lightboxDate');
+    const lightboxHint = document.getElementById('lightboxHint');
+    const zoomLevelEl = document.getElementById('zoomLevel');
+
+    const downloadBtn = document.getElementById('downloadBtn');
     const lightboxClose = document.getElementById('lightboxClose');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    let currentFiltered = [...galleryItems];
     let currentIndex = 0;
 
-    function renderGallery(filter = 'semua') {
-      currentFiltered = filter === 'semua'
-        ? [...galleryItems]
-        : galleryItems.filter(item => item.category === filter);
+    // State Zoom & Geser (Pan)
+    let scale = 1;
+    let panX = 0;
+    let panY = 0;
+    const MIN_SCALE = 1;
+    const MAX_SCALE = 4;
 
-      galleryCount.textContent = `${currentFiltered.length} Item`;
+    let isDragging = false;
+    let hasMoved = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let initialPinchDist = 0;
+    let initialPinchScale = 1;
+    let touchUsed = false;
 
-      galleryGrid.innerHTML = currentFiltered.map((item, idx) => `
-        <article class="gallery-card" data-index="${idx}" style="animation-delay: ${idx * 0.07}s">
-          <div class="gallery-thumb">
-            <img src="${item.image}" alt="${item.title}" loading="lazy" />
-            <div class="zoom-badge" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <polyline points="9 21 3 21 3 15"></polyline>
-                <line x1="21" y1="3" x2="14" y2="10"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-              </svg>
-            </div>
-          </div>
-          <div class="gallery-body">
-            <div class="gallery-meta">
-              <span>${item.categoryLabel}</span>
-              <span>${item.date}</span>
-            </div>
-            <h3>${item.title}</h3>
-            <p>${item.description}</p>
-          </div>
-        </article>
-      `).join('');
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
-    renderGallery();
+    // Fungsi Unduh Foto Langsung
+    async function downloadPhoto(url, index) {
+      const fileName = `galeri-syafaat-${index + 1}.jpg`;
+      showToast('Menyiapkan unduhan foto...');
 
-    // Filter Galeri
-    filterBar.addEventListener('click', (e) => {
-      const btn = e.target.closest('.filter-btn');
-      if (!btn) return;
+      try {
+        const response = await fetch(url, { mode: 'cors' });
+        if (!response.ok) throw new Error('Gagal mengambil file');
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
 
-      filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderGallery(btn.dataset.filter);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+        showToast('Foto berhasil diunduh!');
+      } catch (err) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        showToast('Membuka foto untuk disimpan...');
+      }
+    }
+
+    // Render Grid Foto
+    photoGrid.innerHTML = photos.map((item, idx) => `
+      <div class="photo-card" data-index="${idx}" style="animation-delay: ${idx * 0.06}s">
+        <img src="${item.src}" alt="Foto ${idx + 1}" loading="lazy" />
+        <div class="card-overlay-bar">
+          <span class="card-date-pill">${item.date}</span>
+          <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto" aria-label="Unduh foto ${idx + 1}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Klik Kartu Foto atau Tombol Download di Grid
+    photoGrid.addEventListener('click', (e) => {
+      const dlBtn = e.target.closest('.card-download');
+      if (dlBtn) {
+        e.stopPropagation();
+        const idx = Number(dlBtn.dataset.index);
+        downloadPhoto(photos[idx].src, idx);
+        return;
+      }
+
+      const card = e.target.closest('.photo-card');
+      if (!card) return;
+      openLightbox(Number(card.dataset.index));
     });
 
-    // Lightbox Functions
-    function updateLightbox(index) {
-      if (!currentFiltered.length) return;
-      currentIndex = (index + currentFiltered.length) % currentFiltered.length;
-      const item = currentFiltered[currentIndex];
+    // Terapkan Transform Zoom, Geser & Efek Latar Blur
+    function applyTransform() {
+      if (scale <= 1) {
+        scale = 1;
+        panX = 0;
+        panY = 0;
+        lightboxImg.classList.remove('is-zoomed');
+        lightboxModal.classList.remove('is-zoom-active');
+        lightboxHint.textContent = 'Klik atau scroll pada foto untuk zoom';
+      } else {
+        lightboxImg.classList.add('is-zoomed');
+        lightboxModal.classList.add('is-zoom-active');
+        lightboxHint.textContent = 'Geser foto untuk melihat detail • Klik foto untuk normal';
+      }
 
-      document.getElementById('lightboxMeta').textContent = `${item.categoryLabel} • ${item.date}`;
-      document.getElementById('lightboxTitle').textContent = item.title;
-      const imgEl = document.getElementById('lightboxImg');
-      imgEl.src = item.image;
-      imgEl.alt = item.title;
-      document.getElementById('lightboxDesc').textContent = item.description;
-      document.getElementById('lightboxTags').innerHTML = item.tags
-        .map(tag => `<span class="tag-item">${tag}</span>`)
-        .join('');
-      document.getElementById('lightboxCounter').textContent = `${currentIndex + 1} / ${currentFiltered.length}`;
+      lightboxImg.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${scale})`;
+      zoomLevelEl.textContent = `${Math.round(scale * 100)}%`;
+    }
+
+    function setZoom(newScale) {
+      scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
+      applyTransform();
+    }
+
+    function resetZoom() {
+      scale = 1;
+      panX = 0;
+      panY = 0;
+      applyTransform();
+    }
+
+    // Lightbox Open / Close / Navigate
+    function updateLightbox(index) {
+      if (!photos.length) return;
+      currentIndex = (index + photos.length) % photos.length;
+      const item = photos[currentIndex];
+
+      resetZoom();
+      lightboxImg.src = item.src;
+      lightboxImg.alt = `Foto ${currentIndex + 1}`;
+      lightboxBg.style.backgroundImage = `url("${item.src}")`;
+      lightboxCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+      lightboxDate.textContent = item.date;
     }
 
     function openLightbox(index) {
@@ -1090,27 +1125,137 @@
     function closeLightbox() {
       lightboxModal.classList.remove('open');
       lightboxModal.setAttribute('aria-hidden', 'true');
+      resetZoom();
     }
 
-    galleryGrid.addEventListener('click', (e) => {
-      const card = e.target.closest('.gallery-card');
-      if (!card) return;
-      openLightbox(Number(card.dataset.index));
-    });
+    zoomLevelEl.addEventListener('click', resetZoom);
+    downloadBtn.addEventListener('click', () => downloadPhoto(photos[currentIndex].src, currentIndex));
 
     prevBtn.addEventListener('click', () => updateLightbox(currentIndex - 1));
     nextBtn.addEventListener('click', () => updateLightbox(currentIndex + 1));
     lightboxClose.addEventListener('click', closeLightbox);
 
-    lightboxModal.addEventListener('click', (e) => {
-      if (e.target === lightboxModal) closeLightbox();
+    // Zoom dengan Scroll Mouse
+    lightboxStage.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.35 : -0.35;
+      setZoom(scale + delta);
+    }, { passive: false });
+
+    // Drag / Geser dengan Mouse saat Zoom
+    lightboxImg.addEventListener('mousedown', (e) => {
+      if (touchUsed) return;
+      e.preventDefault();
+      isDragging = true;
+      hasMoved = false;
+      dragStartX = e.clientX - panX;
+      dragStartY = e.clientY - panY;
+      if (scale > 1) lightboxImg.classList.add('is-dragging');
     });
 
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const nextX = e.clientX - dragStartX;
+      const nextY = e.clientY - dragStartY;
+      if (Math.abs(nextX - panX) > 3 || Math.abs(nextY - panY) > 3) {
+        hasMoved = true;
+      }
+      if (scale > 1) {
+        panX = nextX;
+        panY = nextY;
+        applyTransform();
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      lightboxImg.classList.remove('is-dragging');
+
+      // Jika hanya diklik tanpa digeser, toggle zoom 100% <-> 220%
+      if (!hasMoved) {
+        setZoom(scale === 1 ? 2.2 : 1);
+      }
+    });
+
+    // Klik area kosong di luar foto untuk menutup lightbox
+    lightboxStage.addEventListener('click', (e) => {
+      if (e.target === lightboxStage && scale === 1) {
+        closeLightbox();
+      }
+    });
+
+    // Dukungan Sentuh: Pinch-to-Zoom (2 jari), Tap Zoom & Geser / Swipe (1 jari)
+    let touchStartX = 0;
+    let touchMoved = false;
+
+    function getTouchDistance(touches) {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.hypot(dx, dy);
+    }
+
+    lightboxStage.addEventListener('touchstart', (e) => {
+      touchUsed = true;
+      if (e.touches.length === 2) {
+        initialPinchDist = getTouchDistance(e.touches);
+        initialPinchScale = scale;
+        lightboxImg.classList.add('is-dragging');
+      } else if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        dragStartX = e.touches[0].clientX - panX;
+        dragStartY = e.touches[0].clientY - panY;
+        touchMoved = false;
+        if (scale > 1) lightboxImg.classList.add('is-dragging');
+      }
+    }, { passive: true });
+
+    lightboxStage.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2 && initialPinchDist > 0) {
+        const currentDist = getTouchDistance(e.touches);
+        const ratio = currentDist / initialPinchDist;
+        setZoom(initialPinchScale * ratio);
+      } else if (e.touches.length === 1) {
+        const dx = e.touches[0].clientX - dragStartX;
+        const dy = e.touches[0].clientY - dragStartY;
+        if (Math.abs(e.touches[0].clientX - touchStartX) > 6) {
+          touchMoved = true;
+        }
+        if (scale > 1) {
+          panX = dx;
+          panY = dy;
+          applyTransform();
+        }
+      }
+    }, { passive: true });
+
+    lightboxStage.addEventListener('touchend', (e) => {
+      lightboxImg.classList.remove('is-dragging');
+      initialPinchDist = 0;
+
+      if (e.changedTouches.length === 1) {
+        if (!touchMoved && e.target === lightboxImg) {
+          setZoom(scale === 1 ? 2.2 : 1);
+        } else if (scale === 1 && touchMoved) {
+          const diff = e.changedTouches[0].clientX - touchStartX;
+          if (Math.abs(diff) > 45) {
+            updateLightbox(diff < 0 ? currentIndex + 1 : currentIndex - 1);
+          }
+        }
+      }
+
+      setTimeout(() => { touchUsed = false; }, 350);
+    }, { passive: true });
+
+    // Shortcut Keyboard Lightbox
     document.addEventListener('keydown', (e) => {
       if (!lightboxModal.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') updateLightbox(currentIndex - 1);
-      if (e.key === 'ArrowRight') updateLightbox(currentIndex + 1);
+      if (e.key === 'ArrowLeft' && scale === 1) updateLightbox(currentIndex - 1);
+      if (e.key === 'ArrowRight' && scale === 1) updateLightbox(currentIndex + 1);
+      if (e.key === '+' || e.key === '=') setZoom(scale + 0.5);
+      if (e.key === '-') setZoom(scale - 0.5);
+      if (e.key === '0') resetZoom();
     });
 
     // Toggle Menu Mobile
@@ -1134,26 +1279,6 @@
       scrollProgress.style.width = `${progress}%`;
       siteHeader.classList.toggle('is-scrolled', scrollTop > 16);
     }, { passive: true });
-
-    // Scroll Reveal Observer
-    const revealElements = document.querySelectorAll('.reveal');
-    if ('IntersectionObserver' in window) {
-      const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.12,
-        rootMargin: '0px 0px -30px 0px'
-      });
-
-      revealElements.forEach(el => revealObserver.observe(el));
-    } else {
-      revealElements.forEach(el => el.classList.add('is-visible'));
-    }
 
     // Tahun Otomatis
     document.getElementById('year').textContent = new Date().getFullYear();
