@@ -833,7 +833,7 @@
       transform: scale(0.92);
     }
 
-    /* Interactive Zoom Viewport */
+    /* Interactive Swipe & Zoom Viewport */
     .lightbox-stage {
       position: relative;
       z-index: 1;
@@ -843,7 +843,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 68px 46px 88px;
+      padding: 68px 20px 88px;
       touch-action: none;
     }
 
@@ -855,50 +855,16 @@
       border: 1px solid var(--gold-border);
       box-shadow: var(--shadow-lg);
       background: #0f172a;
-      cursor: zoom-in;
-      transform-origin: center center;
-      transition: transform 0.22s var(--ease-out);
-      will-change: transform;
-    }
-
-    .lightbox-img.is-zoomed {
       cursor: grab;
+      transform-origin: center center;
+      transition: transform 0.24s var(--ease-out), opacity 0.2s ease;
+      will-change: transform, opacity;
     }
 
     .lightbox-img.is-dragging {
       cursor: grabbing;
       transition: none;
     }
-
-    /* Tombol Navigasi Kiri & Kanan Murni Ikon (Tanpa Kotak/Card) */
-    .lightbox-nav {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      padding: 10px;
-      color: rgba(255, 255, 255, 0.9);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 215;
-      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.75));
-      transition: color 0.2s ease, transform 0.2s var(--ease-out), opacity 0.2s ease;
-    }
-
-    .lightbox-nav:hover {
-      color: var(--gold-light);
-      transform: translateY(-50%) scale(1.16);
-    }
-
-    .lightbox-nav:active {
-      transform: translateY(-50%) scale(0.92);
-    }
-
-    .lightbox-nav.prev { left: 10px; }
-    .lightbox-nav.next { right: 10px; }
 
     /* Deskripsi Bawah Lightbox */
     .lightbox-bottom {
@@ -975,10 +941,8 @@
         flex: 1;
       }
       .lightbox-stage {
-        padding: 66px 36px 94px;
+        padding: 66px 16px 94px;
       }
-      .lightbox-nav.prev { left: 4px; }
-      .lightbox-nav.next { right: 4px; }
     }
 
     @media (min-width: 520px) {
@@ -1132,7 +1096,7 @@
     </div>
   </footer>
 
-  <!-- Lightbox Foto dengan Latar Blur Foto Utama & Download -->
+  <!-- Lightbox Foto dengan Latar Blur Foto Utama, Geser Kiri/Kanan & Download -->
   <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
     <!-- Latar Belakang Mengikuti Seluruh Foto Utama & Di-Blur -->
     <div class="lightbox-bg" id="lightboxBg" aria-hidden="true"></div>
@@ -1163,23 +1127,10 @@
       </div>
     </div>
 
-    <!-- Tombol Navigasi Kiri & Kanan (Murni Ikon) -->
-    <button class="lightbox-nav prev" id="prevBtn" aria-label="Foto sebelumnya">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="15 18 9 12 15 6"></polyline>
-      </svg>
-    </button>
-
-    <!-- Area Foto Zoom & Pan -->
+    <!-- Area Geser (Swipe), Zoom & Pan -->
     <div class="lightbox-stage" id="lightboxStage">
       <img id="lightboxImg" class="lightbox-img" src="" alt="Foto galeri" draggable="false" />
     </div>
-
-    <button class="lightbox-nav next" id="nextBtn" aria-label="Foto berikutnya">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
-    </button>
 
     <!-- Deskripsi Foto -->
     <div class="lightbox-bottom">
@@ -1266,8 +1217,6 @@
 
     const downloadBtn = document.getElementById('downloadBtn');
     const lightboxClose = document.getElementById('lightboxClose');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
 
     // State Filter & Lightbox
     let searchQuery = '';
@@ -1275,7 +1224,7 @@
     let filteredPhotos = [...photos];
     let currentIndex = 0;
 
-    // State Zoom & Geser (Pan)
+    // State Zoom, Geser (Swipe) & Pan
     let scale = 1;
     let panX = 0;
     let panY = 0;
@@ -1286,9 +1235,12 @@
     let hasMoved = false;
     let dragStartX = 0;
     let dragStartY = 0;
+    let swipeStartX = 0;
+    let swipeOffsetX = 0;
     let initialPinchDist = 0;
     let initialPinchScale = 1;
     let touchUsed = false;
+    let isTransitioningSlide = false;
 
     const bulanShort = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
     const bulanFull = [
@@ -1481,14 +1433,13 @@
         scale = 1;
         panX = 0;
         panY = 0;
-        lightboxImg.classList.remove('is-zoomed');
         lightboxModal.classList.remove('is-zoom-active');
       } else {
-        lightboxImg.classList.add('is-zoomed');
         lightboxModal.classList.add('is-zoom-active');
       }
 
       lightboxImg.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${scale})`;
+      lightboxImg.style.opacity = '1';
       zoomLevelEl.textContent = `${Math.round(scale * 100)}%`;
     }
 
@@ -1501,6 +1452,7 @@
       scale = 1;
       panX = 0;
       panY = 0;
+      swipeOffsetX = 0;
       applyTransform();
     }
 
@@ -1519,6 +1471,53 @@
       lightboxDesc.textContent = item.desc;
     }
 
+    // Perpindahan Foto Halus Saat Digeser ke Kiri (direction = 1) atau Kanan (direction = -1)
+    function switchSlide(direction) {
+      if (filteredPhotos.length <= 1) {
+        resetZoom();
+        return;
+      }
+      if (isTransitioningSlide) return;
+      isTransitioningSlide = true;
+
+      lightboxImg.classList.remove('is-dragging');
+      lightboxImg.style.transform = `translate3d(${direction * -90}px, 0, 0) scale(0.97)`;
+      lightboxImg.style.opacity = '0';
+
+      setTimeout(() => {
+        currentIndex = (currentIndex + direction + filteredPhotos.length) % filteredPhotos.length;
+        const item = filteredPhotos[currentIndex];
+
+        scale = 1;
+        panX = 0;
+        panY = 0;
+        swipeOffsetX = 0;
+        lightboxModal.classList.remove('is-zoom-active');
+        zoomLevelEl.textContent = '100%';
+
+        lightboxImg.classList.add('is-dragging');
+        lightboxImg.src = item.src;
+        lightboxImg.alt = item.desc;
+        lightboxBg.style.backgroundImage = `url("${item.src}")`;
+        lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
+        lightboxDate.textContent = item.date;
+        lightboxDesc.textContent = item.desc;
+
+        lightboxImg.style.transform = `translate3d(${direction * 70}px, 0, 0) scale(0.98)`;
+        lightboxImg.style.opacity = '0';
+
+        void lightboxImg.offsetWidth;
+
+        lightboxImg.classList.remove('is-dragging');
+        lightboxImg.style.transform = 'translate3d(0, 0, 0) scale(1)';
+        lightboxImg.style.opacity = '1';
+
+        setTimeout(() => {
+          isTransitioningSlide = false;
+        }, 240);
+      }, 140);
+    }
+
     function openLightbox(index) {
       updateLightbox(index);
       lightboxModal.classList.add('open');
@@ -1533,9 +1532,6 @@
 
     zoomLevelEl.addEventListener('click', resetZoom);
     downloadBtn.addEventListener('click', () => downloadPhoto(filteredPhotos[currentIndex], currentIndex));
-
-    prevBtn.addEventListener('click', () => updateLightbox(currentIndex - 1));
-    nextBtn.addEventListener('click', () => updateLightbox(currentIndex + 1));
     lightboxClose.addEventListener('click', closeLightbox);
 
     // Zoom dengan Scroll Mouse
@@ -1545,51 +1541,69 @@
       setZoom(scale + delta);
     }, { passive: false });
 
-    // Drag / Geser dengan Mouse saat Zoom
-    lightboxImg.addEventListener('mousedown', (e) => {
-      if (touchUsed) return;
+    // Geser (Swipe) & Drag dengan Mouse (Desktop)
+    lightboxStage.addEventListener('mousedown', (e) => {
+      if (touchUsed || e.button !== 0 || isTransitioningSlide) return;
       e.preventDefault();
       isDragging = true;
       hasMoved = false;
+      swipeStartX = e.clientX;
+      swipeOffsetX = 0;
       dragStartX = e.clientX - panX;
       dragStartY = e.clientY - panY;
-      if (scale > 1) lightboxImg.classList.add('is-dragging');
+      lightboxImg.classList.add('is-dragging');
     });
 
     window.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      const nextX = e.clientX - dragStartX;
-      const nextY = e.clientY - dragStartY;
-      if (Math.abs(nextX - panX) > 3 || Math.abs(nextY - panY) > 3) {
+      const dx = e.clientX - swipeStartX;
+      const nextPanX = e.clientX - dragStartX;
+      const nextPanY = e.clientY - dragStartY;
+
+      if (Math.abs(dx) > 5 || (scale > 1 && (Math.abs(nextPanX - panX) > 4 || Math.abs(nextPanY - panY) > 4))) {
         hasMoved = true;
       }
+
       if (scale > 1) {
-        panX = nextX;
-        panY = nextY;
+        panX = nextPanX;
+        panY = nextPanY;
         applyTransform();
+      } else if (hasMoved) {
+        const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
+        swipeOffsetX = dx * resistance;
+        lightboxImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
+        lightboxImg.style.opacity = `${Math.max(0.45, 1 - Math.abs(swipeOffsetX) / 420)}`;
       }
     });
 
-    window.addEventListener('mouseup', () => {
+    window.addEventListener('mouseup', (e) => {
       if (!isDragging) return;
       isDragging = false;
       lightboxImg.classList.remove('is-dragging');
 
       if (!hasMoved) {
-        setZoom(scale === 1 ? 2.2 : 1);
+        if (e.target === lightboxImg) {
+          setZoom(scale === 1 ? 2.2 : 1);
+        } else if (e.target === lightboxStage && scale === 1) {
+          closeLightbox();
+        }
+        return;
+      }
+
+      if (scale === 1) {
+        if (Math.abs(swipeOffsetX) > 55 && filteredPhotos.length > 1) {
+          switchSlide(swipeOffsetX < 0 ? 1 : -1);
+        } else {
+          resetZoom();
+        }
       }
     });
 
-    // Klik area kosong di luar foto untuk menutup lightbox
-    lightboxStage.addEventListener('click', (e) => {
-      if (e.target === lightboxStage && scale === 1) {
-        closeLightbox();
-      }
-    });
-
-    // Dukungan Sentuh: Pinch-to-Zoom (2 jari), Tap Zoom & Geser / Swipe (1 jari)
+    // Dukungan Sentuh: Pinch-to-Zoom (2 jari), Tap Zoom & Geser Kiri/Kanan (1 jari)
     let touchStartX = 0;
+    let touchStartY = 0;
     let touchMoved = false;
+    let touchTarget = null;
 
     function getTouchDistance(touches) {
       const dx = touches[0].clientX - touches[1].clientX;
@@ -1598,17 +1612,22 @@
     }
 
     lightboxStage.addEventListener('touchstart', (e) => {
+      if (isTransitioningSlide) return;
       touchUsed = true;
+      touchTarget = e.target;
+
       if (e.touches.length === 2) {
         initialPinchDist = getTouchDistance(e.touches);
         initialPinchScale = scale;
         lightboxImg.classList.add('is-dragging');
       } else if (e.touches.length === 1) {
         touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
         dragStartX = e.touches[0].clientX - panX;
         dragStartY = e.touches[0].clientY - panY;
         touchMoved = false;
-        if (scale > 1) lightboxImg.classList.add('is-dragging');
+        swipeOffsetX = 0;
+        lightboxImg.classList.add('is-dragging');
       }
     }, { passive: true });
 
@@ -1618,15 +1637,22 @@
         const ratio = currentDist / initialPinchDist;
         setZoom(initialPinchScale * ratio);
       } else if (e.touches.length === 1) {
-        const dx = e.touches[0].clientX - dragStartX;
-        const dy = e.touches[0].clientY - dragStartY;
-        if (Math.abs(e.touches[0].clientX - touchStartX) > 6) {
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+
+        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
           touchMoved = true;
         }
+
         if (scale > 1) {
-          panX = dx;
-          panY = dy;
+          panX = e.touches[0].clientX - dragStartX;
+          panY = e.touches[0].clientY - dragStartY;
           applyTransform();
+        } else if (touchMoved && Math.abs(dx) >= Math.abs(dy)) {
+          const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
+          swipeOffsetX = dx * resistance;
+          lightboxImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
+          lightboxImg.style.opacity = `${Math.max(0.45, 1 - Math.abs(swipeOffsetX) / 360)}`;
         }
       }
     }, { passive: true });
@@ -1636,12 +1662,17 @@
       initialPinchDist = 0;
 
       if (e.changedTouches.length === 1) {
-        if (!touchMoved && e.target === lightboxImg) {
-          setZoom(scale === 1 ? 2.2 : 1);
-        } else if (scale === 1 && touchMoved) {
-          const diff = e.changedTouches[0].clientX - touchStartX;
-          if (Math.abs(diff) > 45) {
-            updateLightbox(diff < 0 ? currentIndex + 1 : currentIndex - 1);
+        if (!touchMoved) {
+          if (touchTarget === lightboxImg) {
+            setZoom(scale === 1 ? 2.2 : 1);
+          } else if (touchTarget === lightboxStage && scale === 1) {
+            closeLightbox();
+          }
+        } else if (scale === 1) {
+          if (Math.abs(swipeOffsetX) > 45 && filteredPhotos.length > 1) {
+            switchSlide(swipeOffsetX < 0 ? 1 : -1);
+          } else {
+            resetZoom();
           }
         }
       }
@@ -1653,8 +1684,8 @@
     document.addEventListener('keydown', (e) => {
       if (!lightboxModal.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft' && scale === 1) updateLightbox(currentIndex - 1);
-      if (e.key === 'ArrowRight' && scale === 1) updateLightbox(currentIndex + 1);
+      if (e.key === 'ArrowLeft' && scale === 1) switchSlide(-1);
+      if (e.key === 'ArrowRight' && scale === 1) switchSlide(1);
       if (e.key === '+' || e.key === '=') setZoom(scale + 0.5);
       if (e.key === '-') setZoom(scale - 0.5);
       if (e.key === '0') resetZoom();
