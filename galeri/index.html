@@ -97,31 +97,31 @@
     @keyframes cardPopIn {
       from {
         opacity: 0;
-        transform: translateY(16px) scale(0.98);
+        transform: translate3d(0, 12px, 0) scale(0.985);
       }
       to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translate3d(0, 0, 0) scale(1);
       }
     }
 
     @keyframes shimmerSlide {
       0% {
-        transform: translateX(-110%);
+        transform: translate3d(-100%, 0, 0);
       }
       100% {
-        transform: translateX(110%);
+        transform: translate3d(100%, 0, 0);
       }
     }
 
     @keyframes imageIconPulse {
       0%, 100% {
-        opacity: 0.42;
-        transform: translateY(0) scale(0.96);
+        opacity: 0.45;
+        transform: scale(0.97);
       }
       50% {
-        opacity: 0.92;
-        transform: translateY(-3px) scale(1.06);
+        opacity: 0.88;
+        transform: scale(1.04);
       }
     }
 
@@ -130,11 +130,13 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 0%;
+      width: 100%;
       height: 3px;
       background: linear-gradient(90deg, var(--accent), var(--gold-light), var(--gold));
+      transform: scaleX(0);
+      transform-origin: left center;
       z-index: 250;
-      transition: width 0.08s linear;
+      will-change: transform;
       pointer-events: none;
     }
 
@@ -144,17 +146,14 @@
       flex-shrink: 0;
       z-index: 100;
       height: var(--header-h);
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: #ffffff;
       border-bottom: 1px solid var(--border);
       box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
-      transition: box-shadow 0.25s ease, background-color 0.25s ease;
+      transition: box-shadow 0.2s ease;
     }
 
     .header.is-scrolled {
-      background: #ffffff;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.07);
     }
 
     .header-inner {
@@ -171,11 +170,6 @@
       font-weight: 700;
       font-size: 0.98rem;
       letter-spacing: -0.02em;
-      transition: transform 0.2s ease;
-    }
-
-    .brand:hover {
-      transform: translateX(2px);
     }
 
     .brand-mark {
@@ -196,7 +190,7 @@
       font-size: 0.88rem;
       font-weight: 500;
       color: var(--text-muted);
-      transition: color 0.2s ease;
+      transition: color 0.18s ease;
     }
 
     .nav-link::after {
@@ -209,7 +203,7 @@
       background: linear-gradient(90deg, var(--accent), var(--gold));
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.25s var(--ease-out);
+      transition: transform 0.22s var(--ease-out);
     }
 
     .nav-link:hover,
@@ -234,15 +228,10 @@
       place-items: center;
       cursor: pointer;
       box-shadow: var(--shadow-sm);
-      transition: border-color 0.2s ease, transform 0.15s ease;
-    }
-
-    .menu-btn:active {
-      transform: scale(0.94);
     }
 
     .menu-btn svg line {
-      transition: transform 0.25s var(--ease-out), opacity 0.2s ease;
+      transition: transform 0.22s var(--ease-out), opacity 0.18s ease;
       transform-origin: center;
     }
 
@@ -265,16 +254,16 @@
       padding: 12px 20px 20px;
       display: flex;
       flex-direction: column;
-      transform: translateY(-120%);
+      transform: translate3d(0, -110%, 0);
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.3s var(--ease-out), opacity 0.25s ease;
+      transition: transform 0.25s var(--ease-out), opacity 0.2s ease;
       z-index: 99;
       box-shadow: var(--shadow-md);
     }
 
     .mobile-nav.open {
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
       opacity: 1;
       pointer-events: auto;
     }
@@ -284,13 +273,11 @@
       border-bottom: 1px solid var(--border);
       font-weight: 500;
       color: var(--text);
-      transition: color 0.15s ease, padding-left 0.2s ease;
     }
 
     .mobile-nav a:hover,
     .mobile-nav a.active {
       color: var(--accent);
-      padding-left: 6px;
     }
 
     .mobile-nav a:last-child {
@@ -309,20 +296,18 @@
       font-weight: 600;
       border: 1px solid var(--primary);
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s var(--ease-out);
     }
 
     .btn-primary {
       background: var(--primary);
       color: #ffffff;
-      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.22);
     }
 
     .btn-primary:hover {
       background: var(--primary-hover);
       border-color: var(--primary-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(29, 78, 216, 0.28);
+      transform: translateY(-1px);
     }
 
     .btn-sm {
@@ -379,7 +364,6 @@
       font-weight: 600;
       color: var(--accent);
       cursor: pointer;
-      transition: color 0.18s ease;
     }
 
     .filter-reset-link.visible {
@@ -414,7 +398,7 @@
       background: var(--bg);
       gap: 6px;
       min-width: 0;
-      transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
     }
 
     .search-box:hover {
@@ -424,19 +408,16 @@
     .search-box:focus-within {
       background: var(--surface);
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-soft);
     }
 
     .search-box.has-value {
       background: var(--surface);
       border-color: var(--gold-border);
-      box-shadow: 0 0 0 2px var(--gold-soft);
     }
 
     .search-icon {
       color: var(--text-subtle);
       flex-shrink: 0;
-      transition: color 0.18s ease;
     }
 
     .search-box:focus-within .search-icon {
@@ -475,7 +456,6 @@
       place-items: center;
       cursor: pointer;
       flex-shrink: 0;
-      transition: background 0.15s ease, color 0.15s ease;
     }
 
     .search-box.has-value .search-clear-btn {
@@ -510,7 +490,7 @@
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
-      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+      transition: background 0.15s ease, color 0.15s ease;
     }
 
     .sort-seg-btn:hover {
@@ -530,8 +510,9 @@
       overflow-y: auto;
       overflow-x: hidden;
       padding: 18px 0 28px;
-      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
       overscroll-behavior-y: contain;
+      contain: strict;
     }
 
     .gallery-scroll-area::-webkit-scrollbar {
@@ -580,6 +561,7 @@
       border-top: 3px solid var(--gold);
       border-radius: 6px;
       box-shadow: var(--shadow-sm);
+      contain: layout style;
     }
 
     .skeleton-card.ratio-tall {
@@ -601,11 +583,12 @@
       background: linear-gradient(
         105deg,
         transparent 15%,
-        rgba(255, 255, 255, 0.65) 48%,
-        rgba(226, 189, 107, 0.24) 60%,
+        rgba(255, 255, 255, 0.6) 48%,
+        rgba(226, 189, 107, 0.2) 60%,
         transparent 85%
       );
-      animation: shimmerSlide 1.55s ease-in-out infinite;
+      animation: shimmerSlide 1.65s linear infinite;
+      will-change: transform;
       pointer-events: none;
       z-index: 2;
     }
@@ -618,7 +601,7 @@
       align-items: center;
       gap: 6px;
       color: #94a3b8;
-      animation: imageIconPulse 1.6s ease-in-out infinite;
+      animation: imageIconPulse 1.8s ease-in-out infinite;
     }
 
     .skeleton-icon-wrap svg {
@@ -654,12 +637,16 @@
       border-radius: 6px;
       cursor: pointer;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease, border-color 0.25s ease;
-      animation: cardPopIn 0.45s var(--ease-out) both;
+      transition: transform 0.22s var(--ease-out), box-shadow 0.22s ease, border-color 0.2s ease;
+      contain: layout style;
+    }
+
+    .photo-card.is-animating {
+      animation: cardPopIn 0.36s var(--ease-out) both;
     }
 
     .photo-card.is-loading-img {
-      min-height: 220px;
+      min-height: 210px;
     }
 
     .photo-card.is-loading-img::after {
@@ -669,11 +656,12 @@
       background: linear-gradient(
         105deg,
         transparent 15%,
-        rgba(255, 255, 255, 0.65) 48%,
-        rgba(226, 189, 107, 0.24) 60%,
+        rgba(255, 255, 255, 0.6) 48%,
+        rgba(226, 189, 107, 0.2) 60%,
         transparent 85%
       );
-      animation: shimmerSlide 1.55s ease-in-out infinite;
+      animation: shimmerSlide 1.65s linear infinite;
+      will-change: transform;
       pointer-events: none;
       z-index: 1;
     }
@@ -689,13 +677,13 @@
       color: #94a3b8;
       z-index: 1;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.2s ease;
     }
 
     .card-img-placeholder svg {
       width: 32px;
       height: 32px;
-      animation: imageIconPulse 1.6s ease-in-out infinite;
+      animation: imageIconPulse 1.8s ease-in-out infinite;
     }
 
     .card-img-status {
@@ -709,33 +697,10 @@
       opacity: 0;
     }
 
-    .photo-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -130%;
-      width: 55%;
-      height: 100%;
-      background: linear-gradient(
-        105deg,
-        transparent 0%,
-        rgba(226, 189, 107, 0.22) 50%,
-        transparent 100%
-      );
-      transform: skewX(-18deg);
-      transition: left 0.7s var(--ease-out);
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .photo-card:hover::before {
-      left: 150%;
-    }
-
     .photo-card:hover {
-      transform: translateY(-4px);
+      transform: translate3d(0, -3px, 0);
       border-color: var(--gold);
-      box-shadow: 0 16px 34px -6px rgba(200, 155, 60, 0.22), 0 4px 10px -4px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 12px 26px -6px rgba(200, 155, 60, 0.2), 0 4px 10px -4px rgba(15, 23, 42, 0.07);
     }
 
     .photo-card img {
@@ -745,35 +710,29 @@
       height: auto;
       display: block;
       opacity: 1;
-      transition: transform 0.55s var(--ease-out), opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .photo-card.is-loading-img img {
       opacity: 0;
     }
 
-    .photo-card:hover img {
-      transform: scale(1.03);
-    }
-
     .card-overlay {
       position: absolute;
       inset: auto 0 0 0;
-      padding: 40px 14px 13px;
+      padding: 36px 14px 13px;
       background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.88) 100%);
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
       gap: 12px;
       opacity: 0;
-      transform: translateY(4px);
-      transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
+      transition: opacity 0.2s ease;
       z-index: 3;
     }
 
     .photo-card:hover .card-overlay {
       opacity: 1;
-      transform: translateY(0);
     }
 
     .card-meta {
@@ -813,13 +772,12 @@
       justify-content: center;
       flex-shrink: 0;
       cursor: pointer;
-      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
-      transition: color 0.2s ease, transform 0.18s var(--ease-out);
+      transition: color 0.16s ease, transform 0.16s ease;
     }
 
     .card-icon-btn:hover {
       color: var(--gold-light);
-      transform: scale(1.15);
+      transform: scale(1.12);
     }
 
     .card-icon-btn:active {
@@ -884,7 +842,7 @@
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease, background-color 0.25s ease;
+      transition: opacity 0.2s ease, background-color 0.2s ease;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -898,21 +856,21 @@
       background: #060913;
     }
 
-    .lightbox-bg {
+    .lightbox-bg-img {
       position: absolute;
-      inset: -24px;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      filter: blur(36px) brightness(0.32) saturate(1.2);
-      transform: scale(1.06);
-      transition: background-image 0.35s ease, opacity 0.28s ease;
-      z-index: 0;
+      inset: -10%;
+      width: 120%;
+      height: 120%;
+      object-fit: cover;
+      opacity: 0.22;
+      transform: scale(1.08);
       pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.22s ease;
     }
 
-    .modal-backdrop.is-zoom-active .lightbox-bg {
-      opacity: 0.22;
+    .modal-backdrop.is-zoom-active .lightbox-bg-img {
+      opacity: 0.08;
     }
 
     .lightbox-topbar {
@@ -925,9 +883,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(11, 17, 32, 0.85) 0%, rgba(11, 17, 32, 0) 100%);
+      background: linear-gradient(180deg, rgba(11, 17, 32, 0.88) 0%, rgba(11, 17, 32, 0) 100%);
       z-index: 220;
-      transition: opacity 0.22s ease, transform 0.22s var(--ease-out);
     }
 
     .modal-backdrop.is-zoom-active .lightbox-topbar {
@@ -943,10 +900,8 @@
     .lightbox-badge {
       padding: 6px 11px;
       border-radius: 5px;
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: #ffffff;
       font-family: var(--font-mono);
       font-size: 0.74rem;
@@ -964,7 +919,6 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
     }
 
     .lightbox-badge.zoom-pill:hover,
@@ -982,28 +936,21 @@
     .lb-icon-btn {
       width: 36px;
       height: 36px;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 6px;
       color: rgba(255, 255, 255, 0.92);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, transform 0.18s var(--ease-out);
+      transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease;
     }
 
     .lb-icon-btn:hover {
       color: var(--gold-light);
       border-color: var(--gold-border);
-      background: rgba(15, 23, 42, 0.88);
-      transform: scale(1.06);
-    }
-
-    .lb-icon-btn:active {
-      transform: scale(0.94);
+      background: rgba(15, 23, 42, 0.96);
     }
 
     .lightbox-stage {
@@ -1018,7 +965,6 @@
       overflow: hidden;
       padding: 68px 20px 84px;
       touch-action: none;
-      transition: padding 0.24s var(--ease-out);
     }
 
     .modal-backdrop.is-zoom-active .lightbox-stage {
@@ -1035,7 +981,7 @@
       background: #0f172a;
       cursor: zoom-in;
       transform-origin: center center;
-      transition: transform 0.24s var(--ease-out), opacity 0.2s ease, border-radius 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s var(--ease-out), opacity 0.18s ease, border-radius 0.18s ease, border-color 0.18s ease;
       will-change: transform, opacity;
     }
 
@@ -1058,14 +1004,14 @@
       left: 0;
       right: 0;
       padding: 36px 20px 18px;
-      background: linear-gradient(0deg, rgba(11, 17, 32, 0.88) 0%, rgba(11, 17, 32, 0) 100%);
+      background: linear-gradient(0deg, rgba(11, 17, 32, 0.9) 0%, rgba(11, 17, 32, 0) 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       z-index: 215;
       pointer-events: none;
-      transition: opacity 0.22s ease, transform 0.22s var(--ease-out);
+      transition: opacity 0.2s ease;
     }
 
     .lightbox-bottom:empty,
@@ -1075,7 +1021,6 @@
 
     .modal-backdrop.is-zoom-active .lightbox-bottom {
       opacity: 0;
-      transform: translateY(14px);
     }
 
     .lightbox-desc {
@@ -1084,14 +1029,13 @@
       font-weight: 500;
       line-height: 1.45;
       color: #f8fafc;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     }
 
     .toast {
       position: fixed;
       bottom: 24px;
       left: 50%;
-      transform: translateX(-50%) translateY(90px) scale(0.95);
+      transform: translate3d(-50%, 90px, 0) scale(0.95);
       background: var(--primary);
       color: #ffffff;
       padding: 11px 18px;
@@ -1102,13 +1046,13 @@
       z-index: 300;
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.3s var(--ease-out), opacity 0.25s ease;
+      transition: transform 0.25s var(--ease-out), opacity 0.2s ease;
       text-align: center;
       max-width: 90vw;
     }
 
     .toast.show {
-      transform: translateX(-50%) translateY(0) scale(1);
+      transform: translate3d(-50%, 0, 0) scale(1);
       opacity: 1;
     }
 
@@ -1188,7 +1132,6 @@
     @media (hover: none) {
       .card-overlay {
         opacity: 1;
-        transform: translateY(0);
       }
     }
 
@@ -1374,7 +1317,7 @@
 
   <!-- Lightbox Foto -->
   <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
-    <div class="lightbox-bg" id="lightboxBg" aria-hidden="true"></div>
+    <img id="lightboxBgImg" class="lightbox-bg-img" src="" alt="" aria-hidden="true" decoding="async" />
 
     <div class="lightbox-topbar">
       <div class="lightbox-status">
@@ -1402,7 +1345,7 @@
     </div>
 
     <div class="lightbox-stage" id="lightboxStage">
-      <img id="lightboxImg" class="lightbox-img" src="" alt="Foto galeri" draggable="false" />
+      <img id="lightboxImg" class="lightbox-img" src="" alt="Foto galeri" draggable="false" decoding="async" />
     </div>
 
     <div class="lightbox-bottom" id="lightboxBottom">
@@ -1421,8 +1364,10 @@
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
     ];
     const HEIC_EXTENSIONS = ['heic', 'heif'];
-    const MAX_HEIC_CONCURRENCY = 2;
-    const MAX_DISPLAY_DIMENSION = 1440;
+    const MAX_HEIC_CONCURRENCY = 1;
+    const MAX_DISPLAY_DIMENSION = 1152;
+    const SESSION_CACHE_PREFIX = 'heic_jpeg_v1:';
+    const MAX_SESSION_DATA_URL_CHARS = 320000;
 
     const isBackendConfigured =
       SUPABASE_URL.startsWith('https://') &&
@@ -1455,7 +1400,7 @@
     const toast = document.getElementById('toast');
 
     const lightboxModal = document.getElementById('lightboxModal');
-    const lightboxBg = document.getElementById('lightboxBg');
+    const lightboxBgImg = document.getElementById('lightboxBgImg');
     const lightboxStage = document.getElementById('lightboxStage');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCounter = document.getElementById('lightboxCounter');
@@ -1472,6 +1417,9 @@
     let sortOrder = 'newest';
     let currentIndex = 0;
     let cardObserver = null;
+    let scrollRafId = 0;
+    let transformRafId = 0;
+    let searchDebounceId = 0;
 
     const heicConvertedCache = new Map();
     const heicPendingPromises = new Map();
@@ -1534,6 +1482,37 @@
       return HEIC_EXTENSIONS.includes(getExtensionFromUrl(url));
     }
 
+    function readSessionHeicCache(url) {
+      if (heicConvertedCache.has(url)) {
+        return heicConvertedCache.get(url);
+      }
+      try {
+        const cachedDataUrl = sessionStorage.getItem(SESSION_CACHE_PREFIX + url);
+        if (cachedDataUrl && cachedDataUrl.startsWith('data:image/')) {
+          heicConvertedCache.set(url, cachedDataUrl);
+          return cachedDataUrl;
+        }
+      } catch (_) {}
+      return null;
+    }
+
+    function writeSessionHeicCache(url, blob, objectUrl) {
+      heicConvertedCache.set(url, objectUrl);
+      if (!blob || blob.size > 240000 || typeof FileReader !== 'function') return;
+      try {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = typeof reader.result === 'string' ? reader.result : '';
+          if (result && result.length <= MAX_SESSION_DATA_URL_CHARS) {
+            try {
+              sessionStorage.setItem(SESSION_CACHE_PREFIX + url, result);
+            } catch (_) {}
+          }
+        };
+        reader.readAsDataURL(blob);
+      } catch (_) {}
+    }
+
     function acquireHeicSlot(highPriority = false) {
       if (activeHeicWorkers < MAX_HEIC_CONCURRENCY) {
         activeHeicWorkers++;
@@ -1557,7 +1536,7 @@
       }
     }
 
-    async function downscaleBlobIfNeeded(blob, maxDim = MAX_DISPLAY_DIMENSION, quality = 0.72) {
+    async function downscaleBlobIfNeeded(blob, maxDim = MAX_DISPLAY_DIMENSION, quality = 0.68) {
       if (!blob || typeof createImageBitmap !== 'function') {
         return blob;
       }
@@ -1580,13 +1559,12 @@
         if (!ctx) return blob;
 
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'medium';
+        ctx.imageSmoothingQuality = 'low';
         ctx.drawImage(bitmap, 0, 0, targetW, targetH);
 
-        const resizedBlob = await new Promise(resolve => {
+        return await new Promise(resolve => {
           canvas.toBlob(b => resolve(b || blob), 'image/jpeg', quality);
         });
-        return resizedBlob;
       } catch (_) {
         return blob;
       } finally {
@@ -1598,8 +1576,9 @@
 
     async function convertHeicUrlToDisplayUrl(url, highPriority = false) {
       if (!url) return url;
-      if (heicConvertedCache.has(url)) {
-        return heicConvertedCache.get(url);
+      const existing = readSessionHeicCache(url);
+      if (existing) {
+        return existing;
       }
       if (heicPendingPromises.has(url)) {
         return heicPendingPromises.get(url);
@@ -1612,9 +1591,8 @@
 
         await acquireHeicSlot(highPriority);
         try {
-          if (heicConvertedCache.has(url)) {
-            return heicConvertedCache.get(url);
-          }
+          const cachedAgain = readSessionHeicCache(url);
+          if (cachedAgain) return cachedAgain;
 
           const response = await fetch(url);
           if (!response.ok) throw new Error('Gagal mengunduh file HEIC');
@@ -1623,14 +1601,14 @@
           const convertedResult = await window.heic2any({
             blob: heicBlob,
             toType: 'image/jpeg',
-            quality: 0.72
+            quality: 0.68
           });
 
           const rawJpegBlob = Array.isArray(convertedResult) ? convertedResult[0] : convertedResult;
-          const finalBlob = await downscaleBlobIfNeeded(rawJpegBlob, MAX_DISPLAY_DIMENSION, 0.72);
+          const finalBlob = await downscaleBlobIfNeeded(rawJpegBlob, MAX_DISPLAY_DIMENSION, 0.68);
           const objectUrl = URL.createObjectURL(finalBlob);
 
-          heicConvertedCache.set(url, objectUrl);
+          writeSessionHeicCache(url, finalBlob, objectUrl);
           return objectUrl;
         } catch (err) {
           console.warn('Konversi HEIC gagal, memakai URL asli:', err);
@@ -1646,15 +1624,19 @@
     }
 
     function buildSearchIndex(item) {
+      if (item._searchText) return item._searchText;
       const parts = (item.isoDate || '').split('-');
-      if (parts.length !== 3) return `${item.date} ${item.desc}`.toLowerCase();
+      if (parts.length !== 3) {
+        item._searchText = `${item.date} ${item.desc}`.toLowerCase();
+        return item._searchText;
+      }
       const [year, monthStr, dayStr] = parts;
       const monthIdx = Number(monthStr) - 1;
       const dayNum = String(Number(dayStr));
       const mShort = bulanShort[monthIdx] || '';
       const mFull = bulanFull[monthIdx] || '';
 
-      return [
+      item._searchText = [
         item.date,
         item.isoDate,
         `${dayStr}/${monthStr}/${year}`,
@@ -1667,6 +1649,8 @@
         year,
         item.desc
       ].join(' ').toLowerCase();
+
+      return item._searchText;
     }
 
     function showToast(msg) {
@@ -1677,11 +1661,18 @@
     }
 
     function updateScrollUI() {
+      scrollRafId = 0;
       const scrollTop = galleryScrollArea.scrollTop;
       const maxScroll = galleryScrollArea.scrollHeight - galleryScrollArea.clientHeight;
-      const progress = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
-      scrollProgress.style.width = `${progress}%`;
+      const ratio = maxScroll > 0 ? Math.min(1, Math.max(0, scrollTop / maxScroll)) : 0;
+      scrollProgress.style.transform = `scaleX(${ratio})`;
       siteHeader.classList.toggle('is-scrolled', scrollTop > 8);
+    }
+
+    function scheduleScrollUI() {
+      if (!scrollRafId) {
+        scrollRafId = requestAnimationFrame(updateScrollUI);
+      }
     }
 
     async function loadPhotosFromGallery() {
@@ -1711,12 +1702,13 @@
         photos = (data || []).map((row, idx) => ({
           id: row.id,
           src: row.image_url,
-          displaySrc: heicConvertedCache.get(row.image_url) || row.image_url,
+          displaySrc: readSessionHeicCache(row.image_url) || row.image_url,
           isoDate: row.tanggal,
           date: formatIndoDate(row.tanggal),
           desc: row.deskripsi || '',
           createdAt: row.created_at || '',
-          fallbackOrder: idx
+          fallbackOrder: idx,
+          _searchText: ''
         }));
 
         loadingState.classList.remove('visible');
@@ -1763,8 +1755,8 @@
 
     async function triggerHeicConversionForCard(card, item, img, highPriority = false) {
       if (!card || !item || !img || !isHeicUrl(item.src)) return;
-      if (heicConvertedCache.has(item.src)) {
-        const cached = heicConvertedCache.get(item.src);
+      const cached = readSessionHeicCache(item.src);
+      if (cached) {
         item.displaySrc = cached;
         if (img.src !== cached) img.src = cached;
         return;
@@ -1794,7 +1786,7 @@
           const item = filteredPhotos[idx];
           const img = card.querySelector('img');
           if (item && img && isHeicUrl(item.src)) {
-            triggerHeicConversionForCard(card, item, img, i < 6);
+            triggerHeicConversionForCard(card, item, img, i < 4);
           }
         });
         return;
@@ -1811,13 +1803,13 @@
             cardObserver.unobserve(card);
 
             if (item && img && isHeicUrl(item.src)) {
-              triggerHeicConversionForCard(card, item, img, idx < 6);
+              triggerHeicConversionForCard(card, item, img, idx < 4);
             }
           });
         },
         {
           root: galleryScrollArea,
-          rootMargin: '220px 0px',
+          rootMargin: '160px 0px',
           threshold: 0.01
         }
       );
@@ -1906,7 +1898,7 @@
           emptyActionBtn.onclick = null;
         }
         emptyState.classList.add('visible');
-        updateScrollUI();
+        scheduleScrollUI();
         return;
       }
 
@@ -1915,13 +1907,19 @@
         const cleanDesc = (item.desc || '').trim();
         const altText = cleanDesc || `Foto ${item.date}`;
         const heicItem = isHeicUrl(item.src);
+        const cachedHeic = heicItem ? readSessionHeicCache(item.src) : null;
         const activeImgSrc = heicItem
-          ? (heicConvertedCache.get(item.src) || item.displaySrc || '')
+          ? (cachedHeic || '')
           : (item.displaySrc || item.src);
         const placeholderText = heicItem ? 'HEIC' : '';
+        const shouldAnimate = idx < 6;
 
         return `
-          <div class="photo-card is-loading-img" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
+          <div
+            class="photo-card is-loading-img${shouldAnimate ? ' is-animating' : ''}"
+            data-index="${idx}"
+            ${shouldAnimate ? `style="animation-delay: ${idx * 0.04}s"` : ''}
+          >
             <div class="card-img-placeholder" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -1950,15 +1948,17 @@
 
       bindCardImageLoadAnimations();
       galleryScrollArea.scrollTop = 0;
-      requestAnimationFrame(updateScrollUI);
+      scheduleScrollUI();
     }
 
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value;
-      applyFiltersAndRender();
+      clearTimeout(searchDebounceId);
+      searchDebounceId = setTimeout(applyFiltersAndRender, 80);
     });
 
     clearSearchBtn.addEventListener('click', () => {
+      clearTimeout(searchDebounceId);
       searchQuery = '';
       searchInput.value = '';
       searchInput.focus();
@@ -1974,6 +1974,7 @@
     });
 
     function resetAllFilters() {
+      clearTimeout(searchDebounceId);
       searchQuery = '';
       searchInput.value = '';
       sortOrder = 'newest';
@@ -2047,7 +2048,8 @@
       panY = Math.min(maxY, Math.max(-maxY, panY));
     }
 
-    function applyTransform() {
+    function renderLightboxTransform() {
+      transformRafId = 0;
       if (scale <= 1.01) {
         scale = 1;
         panX = 0;
@@ -2063,9 +2065,23 @@
       zoomLevelEl.textContent = `${Math.round(scale * 100)}%`;
     }
 
+    function applyTransform(immediate = false) {
+      if (immediate) {
+        if (transformRafId) {
+          cancelAnimationFrame(transformRafId);
+          transformRafId = 0;
+        }
+        renderLightboxTransform();
+        return;
+      }
+      if (!transformRafId) {
+        transformRafId = requestAnimationFrame(renderLightboxTransform);
+      }
+    }
+
     function setZoom(newScale) {
       scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
-      applyTransform();
+      applyTransform(true);
     }
 
     function resetZoom() {
@@ -2073,7 +2089,7 @@
       panX = 0;
       panY = 0;
       swipeOffsetX = 0;
-      applyTransform();
+      applyTransform(true);
     }
 
     function prefetchNeighborHeic(index) {
@@ -2082,7 +2098,7 @@
       const nextIdx = (index + 1) % filteredPhotos.length;
       [prevIdx, nextIdx].forEach(i => {
         const neighbor = filteredPhotos[i];
-        if (neighbor && isHeicUrl(neighbor.src) && !heicConvertedCache.has(neighbor.src)) {
+        if (neighbor && isHeicUrl(neighbor.src) && !readSessionHeicCache(neighbor.src)) {
           convertHeicUrlToDisplayUrl(neighbor.src, false).then(url => {
             if (url && url !== neighbor.src) neighbor.displaySrc = url;
           });
@@ -2097,8 +2113,8 @@
       lightboxDesc.textContent = cleanDesc;
       lightboxBottom.classList.toggle('is-hidden', !cleanDesc);
 
-      let activeSrc = item.displaySrc || item.src;
-      if (isHeicUrl(item.src) && !heicConvertedCache.has(item.src)) {
+      let activeSrc = readSessionHeicCache(item.src) || item.displaySrc || item.src;
+      if (isHeicUrl(item.src) && !readSessionHeicCache(item.src)) {
         lightboxDesc.textContent = cleanDesc ? `${cleanDesc} (Memuat HEIC...)` : 'Memuat HEIC...';
         lightboxBottom.classList.remove('is-hidden');
         const convertedUrl = await convertHeicUrlToDisplayUrl(item.src, true);
@@ -2115,7 +2131,7 @@
       if (filteredPhotos[currentIndex]?.id === item.id) {
         lightboxImg.src = activeSrc;
         lightboxImg.alt = cleanDesc || `Foto ${item.date}`;
-        lightboxBg.style.backgroundImage = `url("${activeSrc}")`;
+        lightboxBgImg.src = activeSrc;
         prefetchNeighborHeic(currentIndex);
       }
     }
@@ -2136,7 +2152,7 @@
       isTransitioningSlide = true;
 
       lightboxImg.classList.remove('is-dragging');
-      lightboxImg.style.transform = `translate3d(${direction * -90}px, 0, 0) scale(0.97)`;
+      lightboxImg.style.transform = `translate3d(${direction * -80}px, 0, 0) scale(0.98)`;
       lightboxImg.style.opacity = '0';
 
       setTimeout(async () => {
@@ -2153,7 +2169,7 @@
         lightboxImg.classList.add('is-dragging');
         await updateLightboxContent(item);
 
-        lightboxImg.style.transform = `translate3d(${direction * 70}px, 0, 0) scale(0.98)`;
+        lightboxImg.style.transform = `translate3d(${direction * 65}px, 0, 0) scale(0.98)`;
         lightboxImg.style.opacity = '0';
 
         void lightboxImg.offsetWidth;
@@ -2164,8 +2180,8 @@
 
         setTimeout(() => {
           isTransitioningSlide = false;
-        }, 240);
-      }, 140);
+        }, 200);
+      }, 120);
     }
 
     function openLightbox(index) {
@@ -2215,7 +2231,7 @@
       if (scale > 1) {
         panX = nextPanX;
         panY = nextPanY;
-        applyTransform();
+        applyTransform(false);
       } else if (hasMoved) {
         const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
         swipeOffsetX = dx * resistance;
@@ -2298,7 +2314,7 @@
         if (scale > 1) {
           panX = e.touches[0].clientX - dragStartX;
           panY = e.touches[0].clientY - dragStartY;
-          applyTransform();
+          applyTransform(false);
         } else if (touchMoved && Math.abs(dx) >= Math.abs(dy)) {
           const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
           swipeOffsetX = dx * resistance;
@@ -2363,11 +2379,11 @@
       });
     });
 
-    galleryScrollArea.addEventListener('scroll', updateScrollUI, { passive: true });
+    galleryScrollArea.addEventListener('scroll', scheduleScrollUI, { passive: true });
     window.addEventListener('resize', () => {
-      updateScrollUI();
+      scheduleScrollUI();
       if (lightboxModal.classList.contains('open') && scale > 1) {
-        applyTransform();
+        applyTransform(true);
       }
     }, { passive: true });
 
