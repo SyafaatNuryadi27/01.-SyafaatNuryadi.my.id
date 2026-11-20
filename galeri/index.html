@@ -682,8 +682,10 @@
       position: absolute;
       inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 4px;
       color: #94a3b8;
       z-index: 1;
       pointer-events: none;
@@ -694,6 +696,13 @@
       width: 32px;
       height: 32px;
       animation: imageIconPulse 1.6s ease-in-out infinite;
+    }
+
+    .card-img-status {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #64748b;
     }
 
     .photo-card:not(.is-loading-img) .card-img-placeholder {
@@ -1412,6 +1421,8 @@
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
     ];
     const HEIC_EXTENSIONS = ['heic', 'heif'];
+    const MAX_HEIC_CONCURRENCY = 2;
+    const MAX_DISPLAY_DIMENSION = 1440;
 
     const isBackendConfigured =
       SUPABASE_URL.startsWith('https://') &&
@@ -1460,9 +1471,12 @@
     let searchQuery = '';
     let sortOrder = 'newest';
     let currentIndex = 0;
+    let cardObserver = null;
 
     const heicConvertedCache = new Map();
     const heicPendingPromises = new Map();
+    const heicWaitQueue = [];
+    let activeHeicWorkers = 0;
 
     let scale = 1;
     let panX = 0;
@@ -1520,7 +1534,69 @@
       return HEIC_EXTENSIONS.includes(getExtensionFromUrl(url));
     }
 
-    async function convertHeicUrlToDisplayUrl(url) {
+    function acquireHeicSlot(highPriority = false) {
+      if (activeHeicWorkers < MAX_HEIC_CONCURRENCY) {
+        activeHeicWorkers++;
+        return Promise.resolve();
+      }
+      return new Promise(resolve => {
+        if (highPriority) {
+          heicWaitQueue.unshift(resolve);
+        } else {
+          heicWaitQueue.push(resolve);
+        }
+      });
+    }
+
+    function releaseHeicSlot() {
+      activeHeicWorkers = Math.max(0, activeHeicWorkers - 1);
+      const nextResolve = heicWaitQueue.shift();
+      if (nextResolve) {
+        activeHeicWorkers++;
+        nextResolve();
+      }
+    }
+
+    async function downscaleBlobIfNeeded(blob, maxDim = MAX_DISPLAY_DIMENSION, quality = 0.72) {
+      if (!blob || typeof createImageBitmap !== 'function') {
+        return blob;
+      }
+      let bitmap = null;
+      try {
+        bitmap = await createImageBitmap(blob);
+        const { width, height } = bitmap;
+        const longest = Math.max(width, height);
+        if (longest <= maxDim) {
+          return blob;
+        }
+        const ratio = maxDim / longest;
+        const targetW = Math.round(width * ratio);
+        const targetH = Math.round(height * ratio);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = targetW;
+        canvas.height = targetH;
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (!ctx) return blob;
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'medium';
+        ctx.drawImage(bitmap, 0, 0, targetW, targetH);
+
+        const resizedBlob = await new Promise(resolve => {
+          canvas.toBlob(b => resolve(b || blob), 'image/jpeg', quality);
+        });
+        return resizedBlob;
+      } catch (_) {
+        return blob;
+      } finally {
+        if (bitmap && typeof bitmap.close === 'function') {
+          bitmap.close();
+        }
+      }
+    }
+
+    async function convertHeicUrlToDisplayUrl(url, highPriority = false) {
       if (!url) return url;
       if (heicConvertedCache.has(url)) {
         return heicConvertedCache.get(url);
@@ -1533,23 +1609,34 @@
         if (typeof window.heic2any !== 'function') {
           return url;
         }
+
+        await acquireHeicSlot(highPriority);
         try {
+          if (heicConvertedCache.has(url)) {
+            return heicConvertedCache.get(url);
+          }
+
           const response = await fetch(url);
           if (!response.ok) throw new Error('Gagal mengunduh file HEIC');
           const heicBlob = await response.blob();
+
           const convertedResult = await window.heic2any({
             blob: heicBlob,
             toType: 'image/jpeg',
-            quality: 0.88
+            quality: 0.72
           });
-          const outputBlob = Array.isArray(convertedResult) ? convertedResult[0] : convertedResult;
-          const objectUrl = URL.createObjectURL(outputBlob);
+
+          const rawJpegBlob = Array.isArray(convertedResult) ? convertedResult[0] : convertedResult;
+          const finalBlob = await downscaleBlobIfNeeded(rawJpegBlob, MAX_DISPLAY_DIMENSION, 0.72);
+          const objectUrl = URL.createObjectURL(finalBlob);
+
           heicConvertedCache.set(url, objectUrl);
           return objectUrl;
         } catch (err) {
           console.warn('Konversi HEIC gagal, memakai URL asli:', err);
           return url;
         } finally {
+          releaseHeicSlot();
           heicPendingPromises.delete(url);
         }
       })();
@@ -1674,6 +1761,72 @@
       }
     }
 
+    async function triggerHeicConversionForCard(card, item, img, highPriority = false) {
+      if (!card || !item || !img || !isHeicUrl(item.src)) return;
+      if (heicConvertedCache.has(item.src)) {
+        const cached = heicConvertedCache.get(item.src);
+        item.displaySrc = cached;
+        if (img.src !== cached) img.src = cached;
+        return;
+      }
+
+      const statusEl = card.querySelector('.card-img-status');
+      if (statusEl) statusEl.textContent = 'Konversi HEIC...';
+
+      const convertedUrl = await convertHeicUrlToDisplayUrl(item.src, highPriority);
+      if (convertedUrl && convertedUrl !== item.src && img.isConnected) {
+        item.displaySrc = convertedUrl;
+        img.src = convertedUrl;
+      } else if (statusEl) {
+        statusEl.textContent = '';
+      }
+    }
+
+    function setupCardIntersectionObserver() {
+      if (cardObserver) {
+        cardObserver.disconnect();
+        cardObserver = null;
+      }
+
+      if (typeof IntersectionObserver !== 'function') {
+        photoGrid.querySelectorAll('.photo-card').forEach((card, i) => {
+          const idx = Number(card.dataset.index);
+          const item = filteredPhotos[idx];
+          const img = card.querySelector('img');
+          if (item && img && isHeicUrl(item.src)) {
+            triggerHeicConversionForCard(card, item, img, i < 6);
+          }
+        });
+        return;
+      }
+
+      cardObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const card = entry.target;
+            const idx = Number(card.dataset.index);
+            const item = filteredPhotos[idx];
+            const img = card.querySelector('img');
+            cardObserver.unobserve(card);
+
+            if (item && img && isHeicUrl(item.src)) {
+              triggerHeicConversionForCard(card, item, img, idx < 6);
+            }
+          });
+        },
+        {
+          root: galleryScrollArea,
+          rootMargin: '220px 0px',
+          threshold: 0.01
+        }
+      );
+
+      photoGrid.querySelectorAll('.photo-card').forEach(card => {
+        cardObserver.observe(card);
+      });
+    }
+
     function bindCardImageLoadAnimations() {
       photoGrid.querySelectorAll('.photo-card img').forEach(img => {
         const card = img.closest('.photo-card');
@@ -1691,24 +1844,11 @@
         const handleLoadError = async () => {
           if (!fallbackTried && isHeicUrl(item.src)) {
             fallbackTried = true;
-            const convertedUrl = await convertHeicUrlToDisplayUrl(item.src);
-            if (convertedUrl && convertedUrl !== item.src) {
-              item.displaySrc = convertedUrl;
-              img.src = convertedUrl;
-              return;
-            }
+            await triggerHeicConversionForCard(card, item, img, true);
+            return;
           }
           markLoaded();
         };
-
-        if (isHeicUrl(item.src) && !heicConvertedCache.has(item.src)) {
-          convertHeicUrlToDisplayUrl(item.src).then(convertedUrl => {
-            if (convertedUrl && convertedUrl !== item.src && img.isConnected) {
-              item.displaySrc = convertedUrl;
-              img.src = convertedUrl;
-            }
-          });
-        }
 
         if (img.complete && img.naturalWidth > 0) {
           markLoaded();
@@ -1717,6 +1857,8 @@
           img.addEventListener('error', handleLoadError, { once: true });
         }
       });
+
+      setupCardIntersectionObserver();
     }
 
     function applyFiltersAndRender() {
@@ -1772,7 +1914,12 @@
       photoGrid.innerHTML = list.map((item, idx) => {
         const cleanDesc = (item.desc || '').trim();
         const altText = cleanDesc || `Foto ${item.date}`;
-        const activeImgSrc = item.displaySrc || item.src;
+        const heicItem = isHeicUrl(item.src);
+        const activeImgSrc = heicItem
+          ? (heicConvertedCache.get(item.src) || item.displaySrc || '')
+          : (item.displaySrc || item.src);
+        const placeholderText = heicItem ? 'HEIC' : '';
+
         return `
           <div class="photo-card is-loading-img" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
             <div class="card-img-placeholder" aria-hidden="true">
@@ -1781,8 +1928,9 @@
                 <circle cx="8.5" cy="8.5" r="1.5"></circle>
                 <polyline points="21 15 16 10 5 21"></polyline>
               </svg>
+              ${placeholderText ? `<span class="card-img-status">${placeholderText}</span>` : ''}
             </div>
-            <img src="${activeImgSrc}" alt="${escapeHtml(altText)}" loading="lazy" />
+            <img src="${activeImgSrc}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" />
             <div class="card-overlay">
               <div class="card-meta">
                 <span class="card-date">${item.date}</span>
@@ -1928,24 +2076,47 @@
       applyTransform();
     }
 
+    function prefetchNeighborHeic(index) {
+      if (filteredPhotos.length <= 1) return;
+      const prevIdx = (index - 1 + filteredPhotos.length) % filteredPhotos.length;
+      const nextIdx = (index + 1) % filteredPhotos.length;
+      [prevIdx, nextIdx].forEach(i => {
+        const neighbor = filteredPhotos[i];
+        if (neighbor && isHeicUrl(neighbor.src) && !heicConvertedCache.has(neighbor.src)) {
+          convertHeicUrlToDisplayUrl(neighbor.src, false).then(url => {
+            if (url && url !== neighbor.src) neighbor.displaySrc = url;
+          });
+        }
+      });
+    }
+
     async function updateLightboxContent(item) {
       const cleanDesc = (item.desc || '').trim();
-      const activeSrc = item.displaySrc || item.src;
-      lightboxImg.src = activeSrc;
-      lightboxImg.alt = cleanDesc || `Foto ${item.date}`;
-      lightboxBg.style.backgroundImage = `url("${activeSrc}")`;
       lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
       lightboxDate.textContent = item.date;
       lightboxDesc.textContent = cleanDesc;
       lightboxBottom.classList.toggle('is-hidden', !cleanDesc);
 
+      let activeSrc = item.displaySrc || item.src;
       if (isHeicUrl(item.src) && !heicConvertedCache.has(item.src)) {
-        const convertedUrl = await convertHeicUrlToDisplayUrl(item.src);
-        if (convertedUrl && convertedUrl !== item.src && filteredPhotos[currentIndex]?.id === item.id) {
+        lightboxDesc.textContent = cleanDesc ? `${cleanDesc} (Memuat HEIC...)` : 'Memuat HEIC...';
+        lightboxBottom.classList.remove('is-hidden');
+        const convertedUrl = await convertHeicUrlToDisplayUrl(item.src, true);
+        if (convertedUrl && convertedUrl !== item.src) {
           item.displaySrc = convertedUrl;
-          lightboxImg.src = convertedUrl;
-          lightboxBg.style.backgroundImage = `url("${convertedUrl}")`;
+          activeSrc = convertedUrl;
         }
+        if (filteredPhotos[currentIndex]?.id === item.id) {
+          lightboxDesc.textContent = cleanDesc;
+          lightboxBottom.classList.toggle('is-hidden', !cleanDesc);
+        }
+      }
+
+      if (filteredPhotos[currentIndex]?.id === item.id) {
+        lightboxImg.src = activeSrc;
+        lightboxImg.alt = cleanDesc || `Foto ${item.date}`;
+        lightboxBg.style.backgroundImage = `url("${activeSrc}")`;
+        prefetchNeighborHeic(currentIndex);
       }
     }
 
@@ -1968,7 +2139,7 @@
       lightboxImg.style.transform = `translate3d(${direction * -90}px, 0, 0) scale(0.97)`;
       lightboxImg.style.opacity = '0';
 
-      setTimeout(() => {
+      setTimeout(async () => {
         currentIndex = (currentIndex + direction + filteredPhotos.length) % filteredPhotos.length;
         const item = filteredPhotos[currentIndex];
 
@@ -1980,7 +2151,7 @@
         zoomLevelEl.textContent = '100%';
 
         lightboxImg.classList.add('is-dragging');
-        updateLightboxContent(item);
+        await updateLightboxContent(item);
 
         lightboxImg.style.transform = `translate3d(${direction * 70}px, 0, 0) scale(0.98)`;
         lightboxImg.style.opacity = '0';
