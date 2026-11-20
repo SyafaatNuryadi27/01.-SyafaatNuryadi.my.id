@@ -25,13 +25,13 @@
   <meta name="twitter:description" content="Kumpulan foto dan dokumentasi momen resmi milik Syafaat Nuryadi." />
   <meta name="twitter:image" id="twitterImageMeta" content="" />
 
-  <!-- Structured Data Awal (Akan diperbarui otomatis dengan daftar semua foto dari Supabase) -->
+  <!-- Structured Data Awal -->
   <script type="application/ld+json" id="galleryJsonLd">
     {
       "@context": "https://schema.org",
       "@type": "ImageGallery",
       "name": "Galeri Foto Syafaat Nuryadi",
-      "description": "Galeti & foto Syafaat Nuryadi.",
+      "description": "Galeri & foto Syafaat Nuryadi.",
       "url": "https://syafaatnuryadi.my.id/galeri/",
       "author": {
         "@type": "Person",
@@ -43,11 +43,14 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://ixfokmldbkmgjsjcuxpy.supabase.co" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
+
   <!-- Client Database & Storage v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- HEIC/HEIF Browser Decoder -->
-  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
   <style>
     :root {
       --bg: #f8f9fb;
@@ -124,7 +127,6 @@
       display: block;
     }
 
-    /* Heading SEO semantik tanpa mengubah tata letak visual */
     .sr-only {
       position: absolute;
       width: 1px;
@@ -147,7 +149,7 @@
     @keyframes cardPopIn {
       from {
         opacity: 0;
-        transform: translate3d(0, 12px, 0) scale(0.985);
+        transform: translate3d(0, 10px, 0) scale(0.99);
       }
       to {
         opacity: 1;
@@ -164,7 +166,6 @@
       }
     }
 
-    /* Scroll Progress Bar */
     .scroll-progress {
       position: fixed;
       top: 0;
@@ -179,7 +180,6 @@
       pointer-events: none;
     }
 
-    /* Header */
     .header {
       position: relative;
       flex-shrink: 0;
@@ -282,7 +282,6 @@
       transform: translateY(-4px) rotate(-45deg);
     }
 
-    /* Mobile Drawer */
     .mobile-nav {
       position: fixed;
       top: var(--header-h);
@@ -323,7 +322,6 @@
       border-bottom: none;
     }
 
-    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -354,7 +352,6 @@
       font-size: 0.82rem;
     }
 
-    /* Filter Bar */
     .filter-dock {
       flex-shrink: 0;
       background: var(--bg);
@@ -542,7 +539,6 @@
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     }
 
-    /* Area Scroll Khusus Foto */
     .gallery-scroll-area {
       flex: 1 1 auto;
       min-height: 0;
@@ -571,7 +567,6 @@
       background: var(--text-subtle);
     }
 
-    /* Loading Skeleton Grid Menyerupai Kartu Gambar (Statis pada ikon) */
     .loading-state {
       display: none;
     }
@@ -680,7 +675,7 @@
     }
 
     .photo-card.is-animating {
-      animation: cardPopIn 0.36s var(--ease-out) both;
+      animation: cardPopIn 0.3s var(--ease-out) both;
     }
 
     .photo-card.is-loading-img {
@@ -740,6 +735,13 @@
       box-shadow: 0 12px 26px -6px rgba(200, 155, 60, 0.2), 0 4px 10px -4px rgba(15, 23, 42, 0.07);
     }
 
+    .photo-card-link {
+      display: block;
+      width: 100%;
+      color: inherit;
+      text-decoration: none;
+    }
+
     .photo-card img {
       position: relative;
       z-index: 1;
@@ -747,7 +749,7 @@
       height: auto;
       display: block;
       opacity: 1;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.2s ease;
     }
 
     .photo-card.is-loading-img img {
@@ -799,28 +801,6 @@
       overflow: hidden;
     }
 
-    .card-icon-btn {
-      background: transparent;
-      border: none;
-      padding: 4px;
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      cursor: pointer;
-      transition: color 0.16s ease, transform 0.16s ease;
-    }
-
-    .card-icon-btn:hover {
-      color: var(--gold-light);
-      transform: scale(1.12);
-    }
-
-    .card-icon-btn:active {
-      transform: scale(0.92);
-    }
-
     .empty-state {
       display: none;
       text-align: center;
@@ -866,8 +846,8 @@
       letter-spacing: 0.01em;
     }
 
-    /* Lightbox */
-    .modal-backdrop {
+    /* Halaman Detail Foto Tersendiri */
+    .photo-detail-page {
       position: fixed;
       inset: 0;
       background: #0b1120;
@@ -884,17 +864,16 @@
       -webkit-user-select: none;
     }
 
-    .modal-backdrop.open {
+    .photo-detail-page.open {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .modal-backdrop.is-zoom-active {
+    .photo-detail-page.is-zoom-active {
       background: #060913;
     }
 
-    /* Foto Latar Belakang Lightbox yang Lurus, Simetris, dan Tanpa Blur */
-    .lightbox-bg-img {
+    .detail-bg-img {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -907,11 +886,11 @@
       transition: opacity 0.2s ease;
     }
 
-    .modal-backdrop.is-zoom-active .lightbox-bg-img {
+    .photo-detail-page.is-zoom-active .detail-bg-img {
       opacity: 0;
     }
 
-    .lightbox-topbar {
+    .detail-topbar {
       position: fixed;
       top: 0;
       left: 0;
@@ -921,21 +900,46 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(11, 17, 32, 0.88) 0%, rgba(11, 17, 32, 0) 100%);
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(11, 17, 32, 0.92) 0%, rgba(11, 17, 32, 0) 100%);
       z-index: 220;
     }
 
-    .modal-backdrop.is-zoom-active .lightbox-topbar {
-      background: linear-gradient(180deg, rgba(6, 9, 19, 0.92) 0%, rgba(6, 9, 19, 0) 100%);
+    .photo-detail-page.is-zoom-active .detail-topbar {
+      background: linear-gradient(180deg, rgba(6, 9, 19, 0.94) 0%, rgba(6, 9, 19, 0) 100%);
     }
 
-    .lightbox-status {
+    .detail-status {
       display: flex;
       align-items: center;
       gap: 8px;
+      min-width: 0;
+      flex-wrap: wrap;
     }
 
-    .lightbox-badge {
+    .detail-back-btn {
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 5px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+    }
+
+    .detail-back-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .detail-badge {
       padding: 6px 11px;
       border-radius: 5px;
       background: rgba(15, 23, 42, 0.86);
@@ -947,31 +951,32 @@
       letter-spacing: 0.04em;
     }
 
-    .lightbox-badge.gold {
+    .detail-badge.gold {
       color: var(--gold-light);
       border-color: var(--gold-border);
     }
 
-    .lightbox-badge.zoom-pill {
+    .detail-badge.zoom-pill {
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 5px;
     }
 
-    .lightbox-badge.zoom-pill:hover,
-    .modal-backdrop.is-zoom-active .lightbox-badge.zoom-pill {
+    .detail-badge.zoom-pill:hover,
+    .photo-detail-page.is-zoom-active .detail-badge.zoom-pill {
       border-color: var(--gold);
       color: var(--gold-light);
     }
 
-    .lightbox-tools {
+    .detail-tools {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
-    .lb-icon-btn {
+    .detail-icon-btn {
       width: 36px;
       height: 36px;
       background: rgba(15, 23, 42, 0.82);
@@ -985,13 +990,13 @@
       transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease;
     }
 
-    .lb-icon-btn:hover {
+    .detail-icon-btn:hover {
       color: var(--gold-light);
       border-color: var(--gold-border);
       background: rgba(15, 23, 42, 0.96);
     }
 
-    .lightbox-stage {
+    .detail-stage {
       position: relative;
       z-index: 1;
       width: 100vw;
@@ -1005,11 +1010,11 @@
       touch-action: none;
     }
 
-    .modal-backdrop.is-zoom-active .lightbox-stage {
+    .photo-detail-page.is-zoom-active .detail-stage {
       padding: 0;
     }
 
-    .lightbox-img {
+    .detail-img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
@@ -1023,7 +1028,7 @@
       will-change: transform;
     }
 
-    .modal-backdrop.is-zoom-active .lightbox-img {
+    .photo-detail-page.is-zoom-active .detail-img {
       border-radius: 0;
       border-color: transparent;
       box-shadow: none;
@@ -1031,12 +1036,12 @@
       cursor: grab;
     }
 
-    .lightbox-img.is-dragging {
+    .detail-img.is-dragging {
       cursor: grabbing !important;
       transition: none !important;
     }
 
-    .lightbox-bottom {
+    .detail-bottom {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -1052,16 +1057,16 @@
       transition: opacity 0.2s ease;
     }
 
-    .lightbox-bottom:empty,
-    .lightbox-bottom.is-hidden {
+    .detail-bottom:empty,
+    .detail-bottom.is-hidden {
       display: none;
     }
 
-    .modal-backdrop.is-zoom-active .lightbox-bottom {
+    .photo-detail-page.is-zoom-active .detail-bottom {
       opacity: 0;
     }
 
-    .lightbox-desc {
+    .detail-desc {
       max-width: 640px;
       font-size: 0.88rem;
       font-weight: 500;
@@ -1137,13 +1142,6 @@
         line-height: 1.35;
         -webkit-line-clamp: 2;
       }
-      .card-icon-btn {
-        padding: 3px;
-      }
-      .card-icon-btn svg {
-        width: 16px;
-        height: 16px;
-      }
       .skeleton-icon-wrap svg,
       .card-img-placeholder svg {
         width: 26px;
@@ -1152,20 +1150,23 @@
       .skeleton-icon-label {
         font-size: 0.62rem;
       }
-      .lightbox-topbar {
+      .detail-topbar {
         padding: 0 12px;
       }
-      .lightbox-tools {
+      .detail-back-label {
+        display: none;
+      }
+      .detail-tools {
         gap: 6px;
       }
-      .lb-icon-btn {
+      .detail-icon-btn {
         width: 34px;
         height: 34px;
       }
-      .lightbox-stage {
+      .detail-stage {
         padding: 64px 14px 86px;
       }
-      .modal-backdrop.is-zoom-active .lightbox-stage {
+      .photo-detail-page.is-zoom-active .detail-stage {
         padding: 0;
       }
     }
@@ -1211,7 +1212,6 @@
       }
     }
 
-    /* Layar Laptop & Desktop Lebar: Menampilkan 4 Kolom / Baris Grid */
     @media (min-width: 1024px) {
       .skeleton-grid,
       .photo-grid {
@@ -1283,7 +1283,6 @@
   </nav>
 
   <main>
-    <!-- Heading Utama untuk Mesin Pencari (Tersembunyi secara visual) -->
     <h1 class="sr-only">Galeri Foto Syafaat Nuryadi</h1>
 
     <!-- Panel Filter Pencarian Ringkas -->
@@ -1434,19 +1433,38 @@
     </div>
   </footer>
 
-  <!-- Lightbox Foto -->
-  <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
-    <img id="lightboxBgImg" class="lightbox-bg-img" src="" alt="" aria-hidden="true" decoding="async" />
+  <!-- Halaman Detail Foto (URL terpisah ?foto=ID) -->
+  <section class="photo-detail-page" id="photoDetailPage" aria-hidden="true" aria-label="Detail Foto">
+    <img id="detailBgImg" class="detail-bg-img" src="" alt="" aria-hidden="true" decoding="async" />
 
-    <div class="lightbox-topbar">
-      <div class="lightbox-status">
-        <span class="lightbox-badge" id="lightboxCounter">1 / 1</span>
-        <span class="lightbox-badge gold" id="lightboxDate">-</span>
-        <button type="button" class="lightbox-badge zoom-pill" id="zoomLevel" title="Klik untuk reset zoom (100%)">100%</button>
+    <div class="detail-topbar">
+      <div class="detail-status">
+        <a href="./" class="detail-back-btn" id="detailBackBtn" title="Kembali ke Galeri (Esc)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span class="detail-back-label">Galeri</span>
+        </a>
+        <span class="detail-badge" id="detailCounter">1 / 1</span>
+        <span class="detail-badge gold" id="detailDate">-</span>
+        <button type="button" class="detail-badge zoom-pill" id="zoomLevel" title="Klik untuk reset zoom (100%)">100%</button>
       </div>
 
-      <div class="lightbox-tools">
-        <button class="lb-icon-btn" id="downloadBtn" title="Unduh foto" aria-label="Unduh foto">
+      <div class="detail-tools">
+        <button class="detail-icon-btn" id="prevPhotoBtn" title="Foto sebelumnya (Panah Kiri)" aria-label="Foto sebelumnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <button class="detail-icon-btn" id="nextPhotoBtn" title="Foto berikutnya (Panah Kanan)" aria-label="Foto berikutnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        <button class="detail-icon-btn" id="downloadBtn" title="Unduh foto" aria-label="Unduh foto">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
@@ -1454,7 +1472,7 @@
           </svg>
         </button>
 
-        <button class="lb-icon-btn" id="lightboxClose" title="Tutup (Esc)" aria-label="Tutup foto">
+        <button class="detail-icon-btn" id="detailCloseBtn" title="Kembali ke Galeri (Esc)" aria-label="Tutup halaman foto">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -1463,14 +1481,14 @@
       </div>
     </div>
 
-    <div class="lightbox-stage" id="lightboxStage">
-      <img id="lightboxImg" class="lightbox-img" src="" alt="Foto Syafaat Nuryadi" draggable="false" decoding="async" />
+    <div class="detail-stage" id="detailStage">
+      <img id="detailImg" class="detail-img" src="" alt="Foto Syafaat Nuryadi" draggable="false" decoding="async" />
     </div>
 
-    <div class="lightbox-bottom" id="lightboxBottom">
-      <p class="lightbox-desc" id="lightboxDesc"></p>
+    <div class="detail-bottom" id="detailBottom">
+      <p class="detail-desc" id="detailDesc"></p>
     </div>
-  </div>
+  </section>
 
   <div class="toast" id="toast">Memproses...</div>
 
@@ -1480,15 +1498,22 @@
     const TABLE_NAME = 'galeri_foto';
     const OWNER_NAME = 'Syafaat Nuryadi';
     const SITE_BASE_URL = 'https://syafaatnuryadi.my.id';
+    const DEFAULT_PAGE_TITLE = 'Galeri Foto Syafaat Nuryadi — Dokumentasi & Momen';
 
     const ALLOWED_IMAGE_EXTENSIONS = [
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
     ];
     const HEIC_EXTENSIONS = ['heic', 'heif'];
-    const MAX_HEIC_CONCURRENCY = 1;
-    const MAX_DISPLAY_DIMENSION = 1152;
-    const SESSION_CACHE_PREFIX = 'heic_jpeg_v1:';
-    const MAX_SESSION_DATA_URL_CHARS = 320000;
+    const IDB_NAME = 'syafaat_heic_fast_v2';
+    const IDB_STORE = 'jpeg_blobs';
+    const IDB_MAX_ENTRIES = 150;
+
+    const IS_NATIVE_HEIC_BROWSER = (() => {
+      const ua = navigator.userAgent;
+      const isSafari = /Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox|FxiOS|CriOS/.test(ua);
+      const isIOS = /iP(hone|od|ad)/.test(ua);
+      return isSafari || isIOS;
+    })();
 
     const isBackendConfigured =
       SUPABASE_URL.startsWith('https://') &&
@@ -1520,17 +1545,20 @@
     const siteHeader = document.getElementById('siteHeader');
     const toast = document.getElementById('toast');
 
-    const lightboxModal = document.getElementById('lightboxModal');
-    const lightboxBgImg = document.getElementById('lightboxBgImg');
-    const lightboxStage = document.getElementById('lightboxStage');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxCounter = document.getElementById('lightboxCounter');
-    const lightboxDate = document.getElementById('lightboxDate');
-    const lightboxBottom = document.getElementById('lightboxBottom');
-    const lightboxDesc = document.getElementById('lightboxDesc');
+    const photoDetailPage = document.getElementById('photoDetailPage');
+    const detailBgImg = document.getElementById('detailBgImg');
+    const detailStage = document.getElementById('detailStage');
+    const detailImg = document.getElementById('detailImg');
+    const detailCounter = document.getElementById('detailCounter');
+    const detailDate = document.getElementById('detailDate');
+    const detailBottom = document.getElementById('detailBottom');
+    const detailDesc = document.getElementById('detailDesc');
     const zoomLevelEl = document.getElementById('zoomLevel');
+    const detailBackBtn = document.getElementById('detailBackBtn');
+    const prevPhotoBtn = document.getElementById('prevPhotoBtn');
+    const nextPhotoBtn = document.getElementById('nextPhotoBtn');
     const downloadBtn = document.getElementById('downloadBtn');
-    const lightboxClose = document.getElementById('lightboxClose');
+    const detailCloseBtn = document.getElementById('detailCloseBtn');
 
     let photos = [];
     let filteredPhotos = [];
@@ -1542,10 +1570,12 @@
     let transformRafId = 0;
     let searchDebounceId = 0;
 
-    const heicConvertedCache = new Map();
+    const heicMemoryCache = new Map();
     const heicPendingPromises = new Map();
-    const heicWaitQueue = [];
-    let activeHeicWorkers = 0;
+    const heicFetchCache = new Map();
+    const decodeQueue = [];
+    let isDecodingHeic = false;
+    let idbPromise = null;
 
     let scale = 1;
     let panX = 0;
@@ -1570,6 +1600,103 @@
       'januari', 'februari', 'maret', 'april', 'mei', 'juni',
       'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
     ];
+
+    function buildPhotoPageUrl(photoId) {
+      const url = new URL(window.location.href);
+      url.hash = '';
+      if (photoId !== null && photoId !== undefined && photoId !== '') {
+        url.searchParams.set('foto', String(photoId));
+      } else {
+        url.searchParams.delete('foto');
+      }
+      return url.pathname + url.search;
+    }
+
+    function getRequestedPhotoIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const queryPhotoId = params.get('foto');
+      if (queryPhotoId) return queryPhotoId;
+
+      const hashMatch = window.location.hash.match(/^#foto-(.+)$/);
+      return hashMatch ? hashMatch[1] : null;
+    }
+
+    function openHeicCacheDB() {
+      if (idbPromise) return idbPromise;
+      if (!('indexedDB' in window)) return Promise.resolve(null);
+
+      idbPromise = new Promise(resolve => {
+        try {
+          const req = indexedDB.open(IDB_NAME, 1);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(IDB_STORE)) {
+              const store = db.createObjectStore(IDB_STORE, { keyPath: 'url' });
+              store.createIndex('ts', 'ts', { unique: false });
+            }
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => resolve(null);
+        } catch (_) {
+          resolve(null);
+        }
+      });
+      return idbPromise;
+    }
+
+    async function readDiskCache(url) {
+      if (heicMemoryCache.has(url)) return heicMemoryCache.get(url);
+      const db = await openHeicCacheDB();
+      if (!db) return null;
+
+      return new Promise(resolve => {
+        try {
+          const tx = db.transaction(IDB_STORE, 'readonly');
+          const req = tx.objectStore(IDB_STORE).get(url);
+          req.onsuccess = () => {
+            const rec = req.result;
+            if (rec && rec.blob instanceof Blob) {
+              const objUrl = URL.createObjectURL(rec.blob);
+              heicMemoryCache.set(url, objUrl);
+              resolve(objUrl);
+            } else {
+              resolve(null);
+            }
+          };
+          req.onerror = () => resolve(null);
+        } catch (_) {
+          resolve(null);
+        }
+      });
+    }
+
+    function writeDiskCache(url, blob, objectUrl) {
+      heicMemoryCache.set(url, objectUrl);
+      openHeicCacheDB().then(db => {
+        if (!db || !(blob instanceof Blob)) return;
+        try {
+          const tx = db.transaction(IDB_STORE, 'readwrite');
+          const store = tx.objectStore(IDB_STORE);
+          store.put({ url, blob, ts: Date.now() });
+
+          const countReq = store.count();
+          countReq.onsuccess = () => {
+            if (countReq.result > IDB_MAX_ENTRIES) {
+              const cursorReq = store.index('ts').openCursor();
+              let delCount = countReq.result - IDB_MAX_ENTRIES;
+              cursorReq.onsuccess = (e) => {
+                const cursor = e.target.result;
+                if (cursor && delCount > 0) {
+                  cursor.delete();
+                  delCount--;
+                  cursor.continue();
+                }
+              };
+            }
+          };
+        } catch (_) {}
+      });
+    }
 
     function formatIndoDate(isoDate) {
       if (!isoDate) return '-';
@@ -1600,7 +1727,7 @@
     function updateSeoStructuredData(photoList) {
       if (!Array.isArray(photoList) || photoList.length === 0) return;
 
-      const pageUrl = window.location.href.split('#')[0] || `${SITE_BASE_URL}/galeri/`;
+      const baseGalleryUrl = `${SITE_BASE_URL}/galeri/`;
       const primaryPhoto = photoList[0];
 
       const ogImg = document.getElementById('ogImageMeta');
@@ -1613,7 +1740,7 @@
         '@type': 'ImageGallery',
         'name': `Galeri Foto ${OWNER_NAME}`,
         'description': `Kumpulan dokumentasi foto resmi milik ${OWNER_NAME}.`,
-        'url': pageUrl,
+        'url': baseGalleryUrl,
         'author': {
           '@type': 'Person',
           'name': OWNER_NAME,
@@ -1625,7 +1752,7 @@
           'name': buildSeoPhotoAlt(item),
           'caption': (item.desc || '').trim() || `Dokumentasi foto ${OWNER_NAME} pada ${item.date}`,
           'contentUrl': item.src,
-          'url': `${pageUrl}#foto-${item.id}`,
+          'url': `${baseGalleryUrl}?foto=${encodeURIComponent(item.id)}`,
           'datePublished': item.isoDate || undefined,
           'representativeOfPage': idx === 0,
           'author': {
@@ -1659,142 +1786,108 @@
       return HEIC_EXTENSIONS.includes(getExtensionFromUrl(url));
     }
 
-    function readSessionHeicCache(url) {
-      if (heicConvertedCache.has(url)) {
-        return heicConvertedCache.get(url);
-      }
-      try {
-        const cachedDataUrl = sessionStorage.getItem(SESSION_CACHE_PREFIX + url);
-        if (cachedDataUrl && cachedDataUrl.startsWith('data:image/')) {
-          heicConvertedCache.set(url, cachedDataUrl);
-          return cachedDataUrl;
-        }
-      } catch (_) {}
-      return null;
+    function fetchHeicBlob(url) {
+      if (heicFetchCache.has(url)) return heicFetchCache.get(url);
+      const p = fetch(url, { cache: 'force-cache' })
+        .then(res => {
+          if (!res.ok) throw new Error('Gagal mengunduh HEIC');
+          return res.blob();
+        })
+        .catch(err => {
+          heicFetchCache.delete(url);
+          throw err;
+        });
+      heicFetchCache.set(url, p);
+      return p;
     }
 
-    function writeSessionHeicCache(url, blob, objectUrl) {
-      heicConvertedCache.set(url, objectUrl);
-      if (!blob || blob.size > 240000 || typeof FileReader !== 'function') return;
-      try {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = typeof reader.result === 'string' ? reader.result : '';
-          if (result && result.length <= MAX_SESSION_DATA_URL_CHARS) {
-            try {
-              sessionStorage.setItem(SESSION_CACHE_PREFIX + url, result);
-            } catch (_) {}
-          }
-        };
-        reader.readAsDataURL(blob);
-      } catch (_) {}
-    }
-
-    function acquireHeicSlot(highPriority = false) {
-      if (activeHeicWorkers < MAX_HEIC_CONCURRENCY) {
-        activeHeicWorkers++;
-        return Promise.resolve();
-      }
+    function waitForHeicLibrary() {
+      if (typeof window.heic2any === 'function') return Promise.resolve(true);
       return new Promise(resolve => {
-        if (highPriority) {
-          heicWaitQueue.unshift(resolve);
-        } else {
-          heicWaitQueue.push(resolve);
-        }
+        let attempts = 0;
+        const timer = setInterval(() => {
+          attempts++;
+          if (typeof window.heic2any === 'function') {
+            clearInterval(timer);
+            resolve(true);
+          } else if (attempts > 80) {
+            clearInterval(timer);
+            resolve(false);
+          }
+        }, 50);
       });
     }
 
-    function releaseHeicSlot() {
-      activeHeicWorkers = Math.max(0, activeHeicWorkers - 1);
-      const nextResolve = heicWaitQueue.shift();
-      if (nextResolve) {
-        activeHeicWorkers++;
-        nextResolve();
-      }
+    function runDecodeWorker() {
+      if (isDecodingHeic || decodeQueue.length === 0) return;
+      isDecodingHeic = true;
+      const task = decodeQueue.shift();
+
+      (async () => {
+        try {
+          if (heicMemoryCache.has(task.url)) {
+            task.resolve(heicMemoryCache.get(task.url));
+            return;
+          }
+
+          const diskCached = await readDiskCache(task.url);
+          if (diskCached) {
+            task.resolve(diskCached);
+            return;
+          }
+
+          const hasLib = await waitForHeicLibrary();
+          if (!hasLib) {
+            task.resolve(task.url);
+            return;
+          }
+
+          const heicBlob = await task.blobPromise;
+          const result = await window.heic2any({
+            blob: heicBlob,
+            toType: 'image/jpeg',
+            quality: 0.72
+          });
+
+          const jpegBlob = Array.isArray(result) ? result[0] : result;
+          const objUrl = URL.createObjectURL(jpegBlob);
+          writeDiskCache(task.url, jpegBlob, objUrl);
+          task.resolve(objUrl);
+        } catch (err) {
+          console.warn('Konversi HEIC gagal:', err);
+          task.resolve(task.url);
+        } finally {
+          heicFetchCache.delete(task.url);
+          isDecodingHeic = false;
+          requestAnimationFrame(runDecodeWorker);
+        }
+      })();
     }
 
-    async function downscaleBlobIfNeeded(blob, maxDim = MAX_DISPLAY_DIMENSION, quality = 0.68) {
-      if (!blob || typeof createImageBitmap !== 'function') {
-        return blob;
+    function convertHeicUrlToDisplayUrl(url, highPriority = false) {
+      if (!url || IS_NATIVE_HEIC_BROWSER) return Promise.resolve(url);
+
+      if (heicMemoryCache.has(url)) {
+        return Promise.resolve(heicMemoryCache.get(url));
       }
-      let bitmap = null;
-      try {
-        bitmap = await createImageBitmap(blob);
-        const { width, height } = bitmap;
-        const longest = Math.max(width, height);
-        if (longest <= maxDim) {
-          return blob;
-        }
-        const ratio = maxDim / longest;
-        const targetW = Math.round(width * ratio);
-        const targetH = Math.round(height * ratio);
 
-        const canvas = document.createElement('canvas');
-        canvas.width = targetW;
-        canvas.height = targetH;
-        const ctx = canvas.getContext('2d', { alpha: false });
-        if (!ctx) return blob;
-
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'low';
-        ctx.drawImage(bitmap, 0, 0, targetW, targetH);
-
-        return await new Promise(resolve => {
-          canvas.toBlob(b => resolve(b || blob), 'image/jpeg', quality);
-        });
-      } catch (_) {
-        return blob;
-      } finally {
-        if (bitmap && typeof bitmap.close === 'function') {
-          bitmap.close();
-        }
-      }
-    }
-
-    async function convertHeicUrlToDisplayUrl(url, highPriority = false) {
-      if (!url) return url;
-      const existing = readSessionHeicCache(url);
-      if (existing) {
-        return existing;
-      }
       if (heicPendingPromises.has(url)) {
         return heicPendingPromises.get(url);
       }
 
-      const promise = (async () => {
-        if (typeof window.heic2any !== 'function') {
-          return url;
+      const promise = new Promise(resolve => {
+        const blobPromise = fetchHeicBlob(url);
+        const task = { url, blobPromise, resolve };
+
+        if (highPriority) {
+          decodeQueue.unshift(task);
+        } else {
+          decodeQueue.push(task);
         }
-
-        await acquireHeicSlot(highPriority);
-        try {
-          const cachedAgain = readSessionHeicCache(url);
-          if (cachedAgain) return cachedAgain;
-
-          const response = await fetch(url);
-          if (!response.ok) throw new Error('Gagal mengunduh file HEIC');
-          const heicBlob = await response.blob();
-
-          const convertedResult = await window.heic2any({
-            blob: heicBlob,
-            toType: 'image/jpeg',
-            quality: 0.68
-          });
-
-          const rawJpegBlob = Array.isArray(convertedResult) ? convertedResult[0] : convertedResult;
-          const finalBlob = await downscaleBlobIfNeeded(rawJpegBlob, MAX_DISPLAY_DIMENSION, 0.68);
-          const objectUrl = URL.createObjectURL(finalBlob);
-
-          writeSessionHeicCache(url, finalBlob, objectUrl);
-          return objectUrl;
-        } catch (err) {
-          console.warn('Konversi HEIC gagal, memakai URL asli:', err);
-          return url;
-        } finally {
-          releaseHeicSlot();
-          heicPendingPromises.delete(url);
-        }
-      })();
+        runDecodeWorker();
+      }).finally(() => {
+        heicPendingPromises.delete(url);
+      });
 
       heicPendingPromises.set(url, promise);
       return promise;
@@ -1857,6 +1950,7 @@
       loadingState.classList.add('visible');
       photoGrid.innerHTML = '';
       emptyState.classList.remove('visible');
+      openHeicCacheDB();
 
       if (!dbClient) {
         loadingState.classList.remove('visible');
@@ -1880,7 +1974,7 @@
         photos = (data || []).map((row, idx) => ({
           id: row.id,
           src: row.image_url,
-          displaySrc: readSessionHeicCache(row.image_url) || row.image_url,
+          displaySrc: heicMemoryCache.get(row.image_url) || row.image_url,
           isoDate: row.tanggal,
           date: formatIndoDate(row.tanggal),
           desc: row.deskripsi || '',
@@ -1893,11 +1987,11 @@
         loadingState.classList.remove('visible');
         applyFiltersAndRender();
 
-        const hashMatch = window.location.hash.match(/^#foto-(.+)$/);
-        if (hashMatch) {
-          const targetIdx = filteredPhotos.findIndex(p => String(p.id) === hashMatch[1]);
+        const requestedPhotoId = getRequestedPhotoIdFromUrl();
+        if (requestedPhotoId) {
+          const targetIdx = filteredPhotos.findIndex(p => String(p.id) === String(requestedPhotoId));
           if (targetIdx !== -1) {
-            openLightbox(targetIdx);
+            openPhotoPage(targetIdx, { updateHistory: false });
           }
         }
       } catch (err) {
@@ -1942,15 +2036,28 @@
 
     async function triggerHeicConversionForCard(card, item, img, highPriority = false) {
       if (!card || !item || !img || !isHeicUrl(item.src)) return;
-      const cached = readSessionHeicCache(item.src);
-      if (cached) {
-        item.displaySrc = cached;
-        if (img.src !== cached) img.src = cached;
+
+      if (IS_NATIVE_HEIC_BROWSER) {
+        if (img.src !== item.src) img.src = item.src;
+        return;
+      }
+
+      const memCached = heicMemoryCache.get(item.src);
+      if (memCached) {
+        item.displaySrc = memCached;
+        if (img.src !== memCached) img.src = memCached;
+        return;
+      }
+
+      const diskCached = await readDiskCache(item.src);
+      if (diskCached) {
+        item.displaySrc = diskCached;
+        if (img.isConnected && img.src !== diskCached) img.src = diskCached;
         return;
       }
 
       const statusEl = card.querySelector('.card-img-status');
-      if (statusEl) statusEl.textContent = 'Konversi HEIC...';
+      if (statusEl) statusEl.textContent = 'Memuat foto...';
 
       const convertedUrl = await convertHeicUrlToDisplayUrl(item.src, highPriority);
       if (convertedUrl && convertedUrl !== item.src && img.isConnected) {
@@ -1967,13 +2074,24 @@
         cardObserver = null;
       }
 
+      const cards = Array.from(photoGrid.querySelectorAll('.photo-card'));
+
+      cards.slice(0, 8).forEach(card => {
+        const idx = Number(card.dataset.index);
+        const item = filteredPhotos[idx];
+        const img = card.querySelector('img');
+        if (item && img && isHeicUrl(item.src)) {
+          triggerHeicConversionForCard(card, item, img, false);
+        }
+      });
+
       if (typeof IntersectionObserver !== 'function') {
-        photoGrid.querySelectorAll('.photo-card').forEach((card, i) => {
+        cards.slice(8).forEach(card => {
           const idx = Number(card.dataset.index);
           const item = filteredPhotos[idx];
           const img = card.querySelector('img');
           if (item && img && isHeicUrl(item.src)) {
-            triggerHeicConversionForCard(card, item, img, i < 6);
+            triggerHeicConversionForCard(card, item, img, false);
           }
         });
         return;
@@ -1990,18 +2108,18 @@
             cardObserver.unobserve(card);
 
             if (item && img && isHeicUrl(item.src)) {
-              triggerHeicConversionForCard(card, item, img, idx < 6);
+              triggerHeicConversionForCard(card, item, img, false);
             }
           });
         },
         {
           root: galleryScrollArea,
-          rootMargin: '160px 0px',
+          rootMargin: '250px 0px',
           threshold: 0.01
         }
       );
 
-      photoGrid.querySelectorAll('.photo-card').forEach(card => {
+      cards.slice(8).forEach(card => {
         cardObserver.observe(card);
       });
     }
@@ -2094,48 +2212,43 @@
         const cleanDesc = (item.desc || '').trim();
         const seoAlt = buildSeoPhotoAlt(item);
         const heicItem = isHeicUrl(item.src);
-        const cachedHeic = heicItem ? readSessionHeicCache(item.src) : null;
         const activeImgSrc = heicItem
-          ? (cachedHeic || '')
+          ? (IS_NATIVE_HEIC_BROWSER ? item.src : (heicMemoryCache.get(item.src) || ''))
           : (item.displaySrc || item.src);
-        const placeholderText = heicItem ? 'HEIC' : '';
+        const placeholderText = heicItem && !activeImgSrc ? 'HEIC' : '';
         const shouldAnimate = idx < 8;
+        const detailHref = buildPhotoPageUrl(item.id);
 
         return `
           <figure
             id="foto-${escapeHtml(item.id)}"
             class="photo-card is-loading-img${shouldAnimate ? ' is-animating' : ''}"
             data-index="${idx}"
-            ${shouldAnimate ? `style="animation-delay: ${idx * 0.035}s"` : ''}
+            ${shouldAnimate ? `style="animation-delay: ${idx * 0.03}s"` : ''}
           >
-            <div class="card-img-placeholder" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-              ${placeholderText ? `<span class="card-img-status">${placeholderText}</span>` : ''}
-            </div>
-            <img
-              src="${activeImgSrc}"
-              alt="${escapeHtml(seoAlt)}"
-              title="${escapeHtml(seoAlt)}"
-              loading="${idx < 4 ? 'eager' : 'lazy'}"
-              decoding="async"
-            />
-            <figcaption class="card-overlay">
-              <div class="card-meta">
-                <span class="card-date">${item.date}</span>
-                ${cleanDesc ? `<p class="card-desc">${escapeHtml(cleanDesc)}</p>` : `<p class="card-desc">${OWNER_NAME}</p>`}
-              </div>
-              <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto ${OWNER_NAME}" aria-label="Unduh foto ${escapeHtml(seoAlt)}">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
+            <a href="${escapeHtml(detailHref)}" class="photo-card-link" data-index="${idx}" aria-label="Buka foto ${escapeHtml(seoAlt)}">
+              <div class="card-img-placeholder" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
                 </svg>
-              </button>
-            </figcaption>
+                ${placeholderText ? `<span class="card-img-status">${placeholderText}</span>` : ''}
+              </div>
+              <img
+                src="${activeImgSrc}"
+                alt="${escapeHtml(seoAlt)}"
+                title="${escapeHtml(seoAlt)}"
+                loading="${idx < 6 ? 'eager' : 'lazy'}"
+                decoding="async"
+              />
+              <figcaption class="card-overlay">
+                <div class="card-meta">
+                  <span class="card-date">${item.date}</span>
+                  ${cleanDesc ? `<p class="card-desc">${escapeHtml(cleanDesc)}</p>` : `<p class="card-desc">${OWNER_NAME}</p>`}
+                </div>
+              </figcaption>
+            </a>
           </figure>
         `;
       }).join('');
@@ -2212,17 +2325,12 @@
     }
 
     photoGrid.addEventListener('click', (e) => {
-      const dlBtn = e.target.closest('.card-download');
-      if (dlBtn) {
-        e.stopPropagation();
-        const idx = Number(dlBtn.dataset.index);
-        downloadPhoto(filteredPhotos[idx], idx);
-        return;
-      }
-
-      const card = e.target.closest('.photo-card');
-      if (!card) return;
-      openLightbox(Number(card.dataset.index));
+      const link = e.target.closest('.photo-card-link');
+      if (!link) return;
+      // Biarkan Ctrl+Click / Cmd+Click / Middle Click membuka tab baru secara native
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      e.preventDefault();
+      openPhotoPage(Number(link.dataset.index), { updateHistory: true, replaceHistory: false });
     });
 
     function clampPan() {
@@ -2231,8 +2339,8 @@
         panY = 0;
         return;
       }
-      const imgW = lightboxImg.offsetWidth || window.innerWidth;
-      const imgH = lightboxImg.offsetHeight || window.innerHeight;
+      const imgW = detailImg.offsetWidth || window.innerWidth;
+      const imgH = detailImg.offsetHeight || window.innerHeight;
       const scaledW = imgW * scale;
       const scaledH = imgH * scale;
       const maxX = Math.max(0, (scaledW - window.innerWidth) / 2 + 40);
@@ -2242,20 +2350,20 @@
       panY = Math.min(maxY, Math.max(-maxY, panY));
     }
 
-    function renderLightboxTransform() {
+    function renderDetailTransform() {
       transformRafId = 0;
       if (scale <= 1.01) {
         scale = 1;
         panX = 0;
         panY = 0;
-        lightboxModal.classList.remove('is-zoom-active');
+        photoDetailPage.classList.remove('is-zoom-active');
       } else {
-        lightboxModal.classList.add('is-zoom-active');
+        photoDetailPage.classList.add('is-zoom-active');
         clampPan();
       }
 
-      lightboxImg.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${scale})`;
-      lightboxImg.style.opacity = '1';
+      detailImg.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${scale})`;
+      detailImg.style.opacity = '1';
       zoomLevelEl.textContent = `${Math.round(scale * 100)}%`;
     }
 
@@ -2265,11 +2373,11 @@
           cancelAnimationFrame(transformRafId);
           transformRafId = 0;
         }
-        renderLightboxTransform();
+        renderDetailTransform();
         return;
       }
       if (!transformRafId) {
-        transformRafId = requestAnimationFrame(renderLightboxTransform);
+        transformRafId = requestAnimationFrame(renderDetailTransform);
       }
     }
 
@@ -2287,12 +2395,12 @@
     }
 
     function prefetchNeighborHeic(index) {
-      if (filteredPhotos.length <= 1) return;
+      if (filteredPhotos.length <= 1 || IS_NATIVE_HEIC_BROWSER) return;
       const prevIdx = (index - 1 + filteredPhotos.length) % filteredPhotos.length;
       const nextIdx = (index + 1) % filteredPhotos.length;
-      [prevIdx, nextIdx].forEach(i => {
+      [nextIdx, prevIdx].forEach(i => {
         const neighbor = filteredPhotos[i];
-        if (neighbor && isHeicUrl(neighbor.src) && !readSessionHeicCache(neighbor.src)) {
+        if (neighbor && isHeicUrl(neighbor.src) && !heicMemoryCache.has(neighbor.src)) {
           convertHeicUrlToDisplayUrl(neighbor.src, false).then(url => {
             if (url && url !== neighbor.src) neighbor.displaySrc = url;
           });
@@ -2300,42 +2408,57 @@
       });
     }
 
-    async function updateLightboxContent(item) {
+    function syncDetailPageUrlAndTitle(item, { updateHistory = true, replaceHistory = false } = {}) {
+      if (!item) return;
       const cleanDesc = (item.desc || '').trim();
-      const seoAlt = buildSeoPhotoAlt(item);
-      lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
-      lightboxDate.textContent = item.date;
-      lightboxDesc.textContent = cleanDesc;
-      lightboxBottom.classList.toggle('is-hidden', !cleanDesc);
+      document.title = cleanDesc
+        ? `${cleanDesc} (${item.date}) — Galeri ${OWNER_NAME}`
+        : `Foto ${item.date} — Galeri ${OWNER_NAME}`;
 
-      let activeSrc = readSessionHeicCache(item.src) || item.displaySrc || item.src;
-      if (isHeicUrl(item.src) && !readSessionHeicCache(item.src)) {
-        lightboxDesc.textContent = cleanDesc ? `${cleanDesc} (Memuat HEIC...)` : 'Memuat HEIC...';
-        lightboxBottom.classList.remove('is-hidden');
-        const convertedUrl = await convertHeicUrlToDisplayUrl(item.src, true);
-        if (convertedUrl && convertedUrl !== item.src) {
-          item.displaySrc = convertedUrl;
-          activeSrc = convertedUrl;
+      if (updateHistory) {
+        const nextUrl = buildPhotoPageUrl(item.id);
+        const stateObj = { photoId: item.id };
+        if (replaceHistory) {
+          window.history.replaceState(stateObj, '', nextUrl);
+        } else {
+          window.history.pushState(stateObj, '', nextUrl);
         }
-        if (filteredPhotos[currentIndex]?.id === item.id) {
-          lightboxDesc.textContent = cleanDesc;
-          lightboxBottom.classList.toggle('is-hidden', !cleanDesc);
-        }
-      }
-
-      if (filteredPhotos[currentIndex]?.id === item.id) {
-        lightboxImg.src = activeSrc;
-        lightboxImg.alt = seoAlt;
-        lightboxBgImg.src = activeSrc;
-        prefetchNeighborHeic(currentIndex);
       }
     }
 
-    function updateLightbox(index) {
-      if (!filteredPhotos.length) return;
-      currentIndex = (index + filteredPhotos.length) % filteredPhotos.length;
-      resetZoom();
-      updateLightboxContent(filteredPhotos[currentIndex]);
+    async function updateDetailContent(item) {
+      const cleanDesc = (item.desc || '').trim();
+      const seoAlt = buildSeoPhotoAlt(item);
+      detailCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
+      detailDate.textContent = item.date;
+      detailDesc.textContent = cleanDesc;
+      detailBottom.classList.toggle('is-hidden', !cleanDesc);
+
+      if (IS_NATIVE_HEIC_BROWSER || !isHeicUrl(item.src)) {
+        detailImg.src = item.src;
+        detailImg.alt = seoAlt;
+        detailBgImg.src = item.src;
+        return;
+      }
+
+      let activeSrc = heicMemoryCache.get(item.src) || await readDiskCache(item.src);
+      if (!activeSrc) {
+        detailDesc.textContent = cleanDesc ? `${cleanDesc} (Memuat HEIC...)` : 'Memuat HEIC...';
+        detailBottom.classList.remove('is-hidden');
+        activeSrc = await convertHeicUrlToDisplayUrl(item.src, true);
+        if (filteredPhotos[currentIndex]?.id === item.id) {
+          detailDesc.textContent = cleanDesc;
+          detailBottom.classList.toggle('is-hidden', !cleanDesc);
+        }
+      }
+
+      if (filteredPhotos[currentIndex]?.id === item.id && activeSrc) {
+        item.displaySrc = activeSrc;
+        detailImg.src = activeSrc;
+        detailImg.alt = seoAlt;
+        detailBgImg.src = activeSrc;
+        prefetchNeighborHeic(currentIndex);
+      }
     }
 
     function switchSlide(direction) {
@@ -2346,9 +2469,9 @@
       if (isTransitioningSlide) return;
       isTransitioningSlide = true;
 
-      lightboxImg.classList.remove('is-dragging');
-      lightboxImg.style.transform = `translate3d(${direction * -120}px, 0, 0) scale(1)`;
-      lightboxImg.style.opacity = '1';
+      detailImg.classList.remove('is-dragging');
+      detailImg.style.transform = `translate3d(${direction * -120}px, 0, 0) scale(1)`;
+      detailImg.style.opacity = '1';
 
       setTimeout(async () => {
         currentIndex = (currentIndex + direction + filteredPhotos.length) % filteredPhotos.length;
@@ -2358,20 +2481,22 @@
         panX = 0;
         panY = 0;
         swipeOffsetX = 0;
-        lightboxModal.classList.remove('is-zoom-active');
+        photoDetailPage.classList.remove('is-zoom-active');
         zoomLevelEl.textContent = '100%';
 
-        lightboxImg.classList.add('is-dragging');
-        await updateLightboxContent(item);
+        syncDetailPageUrlAndTitle(item, { updateHistory: true, replaceHistory: true });
 
-        lightboxImg.style.transform = `translate3d(${direction * 120}px, 0, 0) scale(1)`;
-        lightboxImg.style.opacity = '1';
+        detailImg.classList.add('is-dragging');
+        await updateDetailContent(item);
 
-        void lightboxImg.offsetWidth;
+        detailImg.style.transform = `translate3d(${direction * 120}px, 0, 0) scale(1)`;
+        detailImg.style.opacity = '1';
 
-        lightboxImg.classList.remove('is-dragging');
-        lightboxImg.style.transform = 'translate3d(0, 0, 0) scale(1)';
-        lightboxImg.style.opacity = '1';
+        void detailImg.offsetWidth;
+
+        detailImg.classList.remove('is-dragging');
+        detailImg.style.transform = 'translate3d(0, 0, 0) scale(1)';
+        detailImg.style.opacity = '1';
 
         setTimeout(() => {
           isTransitioningSlide = false;
@@ -2379,29 +2504,62 @@
       }, 110);
     }
 
-    function openLightbox(index) {
-      updateLightbox(index);
-      lightboxModal.classList.add('open');
-      lightboxModal.setAttribute('aria-hidden', 'false');
-    }
+    function openPhotoPage(index, { updateHistory = true, replaceHistory = false } = {}) {
+      if (!filteredPhotos.length) return;
+      currentIndex = (index + filteredPhotos.length) % filteredPhotos.length;
+      const item = filteredPhotos[currentIndex];
 
-    function closeLightbox() {
-      lightboxModal.classList.remove('open');
-      lightboxModal.setAttribute('aria-hidden', 'true');
       resetZoom();
+      syncDetailPageUrlAndTitle(item, { updateHistory, replaceHistory });
+      updateDetailContent(item);
+
+      photoDetailPage.classList.add('open');
+      photoDetailPage.setAttribute('aria-hidden', 'false');
     }
 
+    function closePhotoPage({ updateHistory = true } = {}) {
+      photoDetailPage.classList.remove('open');
+      photoDetailPage.setAttribute('aria-hidden', 'true');
+      resetZoom();
+      document.title = DEFAULT_PAGE_TITLE;
+
+      if (updateHistory) {
+        window.history.pushState({}, '', buildPhotoPageUrl(null));
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      const requestedPhotoId = getRequestedPhotoIdFromUrl();
+      if (requestedPhotoId && filteredPhotos.length) {
+        const targetIdx = filteredPhotos.findIndex(p => String(p.id) === String(requestedPhotoId));
+        if (targetIdx !== -1) {
+          openPhotoPage(targetIdx, { updateHistory: false });
+          return;
+        }
+      }
+      if (photoDetailPage.classList.contains('open')) {
+        closePhotoPage({ updateHistory: false });
+      }
+    });
+
+    detailBackBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closePhotoPage({ updateHistory: true });
+    });
+
+    prevPhotoBtn.addEventListener('click', () => switchSlide(-1));
+    nextPhotoBtn.addEventListener('click', () => switchSlide(1));
     zoomLevelEl.addEventListener('click', resetZoom);
     downloadBtn.addEventListener('click', () => downloadPhoto(filteredPhotos[currentIndex], currentIndex));
-    lightboxClose.addEventListener('click', closeLightbox);
+    detailCloseBtn.addEventListener('click', () => closePhotoPage({ updateHistory: true }));
 
-    lightboxStage.addEventListener('wheel', (e) => {
+    detailStage.addEventListener('wheel', (e) => {
       e.preventDefault();
       const delta = e.deltaY < 0 ? 0.35 : -0.35;
       setZoom(scale + delta);
     }, { passive: false });
 
-    lightboxStage.addEventListener('mousedown', (e) => {
+    detailStage.addEventListener('mousedown', (e) => {
       if (touchUsed || e.button !== 0 || isTransitioningSlide) return;
       e.preventDefault();
       isDragging = true;
@@ -2410,7 +2568,7 @@
       swipeOffsetX = 0;
       dragStartX = e.clientX - panX;
       dragStartY = e.clientY - panY;
-      lightboxImg.classList.add('is-dragging');
+      detailImg.classList.add('is-dragging');
     });
 
     window.addEventListener('mousemove', (e) => {
@@ -2430,24 +2588,24 @@
       } else if (hasMoved) {
         const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
         swipeOffsetX = dx * resistance;
-        lightboxImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
-        lightboxImg.style.opacity = '1';
+        detailImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
+        detailImg.style.opacity = '1';
       }
     });
 
     window.addEventListener('mouseup', (e) => {
       if (!isDragging) return;
       isDragging = false;
-      lightboxImg.classList.remove('is-dragging');
+      detailImg.classList.remove('is-dragging');
 
       if (!hasMoved) {
-        if (e.target === lightboxImg) {
+        if (e.target === detailImg) {
           setZoom(scale === 1 ? 2.2 : 1);
-        } else if (e.target === lightboxStage) {
+        } else if (e.target === detailStage) {
           if (scale > 1) {
             resetZoom();
           } else {
-            closeLightbox();
+            closePhotoPage({ updateHistory: true });
           }
         }
         return;
@@ -2473,7 +2631,7 @@
       return Math.hypot(dx, dy);
     }
 
-    lightboxStage.addEventListener('touchstart', (e) => {
+    detailStage.addEventListener('touchstart', (e) => {
       if (isTransitioningSlide) return;
       touchUsed = true;
       touchTarget = e.target;
@@ -2481,7 +2639,7 @@
       if (e.touches.length === 2) {
         initialPinchDist = getTouchDistance(e.touches);
         initialPinchScale = scale;
-        lightboxImg.classList.add('is-dragging');
+        detailImg.classList.add('is-dragging');
       } else if (e.touches.length === 1) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -2489,11 +2647,11 @@
         dragStartY = e.touches[0].clientY - panY;
         touchMoved = false;
         swipeOffsetX = 0;
-        lightboxImg.classList.add('is-dragging');
+        detailImg.classList.add('is-dragging');
       }
     }, { passive: true });
 
-    lightboxStage.addEventListener('touchmove', (e) => {
+    detailStage.addEventListener('touchmove', (e) => {
       if (e.touches.length === 2 && initialPinchDist > 0) {
         const currentDist = getTouchDistance(e.touches);
         const ratio = currentDist / initialPinchDist;
@@ -2513,25 +2671,25 @@
         } else if (touchMoved && Math.abs(dx) >= Math.abs(dy)) {
           const resistance = filteredPhotos.length <= 1 ? 0.25 : 1;
           swipeOffsetX = dx * resistance;
-          lightboxImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
-          lightboxImg.style.opacity = '1';
+          detailImg.style.transform = `translate3d(${swipeOffsetX}px, 0, 0) scale(1)`;
+          detailImg.style.opacity = '1';
         }
       }
     }, { passive: true });
 
-    lightboxStage.addEventListener('touchend', (e) => {
-      lightboxImg.classList.remove('is-dragging');
+    detailStage.addEventListener('touchend', (e) => {
+      detailImg.classList.remove('is-dragging');
       initialPinchDist = 0;
 
       if (e.changedTouches.length === 1) {
         if (!touchMoved) {
-          if (touchTarget === lightboxImg) {
+          if (touchTarget === detailImg) {
             setZoom(scale === 1 ? 2.2 : 1);
-          } else if (touchTarget === lightboxStage) {
+          } else if (touchTarget === detailStage) {
             if (scale > 1) {
               resetZoom();
             } else {
-              closeLightbox();
+              closePhotoPage({ updateHistory: true });
             }
           }
         } else if (scale === 1) {
@@ -2547,12 +2705,12 @@
     }, { passive: true });
 
     document.addEventListener('keydown', (e) => {
-      if (!lightboxModal.classList.contains('open')) return;
+      if (!photoDetailPage.classList.contains('open')) return;
       if (e.key === 'Escape') {
         if (scale > 1) {
           resetZoom();
         } else {
-          closeLightbox();
+          closePhotoPage({ updateHistory: true });
         }
       }
       if (e.key === 'ArrowLeft' && scale === 1) switchSlide(-1);
@@ -2577,7 +2735,7 @@
     galleryScrollArea.addEventListener('scroll', scheduleScrollUI, { passive: true });
     window.addEventListener('resize', () => {
       scheduleScrollUI();
-      if (lightboxModal.classList.contains('open') && scale > 1) {
+      if (photoDetailPage.classList.contains('open') && scale > 1) {
         applyTransform(true);
       }
     }, { passive: true });
