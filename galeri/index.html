@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
-  <!-- Supabase JS Client v2 -->
+  <!-- Client Database & Storage v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -587,7 +587,7 @@
       background: var(--text-subtle);
     }
 
-    /* Loading State Supabase */
+    /* Loading State */
     .loading-state {
       display: none;
       flex-direction: column;
@@ -794,7 +794,7 @@
       letter-spacing: 0.01em;
     }
 
-    /* Modal Form Tambah / Edit Foto Supabase (Mendukung Multi-Upload) */
+    /* Modal Form Tambah / Edit Foto (Mendukung Multi-Upload) */
     .form-backdrop {
       position: fixed;
       inset: 0;
@@ -1103,44 +1103,6 @@
       min-height: 74px;
     }
 
-    /* Progress Bar Upload Banyak Foto */
-    .upload-progress-wrap {
-      display: none;
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 6px;
-      background: var(--accent-soft);
-      border: 1px solid rgba(37, 99, 235, 0.25);
-    }
-
-    .upload-progress-wrap.visible {
-      display: block;
-    }
-
-    .upload-progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 6px;
-    }
-
-    .upload-progress-track {
-      width: 100%;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(29, 78, 216, 0.15);
-      overflow: hidden;
-    }
-
-    .upload-progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--primary), var(--gold));
-      transition: width 0.25s ease;
-    }
-
     .form-actions {
       display: flex;
       align-items: center;
@@ -1360,6 +1322,11 @@
       transition: opacity 0.22s ease, transform 0.22s var(--ease-out);
     }
 
+    .lightbox-bottom:empty,
+    .lightbox-bottom.is-hidden {
+      display: none;
+    }
+
     /* Sembunyikan deskripsi bawah saat foto di-zoom agar fokus penuh pada detail gambar */
     .modal-backdrop.is-zoom-active .lightbox-bottom {
       opacity: 0;
@@ -1568,8 +1535,8 @@
                 <button type="button" class="sort-seg-btn" data-sort="oldest">Terlama</button>
               </div>
 
-              <!-- Tombol Tambah Foto ke Supabase -->
-              <button type="button" class="add-photo-btn" id="openAddModalBtn" title="Unggah satu atau banyak foto ke Supabase">
+              <!-- Tombol Tambah Foto -->
+              <button type="button" class="add-photo-btn" id="openAddModalBtn" title="Unggah satu atau banyak foto ke galeri">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1585,10 +1552,10 @@
     <!-- Area Scroll Khusus Grid Foto -->
     <div class="gallery-scroll-area" id="galleryScrollArea">
       <div class="container">
-        <!-- Indikator Memuat Data Supabase -->
+        <!-- Indikator Memuat Data Galeri -->
         <div class="loading-state visible" id="loadingState">
           <div class="spinner"></div>
-          <span>Memuat galeri dari Supabase...</span>
+          <span>Memuat galeri foto...</span>
         </div>
 
         <!-- Masonry Grid Foto -->
@@ -1597,7 +1564,7 @@
         <!-- Tampilan Kosong -->
         <div class="empty-state" id="emptyState">
           <p id="emptyTitle">Belum ada foto tersimpan di galeri.</p>
-          <p class="empty-sub" id="emptySub">Klik tombol "+ Tambah" di atas untuk mengunggah satu atau banyak foto sekaligus ke Supabase.</p>
+          <p class="empty-sub" id="emptySub">Klik tombol "+ Tambah" di atas untuk mengunggah satu atau banyak foto sekaligus.</p>
           <button type="button" class="btn btn-primary btn-sm" id="emptyActionBtn">+ Tambah Foto Pertama</button>
         </div>
       </div>
@@ -1611,11 +1578,11 @@
     </div>
   </footer>
 
-  <!-- Modal Tambah / Edit Foto Supabase (Unggah File Langsung) -->
+  <!-- Modal Tambah / Edit Foto (Unggah File Langsung) -->
   <div class="form-backdrop" id="photoFormModal" aria-hidden="true">
     <div class="form-card" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
       <div class="form-header">
-        <h2 class="form-title" id="formModalTitle">Unggah Foto ke Supabase</h2>
+        <h2 class="form-title" id="formModalTitle">Unggah Foto ke Galeri</h2>
         <button type="button" class="form-close" id="closeFormModalBtn" aria-label="Tutup form">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1664,29 +1631,17 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="photoDescInput" id="descFieldLabel">Deskripsi Foto</label>
+          <label class="form-label" for="photoDescInput" id="descFieldLabel">Deskripsi Foto (Opsional)</label>
           <textarea
             id="photoDescInput"
             class="form-control"
-            placeholder="Tulis keterangan momen (berlaku untuk semua foto yang dipilih, atau isi keterangan khusus pada tiap foto di atas)..."
-            required
+            placeholder="Tulis keterangan momen (opsional, berlaku untuk semua foto yang dipilih atau isi keterangan khusus pada tiap foto di atas)..."
           ></textarea>
-        </div>
-
-        <!-- Bar Progres Unggah Banyak Foto -->
-        <div class="upload-progress-wrap" id="uploadProgressWrap">
-          <div class="upload-progress-label">
-            <span id="uploadProgressText">Mengunggah foto...</span>
-            <span id="uploadProgressPercent">0%</span>
-          </div>
-          <div class="upload-progress-track">
-            <div class="upload-progress-bar" id="uploadProgressBar"></div>
-          </div>
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn btn-outline btn-sm" id="cancelFormBtn">Batal</button>
-          <button type="submit" class="btn btn-primary btn-sm" id="submitFormBtn">Simpan ke Supabase</button>
+          <button type="submit" class="btn btn-primary btn-sm" id="submitFormBtn">Unggah Foto</button>
         </div>
       </form>
     </div>
@@ -1712,7 +1667,7 @@
           </svg>
         </button>
 
-        <button class="lb-icon-btn danger" id="deletePhotoBtn" title="Hapus foto dari Supabase" aria-label="Hapus foto">
+        <button class="lb-icon-btn danger" id="deletePhotoBtn" title="Hapus foto dari galeri" aria-label="Hapus foto">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"></polyline>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -1742,7 +1697,7 @@
     </div>
 
     <!-- Deskripsi Foto -->
-    <div class="lightbox-bottom">
+    <div class="lightbox-bottom" id="lightboxBottom">
       <p class="lightbox-desc" id="lightboxDesc"></p>
     </div>
   </div>
@@ -1752,25 +1707,24 @@
 
   <script>
     // =========================================================================
-    // KONFIGURASI SUPABASE
+    // KONFIGURASI PENYIMPANAN & DATABASE GALERI
     // =========================================================================
     const SUPABASE_URL = 'https://ixfokmldbkmgjsjcuxpy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_65c36nE8s8kER37H-vQOUg_a06QfX_4';
     const STORAGE_BUCKET = 'galeri';
     const TABLE_NAME = 'galeri_foto';
 
-    // Tanpa batas ukuran file di sisi klien (mengikuti paket Supabase)
     const MAX_FILE_SIZE_BYTES = Infinity;
     const ALLOWED_IMAGE_EXTENSIONS = [
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
     ];
 
-    const isSupabaseConfigured =
+    const isBackendConfigured =
       SUPABASE_URL.startsWith('https://') &&
       !SUPABASE_URL.includes('YOUR_PROJECT_ID') &&
       SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
 
-    const supabaseClient = isSupabaseConfigured
+    const dbClient = isBackendConfigured
       ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       : null;
 
@@ -1818,10 +1772,6 @@
     const photoDateInput = document.getElementById('photoDateInput');
     const descFieldLabel = document.getElementById('descFieldLabel');
     const photoDescInput = document.getElementById('photoDescInput');
-    const uploadProgressWrap = document.getElementById('uploadProgressWrap');
-    const uploadProgressText = document.getElementById('uploadProgressText');
-    const uploadProgressPercent = document.getElementById('uploadProgressPercent');
-    const uploadProgressBar = document.getElementById('uploadProgressBar');
     const submitFormBtn = document.getElementById('submitFormBtn');
 
     // Elemen Lightbox
@@ -1831,6 +1781,7 @@
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCounter = document.getElementById('lightboxCounter');
     const lightboxDate = document.getElementById('lightboxDate');
+    const lightboxBottom = document.getElementById('lightboxBottom');
     const lightboxDesc = document.getElementById('lightboxDesc');
     const zoomLevelEl = document.getElementById('zoomLevel');
     const editPhotoBtn = document.getElementById('editPhotoBtn');
@@ -1897,6 +1848,14 @@
       return ALLOWED_IMAGE_EXTENSIONS.includes(ext);
     }
 
+    function escapeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
     function buildSearchIndex(item) {
       const parts = (item.isoDate || '').split('-');
       if (parts.length !== 3) return `${item.date} ${item.desc}`.toLowerCase();
@@ -1921,11 +1880,13 @@
       ].join(' ').toLowerCase();
     }
 
-    function showToast(msg) {
+    function showToast(msg, persist = false) {
       toast.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toast._timer);
-      toast._timer = setTimeout(() => toast.classList.remove('show'), 3200);
+      if (!persist) {
+        toast._timer = setTimeout(() => toast.classList.remove('show'), 3200);
+      }
     }
 
     function updateScrollUI() {
@@ -2014,7 +1975,7 @@
           ? 'Klik atau seret 1 foto pengganti ke sini'
           : 'Klik atau seret banyak foto ke sini (bisa tambah lagi)';
         if (!isEditMode) {
-          submitFormBtn.textContent = 'Simpan ke Supabase';
+          submitFormBtn.textContent = 'Unggah Foto';
         }
         return;
       }
@@ -2032,25 +1993,25 @@
 
       if (!isEditMode) {
         submitFormBtn.textContent = count > 1
-          ? `Unggah & Simpan ${count} Foto`
-          : 'Simpan ke Supabase';
+          ? `Unggah ${count} Foto`
+          : 'Unggah Foto';
       }
 
       multiPreviewList.innerHTML = selectedUploadQueue.map((item, idx) => `
         <div class="multi-preview-item" data-uid="${item.uid}">
           <div class="multi-preview-thumb">
-            <img src="${item.previewUrl}" alt="${item.file.name}" />
+            <img src="${item.previewUrl}" alt="${escapeHtml(item.file.name)}" />
             <button type="button" class="remove-file-btn" data-uid="${item.uid}" title="Hapus foto ini dari daftar">&times;</button>
           </div>
           <div class="multi-preview-info">
-            <div class="multi-file-name" title="${item.file.name}">${idx + 1}. ${item.file.name}</div>
+            <div class="multi-file-name" title="${escapeHtml(item.file.name)}">${idx + 1}. ${escapeHtml(item.file.name)}</div>
             <div class="multi-file-size">${formatBytes(item.file.size)}</div>
             ${!isEditMode ? `
               <input
                 type="text"
                 class="multi-item-caption"
                 data-uid="${item.uid}"
-                value="${item.customDesc.replace(/"/g, '&quot;')}"
+                value="${escapeHtml(item.customDesc)}"
                 placeholder="Keterangan khusus (opsional)..."
               />
             ` : ''}
@@ -2076,26 +2037,26 @@
     clearSelectedFilesBtn.addEventListener('click', clearUploadQueue);
 
     // =========================================================================
-    // OPERASI DATABASE & STORAGE SUPABASE
+    // OPERASI DATABASE & STORAGE GALERI
     // =========================================================================
 
-    async function loadPhotosFromSupabase() {
+    async function loadPhotosFromGallery() {
       loadingState.classList.add('visible');
       photoGrid.innerHTML = '';
       emptyState.classList.remove('visible');
 
-      if (!supabaseClient) {
+      if (!dbClient) {
         loadingState.classList.remove('visible');
         filterSummary.textContent = '0 Momen';
-        emptyTitle.textContent = 'Konfigurasi Supabase Belum Diisi';
-        emptySub.textContent = 'Masukkan SUPABASE_URL dan SUPABASE_ANON_KEY pada script.';
+        emptyTitle.textContent = 'Konfigurasi Galeri Belum Diisi';
+        emptySub.textContent = 'Silakan periksa kembali pengaturan koneksi penyimpanan.';
         emptyActionBtn.style.display = 'none';
         emptyState.classList.add('visible');
         return;
       }
 
       try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await dbClient
           .from(TABLE_NAME)
           .select('id, image_url, storage_path, tanggal, deskripsi, created_at')
           .order('tanggal', { ascending: false })
@@ -2109,20 +2070,20 @@
           storagePath: row.storage_path || null,
           isoDate: row.tanggal,
           date: formatIndoDate(row.tanggal),
-          desc: row.deskripsi
+          desc: row.deskripsi || ''
         }));
 
         loadingState.classList.remove('visible');
         applyFiltersAndRender();
       } catch (err) {
-        console.error('Gagal memuat data Supabase:', err);
+        console.error('Gagal memuat galeri:', err);
         loadingState.classList.remove('visible');
         filterSummary.textContent = 'Gagal memuat';
-        emptyTitle.textContent = 'Gagal terhubung ke Supabase';
-        emptySub.textContent = err.message || 'Periksa kembali tabel galeri_foto dan kebijakan RLS pada proyek Supabase Anda.';
+        emptyTitle.textContent = 'Gagal memuat galeri foto';
+        emptySub.textContent = err.message || 'Periksa koneksi internet dan coba muat ulang halaman.';
         emptyActionBtn.textContent = 'Coba Muat Ulang';
         emptyActionBtn.style.display = 'inline-flex';
-        emptyActionBtn.onclick = loadPhotosFromSupabase;
+        emptyActionBtn.onclick = loadPhotosFromGallery;
         emptyState.classList.add('visible');
       }
     }
@@ -2136,7 +2097,7 @@
       const uniqueSuffix = `${Date.now()}-${indexOffset}-${Math.random().toString(36).slice(2, 7)}`;
       const storagePath = `momen/${uniqueSuffix}-${safeBase || 'foto'}.${ext}`;
 
-      const { error: uploadError } = await supabaseClient.storage
+      const { error: uploadError } = await dbClient.storage
         .from(STORAGE_BUCKET)
         .upload(storagePath, file, {
           contentType: file.type || undefined,
@@ -2146,7 +2107,7 @@
 
       if (uploadError) throw uploadError;
 
-      const { data: publicData } = supabaseClient.storage
+      const { data: publicData } = dbClient.storage
         .from(STORAGE_BUCKET)
         .getPublicUrl(storagePath);
 
@@ -2156,22 +2117,11 @@
       };
     }
 
-    function setUploadProgress(visible, labelText = '', percent = 0) {
-      uploadProgressWrap.classList.toggle('visible', visible);
-      if (visible) {
-        uploadProgressText.textContent = labelText;
-        uploadProgressPercent.textContent = `${Math.round(percent)}%`;
-        uploadProgressBar.style.width = `${Math.min(100, Math.max(0, percent))}%`;
-      } else {
-        uploadProgressBar.style.width = '0%';
-      }
-    }
-
-    async function savePhotoToSupabase(e) {
+    async function savePhotoToGallery(e) {
       e.preventDefault();
       if (isUploading) return;
-      if (!supabaseClient) {
-        showToast('Konfigurasi Supabase belum diisi.');
+      if (!dbClient) {
+        showToast('Koneksi penyimpanan galeri belum siap.');
         return;
       }
 
@@ -2179,8 +2129,8 @@
       const tanggal = photoDateInput.value;
       const defaultDeskripsi = photoDescInput.value.trim();
 
-      if (!tanggal || !defaultDeskripsi) {
-        showToast('Tanggal dan deskripsi wajib diisi.');
+      if (!tanggal) {
+        showToast('Tanggal momen wajib diisi.');
         return;
       }
 
@@ -2189,33 +2139,38 @@
         return;
       }
 
+      // Salin antrean sebelum modal ditutup dan antrean dibersihkan
+      const queueSnapshot = selectedUploadQueue.map(entry => ({
+        file: entry.file,
+        customDesc: entry.customDesc
+      }));
+
+      // Tutup halaman/modal upload segera setelah tombol ditekan
+      closePhotoFormModal(true);
+
       isUploading = true;
-      submitFormBtn.disabled = true;
-      cancelFormBtn.disabled = true;
+      openAddModalBtn.disabled = true;
 
       try {
         if (editId) {
-          // MODE EDIT 1 FOTO
-          submitFormBtn.textContent = 'Menyimpan...';
+          showToast('Menyimpan perubahan foto...', true);
           const existing = photos.find(p => String(p.id) === String(editId));
           const updatePayload = {
             tanggal,
             deskripsi: defaultDeskripsi
           };
 
-          if (selectedUploadQueue.length > 0) {
-            setUploadProgress(true, 'Mengunggah foto pengganti...', 45);
-            const uploaded = await uploadFileToStorage(selectedUploadQueue[0].file, 0);
+          if (queueSnapshot.length > 0) {
+            const uploaded = await uploadFileToStorage(queueSnapshot[0].file, 0);
             updatePayload.image_url = uploaded.imageUrl;
             updatePayload.storage_path = uploaded.storagePath;
 
             if (existing && existing.storagePath) {
-              await supabaseClient.storage.from(STORAGE_BUCKET).remove([existing.storagePath]);
+              await dbClient.storage.from(STORAGE_BUCKET).remove([existing.storagePath]);
             }
           }
 
-          setUploadProgress(true, 'Menyimpan perubahan ke database...', 85);
-          const { data, error } = await supabaseClient
+          const { data, error } = await dbClient
             .from(TABLE_NAME)
             .update(updatePayload)
             .eq('id', editId)
@@ -2232,12 +2187,10 @@
               storagePath: data.storage_path || null,
               isoDate: data.tanggal,
               date: formatIndoDate(data.tanggal),
-              desc: data.deskripsi
+              desc: data.deskripsi || ''
             };
           }
 
-          setUploadProgress(true, 'Selesai!', 100);
-          closePhotoFormModal();
           applyFiltersAndRender();
 
           if (lightboxModal.classList.contains('open')) {
@@ -2248,28 +2201,26 @@
               closeLightbox();
             }
           }
-          showToast('Perubahan berhasil disimpan ke Supabase!');
+          showToast('Perubahan foto berhasil disimpan!');
         } else {
-          // MODE UNGGAH BANYAK FOTO SEKALIGUS
-          const totalFiles = selectedUploadQueue.length;
+          const totalFiles = queueSnapshot.length;
           const newlyInserted = [];
           const failedFiles = [];
 
           for (let i = 0; i < totalFiles; i++) {
-            const entry = selectedUploadQueue[i];
-            const progressPct = (i / totalFiles) * 100;
-            setUploadProgress(
-              true,
-              `Mengunggah foto ${i + 1} dari ${totalFiles} (${entry.file.name})...`,
-              progressPct
+            const entry = queueSnapshot[i];
+            showToast(
+              totalFiles > 1
+                ? `Mengunggah foto ${i + 1} dari ${totalFiles}...`
+                : 'Mengunggah foto ke galeri...',
+              true
             );
-            submitFormBtn.textContent = `Mengunggah ${i + 1}/${totalFiles}...`;
 
             try {
               const uploaded = await uploadFileToStorage(entry.file, i);
-              const caption = (entry.customDesc || '').trim() || defaultDeskripsi;
+              const caption = (entry.customDesc || '').trim() || defaultDeskripsi || '';
 
-              const { data, error } = await supabaseClient
+              const { data, error } = await dbClient
                 .from(TABLE_NAME)
                 .insert([
                   {
@@ -2290,7 +2241,7 @@
                 storagePath: data.storage_path || null,
                 isoDate: data.tanggal,
                 date: formatIndoDate(data.tanggal),
-                desc: data.deskripsi
+                desc: data.deskripsi || ''
               });
             } catch (fileErr) {
               console.error(`Gagal unggah ${entry.file.name}:`, fileErr);
@@ -2298,20 +2249,17 @@
             }
           }
 
-          setUploadProgress(true, 'Menyelesaikan proses...', 100);
-
           if (newlyInserted.length > 0) {
             photos = [...newlyInserted.reverse(), ...photos];
           }
 
-          closePhotoFormModal();
           applyFiltersAndRender();
 
           if (failedFiles.length === 0) {
             showToast(
               newlyInserted.length > 1
-                ? `${newlyInserted.length} foto berhasil diunggah & disimpan ke Supabase!`
-                : 'Foto berhasil diunggah & disimpan ke Supabase!'
+                ? `${newlyInserted.length} foto berhasil diunggah ke galeri!`
+                : 'Foto berhasil diunggah ke galeri!'
             );
           } else {
             showToast(
@@ -2320,32 +2268,29 @@
           }
         }
       } catch (err) {
-        console.error('Gagal menyimpan ke Supabase:', err);
+        console.error('Gagal menyimpan foto:', err);
         showToast(`Gagal menyimpan: ${err.message || 'Terjadi kesalahan'}`);
       } finally {
         isUploading = false;
-        submitFormBtn.disabled = false;
-        cancelFormBtn.disabled = false;
-        setUploadProgress(false);
-        submitFormBtn.textContent = 'Simpan ke Supabase';
+        openAddModalBtn.disabled = false;
       }
     }
 
     async function deleteCurrentPhoto() {
       const item = filteredPhotos[currentIndex];
-      if (!item || !supabaseClient) return;
+      if (!item || !dbClient) return;
 
-      const confirmed = confirm(`Hapus foto momen "${item.date}" secara permanen dari Supabase?`);
+      const confirmed = confirm(`Hapus foto momen "${item.date}" secara permanen dari galeri?`);
       if (!confirmed) return;
 
-      showToast('Menghapus foto dari Supabase...');
+      showToast('Menghapus foto dari galeri...', true);
 
       try {
         if (item.storagePath) {
-          await supabaseClient.storage.from(STORAGE_BUCKET).remove([item.storagePath]);
+          await dbClient.storage.from(STORAGE_BUCKET).remove([item.storagePath]);
         }
 
-        const { error } = await supabaseClient
+        const { error } = await dbClient
           .from(TABLE_NAME)
           .delete()
           .eq('id', item.id);
@@ -2355,7 +2300,7 @@
         photos = photos.filter(p => String(p.id) !== String(item.id));
         closeLightbox();
         applyFiltersAndRender();
-        showToast('Foto berhasil dihapus dari Supabase.');
+        showToast('Foto berhasil dihapus dari galeri.');
       } catch (err) {
         console.error('Gagal menghapus foto:', err);
         showToast(`Gagal menghapus: ${err.message || 'Terjadi kesalahan'}`);
@@ -2403,7 +2348,7 @@
           emptyActionBtn.style.display = 'inline-flex';
           emptyActionBtn.onclick = resetAllFilters;
         } else {
-          emptyTitle.textContent = 'Belum ada foto tersimpan di Supabase.';
+          emptyTitle.textContent = 'Belum ada foto tersimpan di galeri.';
           emptySub.textContent = 'Klik tombol "+ Tambah" untuk mengunggah satu atau banyak foto sekaligus.';
           emptyActionBtn.textContent = '+ Tambah Foto Pertama';
           emptyActionBtn.style.display = 'inline-flex';
@@ -2415,24 +2360,28 @@
       }
 
       emptyState.classList.remove('visible');
-      photoGrid.innerHTML = list.map((item, idx) => `
-        <div class="photo-card" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
-          <img src="${item.src}" alt="${item.desc}" loading="lazy" />
-          <div class="card-overlay">
-            <div class="card-meta">
-              <span class="card-date">${item.date}</span>
-              <p class="card-desc">${item.desc}</p>
+      photoGrid.innerHTML = list.map((item, idx) => {
+        const cleanDesc = (item.desc || '').trim();
+        const altText = cleanDesc || `Momen ${item.date}`;
+        return `
+          <div class="photo-card" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
+            <img src="${item.src}" alt="${escapeHtml(altText)}" loading="lazy" />
+            <div class="card-overlay">
+              <div class="card-meta">
+                <span class="card-date">${item.date}</span>
+                ${cleanDesc ? `<p class="card-desc">${escapeHtml(cleanDesc)}</p>` : ''}
+              </div>
+              <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto" aria-label="Unduh foto ${item.date}">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </button>
             </div>
-            <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto" aria-label="Unduh foto ${item.date}">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-            </button>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       galleryScrollArea.scrollTop = 0;
       requestAnimationFrame(updateScrollUI);
@@ -2473,10 +2422,12 @@
     // =========================================================================
 
     function openPhotoFormModal(itemToEdit = null) {
-      if (isUploading) return;
+      if (isUploading) {
+        showToast('Sedang mengunggah foto sebelumnya, harap tunggu sebentar...');
+        return;
+      }
       photoForm.reset();
       clearUploadQueue();
-      setUploadProgress(false);
       previewBox.classList.remove('visible');
       previewImg.src = '';
 
@@ -2487,36 +2438,36 @@
         fileFieldLabel.textContent = 'Ganti File Foto (Opsional)';
         dropzoneText.textContent = 'Klik atau seret 1 foto pengganti ke sini';
         photoDateInput.value = itemToEdit.isoDate;
-        descFieldLabel.textContent = 'Deskripsi Foto';
-        photoDescInput.value = itemToEdit.desc;
+        descFieldLabel.textContent = 'Deskripsi Foto (Opsional)';
+        photoDescInput.value = itemToEdit.desc || '';
         previewImg.src = itemToEdit.src;
         previewBox.classList.add('visible');
         submitFormBtn.textContent = 'Simpan Perubahan';
       } else {
-        formModalTitle.textContent = 'Unggah Foto ke Supabase';
+        formModalTitle.textContent = 'Unggah Foto ke Galeri';
         editPhotoIdInput.value = '';
         photoFileInput.setAttribute('multiple', 'multiple');
         fileFieldLabel.textContent = 'Pilih File Foto (Bisa Banyak Sekaligus)';
         dropzoneText.textContent = 'Klik atau seret banyak foto ke sini (bisa tambah lagi)';
         photoDateInput.value = new Date().toISOString().split('T')[0];
-        descFieldLabel.textContent = 'Deskripsi Foto (Utama / Default untuk Semua Foto)';
-        submitFormBtn.textContent = 'Simpan ke Supabase';
+        descFieldLabel.textContent = 'Deskripsi Foto (Opsional)';
+        submitFormBtn.textContent = 'Unggah Foto';
       }
 
       photoFormModal.classList.add('open');
       photoFormModal.setAttribute('aria-hidden', 'false');
     }
 
-    function closePhotoFormModal() {
-      if (isUploading) return;
+    function closePhotoFormModal(force = false) {
+      if (isUploading && !force) return;
       clearUploadQueue();
       photoFormModal.classList.remove('open');
       photoFormModal.setAttribute('aria-hidden', 'true');
     }
 
     openAddModalBtn.addEventListener('click', () => openPhotoFormModal());
-    closeFormModalBtn.addEventListener('click', closePhotoFormModal);
-    cancelFormBtn.addEventListener('click', closePhotoFormModal);
+    closeFormModalBtn.addEventListener('click', () => closePhotoFormModal());
+    cancelFormBtn.addEventListener('click', () => closePhotoFormModal());
 
     photoFormModal.addEventListener('click', (e) => {
       if (e.target === photoFormModal) closePhotoFormModal();
@@ -2548,7 +2499,7 @@
       }
     });
 
-    photoForm.addEventListener('submit', savePhotoToSupabase);
+    photoForm.addEventListener('submit', savePhotoToGallery);
 
     // =========================================================================
     // UNDUH FOTO & LIGHTBOX SWIPE / ZOOM RAPI
@@ -2610,7 +2561,6 @@
       openLightbox(Number(card.dataset.index));
     });
 
-    // Batasi posisi pan agar foto tidak terseret jauh keluar viewport saat di-zoom
     function clampPan() {
       if (scale <= 1) {
         panX = 0;
@@ -2657,18 +2607,22 @@
       applyTransform();
     }
 
-    function updateLightbox(index) {
-      if (!filteredPhotos.length) return;
-      currentIndex = (index + filteredPhotos.length) % filteredPhotos.length;
-      const item = filteredPhotos[currentIndex];
-
-      resetZoom();
+    function updateLightboxContent(item) {
+      const cleanDesc = (item.desc || '').trim();
       lightboxImg.src = item.src;
-      lightboxImg.alt = item.desc;
+      lightboxImg.alt = cleanDesc || `Momen ${item.date}`;
       lightboxBg.style.backgroundImage = `url("${item.src}")`;
       lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
       lightboxDate.textContent = item.date;
-      lightboxDesc.textContent = item.desc;
+      lightboxDesc.textContent = cleanDesc;
+      lightboxBottom.classList.toggle('is-hidden', !cleanDesc);
+    }
+
+    function updateLightbox(index) {
+      if (!filteredPhotos.length) return;
+      currentIndex = (index + filteredPhotos.length) % filteredPhotos.length;
+      resetZoom();
+      updateLightboxContent(filteredPhotos[currentIndex]);
     }
 
     function switchSlide(direction) {
@@ -2695,12 +2649,7 @@
         zoomLevelEl.textContent = '100%';
 
         lightboxImg.classList.add('is-dragging');
-        lightboxImg.src = item.src;
-        lightboxImg.alt = item.desc;
-        lightboxBg.style.backgroundImage = `url("${item.src}")`;
-        lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
-        lightboxDate.textContent = item.date;
-        lightboxDesc.textContent = item.desc;
+        updateLightboxContent(item);
 
         lightboxImg.style.transform = `translate3d(${direction * 70}px, 0, 0) scale(0.98)`;
         lightboxImg.style.opacity = '0';
@@ -2928,7 +2877,7 @@
 
     // Inisialisasi Awal
     document.getElementById('year').textContent = new Date().getFullYear();
-    loadPhotosFromSupabase();
+    loadPhotosFromGallery();
   </script>
 </body>
 </html>
