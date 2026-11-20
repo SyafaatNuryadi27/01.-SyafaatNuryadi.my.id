@@ -41,14 +41,15 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
+    html,
+    body {
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      min-height: 100vh;
-      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       font-family: var(--font-sans);
@@ -56,12 +57,15 @@
       color: var(--text);
       line-height: 1.6;
       font-size: 15px;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
     main {
-      flex: 1 0 auto;
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
     a {
@@ -96,17 +100,6 @@
     }
 
     /* Keyframes */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     @keyframes cardPopIn {
       from {
         opacity: 0;
@@ -131,13 +124,13 @@
       pointer-events: none;
     }
 
-    /* Header */
+    /* Header (Tetap / Tidak Ikut Scroll) */
     .header {
-      position: sticky;
-      top: 0;
+      position: relative;
+      flex-shrink: 0;
       z-index: 100;
       height: var(--header-h);
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
@@ -146,7 +139,7 @@
     }
 
     .header.is-scrolled {
-      background: rgba(255, 255, 255, 0.97);
+      background: #ffffff;
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     }
 
@@ -323,58 +316,21 @@
       font-size: 0.82rem;
     }
 
-    /* Compact Gallery Header */
-    .gallery-top {
-      padding: 36px 0 28px;
-      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+    /* Area Filter Tetap & Ringkas (Tidak Ikut Scroll) */
+    .filter-dock {
+      flex-shrink: 0;
+      background: var(--bg);
+      padding: 9px 0;
       border-bottom: 1px solid var(--border);
-      animation: fadeUp 0.55s var(--ease-out) both;
+      z-index: 20;
     }
 
-    .gallery-top-inner {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .page-title {
-      font-size: 1.75rem;
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      line-height: 1.2;
-    }
-
-    .breadcrumb {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-subtle);
-    }
-
-    .breadcrumb a {
-      color: var(--accent);
-      transition: opacity 0.2s ease;
-    }
-
-    .breadcrumb a:hover {
-      opacity: 0.75;
-    }
-
-    /* Panel Filter Pencarian Momen */
     .filter-panel {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-top: 3px solid var(--gold);
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin-bottom: 26px;
+      border-top: 2px solid var(--gold);
+      border-radius: 6px;
+      padding: 7px 12px;
       box-shadow: var(--shadow-sm);
     }
 
@@ -382,18 +338,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 10px;
     }
 
     .filter-status-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
     .filter-summary {
-      font-size: 0.86rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.01em;
@@ -404,8 +360,8 @@
       display: none;
       background: transparent;
       border: none;
-      padding: 2px 0;
-      font-size: 0.78rem;
+      padding: 1px 0;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--accent);
       cursor: pointer;
@@ -422,28 +378,29 @@
       text-decoration: underline;
     }
 
+    /* Pencarian & Filter Terbaru/Terlama Sejajar Bersebelahan */
     .filter-controls {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 6px;
       flex: 1;
       min-width: 0;
     }
 
-    /* Kotak Pencarian Otomatis (Tanggal, Bulan, Tahun, atau Deskripsi) */
     .search-box {
       position: relative;
       display: inline-flex;
       align-items: center;
-      height: 38px;
+      height: 31px;
       width: 100%;
-      max-width: 390px;
-      padding: 0 12px;
-      border-radius: 6px;
+      max-width: 320px;
+      padding: 0 9px;
+      border-radius: 5px;
       border: 1px solid var(--border);
       background: var(--bg);
-      gap: 9px;
+      gap: 6px;
+      min-width: 0;
       transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
     }
 
@@ -454,13 +411,13 @@
     .search-box:focus-within {
       background: var(--surface);
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
+      box-shadow: 0 0 0 2px var(--accent-soft);
     }
 
     .search-box.has-value {
       background: var(--surface);
       border-color: var(--gold-border);
-      box-shadow: 0 0 0 3px var(--gold-soft);
+      box-shadow: 0 0 0 2px var(--gold-soft);
     }
 
     .search-icon {
@@ -479,10 +436,11 @@
 
     .search-input {
       width: 100%;
+      min-width: 0;
       border: none;
       background: transparent;
       outline: none;
-      font-size: 0.82rem;
+      font-size: 0.76rem;
       font-weight: 500;
       color: var(--text);
     }
@@ -492,13 +450,13 @@
     }
 
     .search-clear-btn {
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       border: none;
-      border-radius: 4px;
+      border-radius: 3px;
       background: rgba(15, 23, 42, 0.08);
       color: var(--text);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       line-height: 1;
       display: none;
       place-items: center;
@@ -516,13 +474,13 @@
       color: #0f172a;
     }
 
-    /* Segmented Toggle Urutan (Terbaru | Terlama) */
+    /* Segmented Toggle Urutan (Terbaru | Terlama) Tepat di Samping Pencarian */
     .sort-segmented {
       display: inline-flex;
       align-items: center;
-      height: 38px;
-      padding: 3px;
-      border-radius: 6px;
+      height: 31px;
+      padding: 2px;
+      border-radius: 5px;
       border: 1px solid var(--border);
       background: var(--surface-alt);
       gap: 2px;
@@ -530,13 +488,13 @@
     }
 
     .sort-seg-btn {
-      height: 30px;
-      padding: 0 12px;
+      height: 25px;
+      padding: 0 9px;
       border: none;
-      border-radius: 4px;
+      border-radius: 3px;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.79rem;
+      font-size: 0.73rem;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
@@ -550,12 +508,35 @@
     .sort-seg-btn.active {
       background: var(--surface);
       color: var(--primary);
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     }
 
-    /* Photo Grid Section (Masonry agar Portrait & Landscape Muat Penuh) */
-    .gallery-section {
-      padding: 28px 0 76px;
+    /* Area Scroll Khusus Foto (Hanya Bagian Ini yang Bisa Di-Scroll) */
+    .gallery-scroll-area {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 18px 0 28px;
+      scroll-behavior: smooth;
+      overscroll-behavior-y: contain;
+    }
+
+    .gallery-scroll-area::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    .gallery-scroll-area::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .gallery-scroll-area::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: 999px;
+    }
+
+    .gallery-scroll-area::-webkit-scrollbar-thumb:hover {
+      background: var(--text-subtle);
     }
 
     .photo-grid {
@@ -713,34 +694,23 @@
       margin-bottom: 14px;
     }
 
-    /* Footer */
+    /* Footer Ringkas & Rapi (Tetap / Tidak Ikut Scroll) */
     .footer {
-      margin-top: auto;
+      flex-shrink: 0;
       border-top: 1px solid var(--border);
       background: var(--surface);
-      padding: 28px 0;
+      padding: 8px 0;
+      z-index: 20;
     }
 
     .footer-inner {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: flex-start;
-      justify-content: space-between;
-      font-size: 0.84rem;
-      color: var(--text-subtle);
-    }
-
-    .back-top {
-      display: inline-flex;
       align-items: center;
-      gap: 4px;
-      transition: transform 0.2s var(--ease-out), color 0.2s ease;
-    }
-
-    .back-top:hover {
-      transform: translateY(-2px);
-      color: var(--gold) !important;
+      justify-content: center;
+      font-size: 0.74rem;
+      font-weight: 500;
+      color: var(--text-subtle);
+      letter-spacing: 0.01em;
     }
 
     /* Lightbox Modal dengan Latar Foto Blur Dinamis */
@@ -766,22 +736,24 @@
       pointer-events: auto;
     }
 
-    /* Latar Belakang Mengikuti Foto Utama & Di-Blur */
+    /* Latar Belakang Menampilkan Seluruh Foto Utama & Tetap Blur */
     .lightbox-bg {
       position: absolute;
-      inset: -48px;
-      background-size: cover;
+      inset: 16px;
+      background-size: contain;
       background-position: center;
+      background-repeat: no-repeat;
       filter: blur(28px) brightness(0.45) saturate(1.15);
-      transform: scale(1.08);
+      transform: scale(1);
       transition: background-image 0.35s ease, transform 0.35s var(--ease-out), filter 0.35s ease;
       z-index: 0;
       pointer-events: none;
     }
 
     .modal-backdrop.is-zoom-active .lightbox-bg {
-      filter: blur(36px) brightness(0.32) saturate(1.25);
-      transform: scale(1.18);
+      background-size: contain;
+      filter: blur(24px) brightness(0.4) saturate(1.25);
+      transform: scale(1);
     }
 
     /* Top Lightbox Toolbar */
@@ -928,19 +900,18 @@
     .lightbox-nav.prev { left: 10px; }
     .lightbox-nav.next { right: 10px; }
 
-    /* Deskripsi & Petunjuk Bawah Lightbox */
+    /* Deskripsi Bawah Lightbox */
     .lightbox-bottom {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 28px 20px 14px;
+      padding: 32px 20px 18px;
       background: linear-gradient(0deg, rgba(15, 23, 42, 0.84) 0%, rgba(15, 23, 42, 0) 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 4px;
       z-index: 215;
       pointer-events: none;
     }
@@ -952,11 +923,6 @@
       line-height: 1.45;
       color: #f8fafc;
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
-    }
-
-    .lightbox-hint {
-      color: rgba(255, 255, 255, 0.68);
-      font-size: 0.72rem;
     }
 
     /* Toast */
@@ -985,26 +951,28 @@
 
     /* Responsive */
     @media (max-width: 680px) {
+      .filter-dock {
+        padding: 7px 0;
+      }
       .filter-panel {
-        padding: 13px 14px;
+        padding: 6px 10px;
       }
       .filter-bar {
         flex-direction: column;
         align-items: stretch;
-        gap: 10px;
+        gap: 6px;
       }
       .filter-status-group {
         justify-content: space-between;
       }
       .filter-controls {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
       }
       .search-box {
         max-width: none;
-      }
-      .sort-segmented {
-        align-self: flex-start;
+        flex: 1;
       }
       .lightbox-stage {
         padding: 66px 36px 94px;
@@ -1021,10 +989,6 @@
       .photo-card {
         margin-bottom: 20px;
       }
-      .footer-inner {
-        flex-direction: row;
-        align-items: center;
-      }
     }
 
     @media (min-width: 900px) {
@@ -1034,9 +998,6 @@
       .menu-btn,
       .mobile-nav {
         display: none;
-      }
-      .page-title {
-        font-size: 2.1rem;
       }
       .photo-grid {
         column-count: 3;
@@ -1068,7 +1029,7 @@
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- Header -->
+  <!-- Header (Tetap) -->
   <header class="header" id="siteHeader">
     <div class="container header-inner">
       <a href="../index.html#beranda" class="brand">
@@ -1104,22 +1065,9 @@
   </nav>
 
   <main>
-    <!-- Header Halaman -->
-    <section class="gallery-top">
-      <div class="container gallery-top-inner">
-        <h1 class="page-title">Galeri Foto</h1>
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <a href="../index.html">Beranda</a>
-          <span>/</span>
-          <span>Galeri</span>
-        </nav>
-      </div>
-    </section>
-
-    <!-- Filter Pencarian Momen & Grid Foto -->
-    <section class="gallery-section">
+    <!-- Panel Filter Pencarian Ringkas (Tetap / Tidak Ikut Scroll) -->
+    <div class="filter-dock">
       <div class="container">
-        <!-- Panel Filter Pencarian Otomatis -->
         <div class="filter-panel" aria-label="Filter pencarian foto">
           <div class="filter-bar">
             <div class="filter-status-group">
@@ -1130,7 +1078,7 @@
             <div class="filter-controls">
               <!-- Pencarian Tanggal, Bulan, Tahun, atau Deskripsi -->
               <div class="search-box" id="searchBox">
-                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
@@ -1151,7 +1099,7 @@
                 >&times;</button>
               </div>
 
-              <!-- Segmented Control Urutan -->
+              <!-- Segmented Control Urutan Tepat di Samping Pencarian -->
               <div class="sort-segmented" role="group" aria-label="Urutkan momen">
                 <button type="button" class="sort-seg-btn active" data-sort="newest">Terbaru</button>
                 <button type="button" class="sort-seg-btn" data-sort="oldest">Terlama</button>
@@ -1159,7 +1107,12 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
+    <!-- Area Scroll Khusus Grid Foto -->
+    <div class="gallery-scroll-area" id="galleryScrollArea">
+      <div class="container">
         <!-- Masonry Grid Foto (Mendukung Foto Portrait Tegak & Landscape) -->
         <div class="photo-grid" id="photoGrid"></div>
 
@@ -1169,23 +1122,19 @@
           <button type="button" class="btn btn-primary btn-sm" id="emptyResetBtn">Tampilkan Semua Foto</button>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer Ringkas & Rapi (Tetap) -->
   <footer class="footer">
     <div class="container footer-inner">
-      <div>&copy; <span id="year"></span> Syafaat Nuryadi.</div>
-      <div style="display: flex; align-items: center; gap: 20px;">
-        <a href="../index.html" class="mono back-top" style="color: var(--text-muted);">&larr; Kembali ke Beranda</a>
-        <a href="#" class="mono back-top" style="color: var(--accent);">Ke atas &uarr;</a>
-      </div>
+      <span>&copy; <span id="year"></span> Syafaat Nuryadi.</span>
     </div>
   </footer>
 
   <!-- Lightbox Foto dengan Latar Blur Foto Utama & Download -->
   <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
-    <!-- Latar Belakang Mengikuti Foto Utama & Di-Blur -->
+    <!-- Latar Belakang Mengikuti Seluruh Foto Utama & Di-Blur -->
     <div class="lightbox-bg" id="lightboxBg" aria-hidden="true"></div>
 
     <!-- Toolbar Atas -->
@@ -1232,10 +1181,9 @@
       </svg>
     </button>
 
-    <!-- Deskripsi Foto & Petunjuk Zoom -->
+    <!-- Deskripsi Foto -->
     <div class="lightbox-bottom">
       <p class="lightbox-desc" id="lightboxDesc"></p>
-      <span class="lightbox-hint" id="lightboxHint">Klik atau scroll pada foto untuk zoom</span>
     </div>
   </div>
 
@@ -1289,6 +1237,7 @@
       }
     ];
 
+    const galleryScrollArea = document.getElementById('galleryScrollArea');
     const photoGrid = document.getElementById('photoGrid');
     const emptyState = document.getElementById('emptyState');
     const filterSummary = document.getElementById('filterSummary');
@@ -1313,7 +1262,6 @@
     const lightboxCounter = document.getElementById('lightboxCounter');
     const lightboxDate = document.getElementById('lightboxDate');
     const lightboxDesc = document.getElementById('lightboxDesc');
-    const lightboxHint = document.getElementById('lightboxHint');
     const zoomLevelEl = document.getElementById('zoomLevel');
 
     const downloadBtn = document.getElementById('downloadBtn');
@@ -1378,6 +1326,14 @@
       toast._timer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
+    function updateScrollUI() {
+      const scrollTop = galleryScrollArea.scrollTop;
+      const maxScroll = galleryScrollArea.scrollHeight - galleryScrollArea.clientHeight;
+      const progress = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
+      scrollProgress.style.width = `${progress}%`;
+      siteHeader.classList.toggle('is-scrolled', scrollTop > 8);
+    }
+
     // Terapkan Filter Pencarian Otomatis & Render Ulang Galeri
     function applyFiltersAndRender() {
       let list = [...photos];
@@ -1410,6 +1366,7 @@
       if (!list.length) {
         photoGrid.innerHTML = '';
         emptyState.classList.add('visible');
+        updateScrollUI();
         return;
       }
 
@@ -1432,6 +1389,9 @@
           </div>
         </div>
       `).join('');
+
+      galleryScrollArea.scrollTop = 0;
+      requestAnimationFrame(updateScrollUI);
     }
 
     // Filter Otomatis Saat Mengetik Kata Kunci
@@ -1523,11 +1483,9 @@
         panY = 0;
         lightboxImg.classList.remove('is-zoomed');
         lightboxModal.classList.remove('is-zoom-active');
-        lightboxHint.textContent = 'Klik atau scroll pada foto untuk zoom';
       } else {
         lightboxImg.classList.add('is-zoomed');
         lightboxModal.classList.add('is-zoom-active');
-        lightboxHint.textContent = 'Geser foto untuk melihat detail • Klik foto untuk normal';
       }
 
       lightboxImg.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${scale})`;
@@ -1715,14 +1673,9 @@
       });
     });
 
-    // Scroll Progress & Header Elevation
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      scrollProgress.style.width = `${progress}%`;
-      siteHeader.classList.toggle('is-scrolled', scrollTop > 16);
-    }, { passive: true });
+    // Scroll Progress Khusus Area Foto
+    galleryScrollArea.addEventListener('scroll', updateScrollUI, { passive: true });
+    window.addEventListener('resize', updateScrollUI, { passive: true });
 
     // Inisialisasi Awal
     document.getElementById('year').textContent = new Date().getFullYear();
