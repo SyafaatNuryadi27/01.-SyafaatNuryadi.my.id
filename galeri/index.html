@@ -3,7 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Galeri Foto — Syafaat Nuryadi</title>
+  <title>Galeri Foto Syafaat Nuryadi — Dokumentasi &amp; Momen</title>
+  <meta name="description" content="Galeri foto resmi Syafaat Nuryadi. Kumpulan dokumentasi momen, kegiatan, proyek, dan arsip visual Syafaat Nuryadi." />
+  <meta name="keywords" content="Syafaat Nuryadi, Foto Syafaat Nuryadi, Galeri Syafaat Nuryadi, Dokumentasi Syafaat Nuryadi" />
+  <meta name="author" content="Syafaat Nuryadi" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://syafaatnuryadi.my.id/galeri/" />
+
+  <!-- Open Graph & Social Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Syafaat Nuryadi" />
+  <meta property="og:title" content="Galeri Foto Syafaat Nuryadi" />
+  <meta property="og:description" content="Kumpulan foto dan dokumentasi momen resmi milik Syafaat Nuryadi." />
+  <meta property="og:url" content="https://syafaatnuryadi.my.id/galeri/" />
+  <meta property="og:image" id="ogImageMeta" content="" />
+  <meta property="og:image:alt" content="Galeri Foto Syafaat Nuryadi" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Galeri Foto Syafaat Nuryadi" />
+  <meta name="twitter:description" content="Kumpulan foto dan dokumentasi momen resmi milik Syafaat Nuryadi." />
+  <meta name="twitter:image" id="twitterImageMeta" content="" />
+
+  <!-- Structured Data Awal (Akan diperbarui otomatis dengan daftar semua foto dari Supabase) -->
+  <script type="application/ld+json" id="galleryJsonLd">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "Galeri Foto Syafaat Nuryadi",
+      "description": "Kumpulan dokumentasi foto resmi Syafaat Nuryadi.",
+      "url": "https://syafaatnuryadi.my.id/galeri/",
+      "author": {
+        "@type": "Person",
+        "name": "Syafaat Nuryadi",
+        "url": "https://syafaatnuryadi.my.id/"
+      }
+    }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
@@ -85,6 +122,19 @@
     img {
       max-width: 100%;
       display: block;
+    }
+
+    /* Heading SEO semantik tanpa mengubah tata letak visual */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .container {
@@ -1187,6 +1237,9 @@
   </nav>
 
   <main>
+    <!-- Heading Utama untuk Mesin Pencari (Tersembunyi secara visual) -->
+    <h1 class="sr-only">Galeri Foto Syafaat Nuryadi</h1>
+
     <!-- Panel Filter Pencarian Ringkas -->
     <div class="filter-dock">
       <div class="container">
@@ -1298,7 +1351,7 @@
           </div>
         </div>
 
-        <div class="photo-grid" id="photoGrid"></div>
+        <section class="photo-grid" id="photoGrid" aria-label="Koleksi Foto Syafaat Nuryadi"></section>
 
         <div class="empty-state" id="emptyState">
           <p id="emptyTitle">Belum ada foto tersimpan di galeri.</p>
@@ -1345,7 +1398,7 @@
     </div>
 
     <div class="lightbox-stage" id="lightboxStage">
-      <img id="lightboxImg" class="lightbox-img" src="" alt="Foto galeri" draggable="false" decoding="async" />
+      <img id="lightboxImg" class="lightbox-img" src="" alt="Foto Syafaat Nuryadi" draggable="false" decoding="async" />
     </div>
 
     <div class="lightbox-bottom" id="lightboxBottom">
@@ -1359,6 +1412,8 @@
     const SUPABASE_URL = 'https://ixfokmldbkmgjsjcuxpy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_65c36nE8s8kER37H-vQOUg_a06QfX_4';
     const TABLE_NAME = 'galeri_foto';
+    const OWNER_NAME = 'Syafaat Nuryadi';
+    const SITE_BASE_URL = 'https://syafaatnuryadi.my.id';
 
     const ALLOWED_IMAGE_EXTENSIONS = [
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
@@ -1466,6 +1521,64 @@
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+    }
+
+    function buildSeoPhotoAlt(item) {
+      const cleanDesc = (item.desc || '').trim();
+      if (cleanDesc) {
+        return `${OWNER_NAME} — ${cleanDesc} (${item.date})`;
+      }
+      return `Foto ${OWNER_NAME} (${item.date})`;
+    }
+
+    function updateSeoStructuredData(photoList) {
+      if (!Array.isArray(photoList) || photoList.length === 0) return;
+
+      const pageUrl = window.location.href.split('#')[0] || `${SITE_BASE_URL}/galeri/`;
+      const primaryPhoto = photoList[0];
+
+      // Perbarui meta Open Graph & Twitter dengan foto terbaru
+      const ogImg = document.getElementById('ogImageMeta');
+      const twImg = document.getElementById('twitterImageMeta');
+      if (ogImg && primaryPhoto.src) ogImg.setAttribute('content', primaryPhoto.src);
+      if (twImg && primaryPhoto.src) twImg.setAttribute('content', primaryPhoto.src);
+
+      // Suntikkan Schema.org ImageGallery + daftar ImageObject agar Google Images mengindeks tiap URL foto
+      const schemaPayload = {
+        '@context': 'https://schema.org',
+        '@type': 'ImageGallery',
+        'name': `Galeri Foto ${OWNER_NAME}`,
+        'description': `Kumpulan dokumentasi foto resmi milik ${OWNER_NAME}.`,
+        'url': pageUrl,
+        'author': {
+          '@type': 'Person',
+          'name': OWNER_NAME,
+          'url': `${SITE_BASE_URL}/`
+        },
+        'image': photoList.map((item, idx) => ({
+          '@type': 'ImageObject',
+          'position': idx + 1,
+          'name': buildSeoPhotoAlt(item),
+          'caption': (item.desc || '').trim() || `Dokumentasi foto ${OWNER_NAME} pada ${item.date}`,
+          'contentUrl': item.src,
+          'url': `${pageUrl}#foto-${item.id}`,
+          'datePublished': item.isoDate || undefined,
+          'representativeOfPage': idx === 0,
+          'author': {
+            '@type': 'Person',
+            'name': OWNER_NAME
+          },
+          'copyrightHolder': {
+            '@type': 'Person',
+            'name': OWNER_NAME
+          }
+        }))
+      };
+
+      const jsonLdScript = document.getElementById('galleryJsonLd');
+      if (jsonLdScript) {
+        jsonLdScript.textContent = JSON.stringify(schemaPayload);
+      }
     }
 
     function getExtensionFromUrl(url) {
@@ -1627,7 +1740,7 @@
       if (item._searchText) return item._searchText;
       const parts = (item.isoDate || '').split('-');
       if (parts.length !== 3) {
-        item._searchText = `${item.date} ${item.desc}`.toLowerCase();
+        item._searchText = `${OWNER_NAME} ${item.date} ${item.desc}`.toLowerCase();
         return item._searchText;
       }
       const [year, monthStr, dayStr] = parts;
@@ -1637,6 +1750,7 @@
       const mFull = bulanFull[monthIdx] || '';
 
       item._searchText = [
+        OWNER_NAME,
         item.date,
         item.isoDate,
         `${dayStr}/${monthStr}/${year}`,
@@ -1711,8 +1825,18 @@
           _searchText: ''
         }));
 
+        updateSeoStructuredData(photos);
         loadingState.classList.remove('visible');
         applyFiltersAndRender();
+
+        // Buka langsung foto tertentu jika URL memiliki hash #foto-<id> (misalnya dari hasil Google Images)
+        const hashMatch = window.location.hash.match(/^#foto-(.+)$/);
+        if (hashMatch) {
+          const targetIdx = filteredPhotos.findIndex(p => String(p.id) === hashMatch[1]);
+          if (targetIdx !== -1) {
+            openLightbox(targetIdx);
+          }
+        }
       } catch (err) {
         console.error('Gagal memuat galeri:', err);
         loadingState.classList.remove('visible');
@@ -1905,7 +2029,7 @@
       emptyState.classList.remove('visible');
       photoGrid.innerHTML = list.map((item, idx) => {
         const cleanDesc = (item.desc || '').trim();
-        const altText = cleanDesc || `Foto ${item.date}`;
+        const seoAlt = buildSeoPhotoAlt(item);
         const heicItem = isHeicUrl(item.src);
         const cachedHeic = heicItem ? readSessionHeicCache(item.src) : null;
         const activeImgSrc = heicItem
@@ -1915,7 +2039,8 @@
         const shouldAnimate = idx < 6;
 
         return `
-          <div
+          <figure
+            id="foto-${escapeHtml(item.id)}"
             class="photo-card is-loading-img${shouldAnimate ? ' is-animating' : ''}"
             data-index="${idx}"
             ${shouldAnimate ? `style="animation-delay: ${idx * 0.04}s"` : ''}
@@ -1928,21 +2053,27 @@
               </svg>
               ${placeholderText ? `<span class="card-img-status">${placeholderText}</span>` : ''}
             </div>
-            <img src="${activeImgSrc}" alt="${escapeHtml(altText)}" loading="lazy" decoding="async" />
-            <div class="card-overlay">
+            <img
+              src="${activeImgSrc}"
+              alt="${escapeHtml(seoAlt)}"
+              title="${escapeHtml(seoAlt)}"
+              loading="${idx < 3 ? 'eager' : 'lazy'}"
+              decoding="async"
+            />
+            <figcaption class="card-overlay">
               <div class="card-meta">
                 <span class="card-date">${item.date}</span>
-                ${cleanDesc ? `<p class="card-desc">${escapeHtml(cleanDesc)}</p>` : ''}
+                ${cleanDesc ? `<p class="card-desc">${escapeHtml(cleanDesc)}</p>` : `<p class="card-desc">${OWNER_NAME}</p>`}
               </div>
-              <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto" aria-label="Unduh foto ${item.date}">
+              <button type="button" class="card-icon-btn card-download" data-index="${idx}" title="Unduh foto ${OWNER_NAME}" aria-label="Unduh foto ${escapeHtml(seoAlt)}">
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
               </button>
-            </div>
-          </div>
+            </figcaption>
+          </figure>
         `;
       }).join('');
 
@@ -1986,7 +2117,7 @@
 
     async function downloadPhoto(item, index) {
       const ext = getExtensionFromUrl(item.src);
-      const fileName = `galeri-syafaat-${item.isoDate || index + 1}.${ext}`;
+      const fileName = `syafaat-nuryadi-${item.isoDate || index + 1}.${ext}`;
       showToast('Menyiapkan unduhan foto...');
 
       try {
@@ -2108,6 +2239,7 @@
 
     async function updateLightboxContent(item) {
       const cleanDesc = (item.desc || '').trim();
+      const seoAlt = buildSeoPhotoAlt(item);
       lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
       lightboxDate.textContent = item.date;
       lightboxDesc.textContent = cleanDesc;
@@ -2130,7 +2262,7 @@
 
       if (filteredPhotos[currentIndex]?.id === item.id) {
         lightboxImg.src = activeSrc;
-        lightboxImg.alt = cleanDesc || `Foto ${item.date}`;
+        lightboxImg.alt = seoAlt;
         lightboxBgImg.src = activeSrc;
         prefetchNeighborHeic(currentIndex);
       }
