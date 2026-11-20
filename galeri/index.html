@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #f8f9fb;
@@ -21,6 +23,8 @@
       --primary-hover: #1e40af;
       --accent: #2563eb;
       --accent-soft: #eff6ff;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
       --gold: #c89b3c;
       --gold-light: #e2bd6b;
       --gold-soft: #fdf8eb;
@@ -75,7 +79,8 @@
 
     button,
     input,
-    select {
+    select,
+    textarea {
       font-family: inherit;
     }
 
@@ -91,14 +96,6 @@
       padding: 0 20px;
     }
 
-    .mono {
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
     /* Keyframes */
     @keyframes cardPopIn {
       from {
@@ -108,6 +105,12 @@
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
       }
     }
 
@@ -298,17 +301,34 @@
       transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
     }
 
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
     .btn-primary {
       background: var(--primary);
       color: #ffffff;
       box-shadow: 0 4px 12px rgba(29, 78, 216, 0.22);
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       background: var(--primary-hover);
       border-color: var(--primary-hover);
       transform: translateY(-2px);
       box-shadow: 0 10px 20px rgba(29, 78, 216, 0.28);
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: var(--surface-alt);
+      border-color: var(--text-subtle);
     }
 
     .btn-sm {
@@ -378,7 +398,7 @@
       text-decoration: underline;
     }
 
-    /* Pencarian & Filter Terbaru/Terlama Sejajar Bersebelahan */
+    /* Pencarian, Filter Urutan & Tombol Tambah Foto */
     .filter-controls {
       display: flex;
       align-items: center;
@@ -394,7 +414,7 @@
       align-items: center;
       height: 31px;
       width: 100%;
-      max-width: 320px;
+      max-width: 300px;
       padding: 0 9px;
       border-radius: 5px;
       border: 1px solid var(--border);
@@ -474,7 +494,7 @@
       color: #0f172a;
     }
 
-    /* Segmented Toggle Urutan (Terbaru | Terlama) Tepat di Samping Pencarian */
+    /* Segmented Toggle Urutan (Terbaru | Terlama) */
     .sort-segmented {
       display: inline-flex;
       align-items: center;
@@ -511,7 +531,35 @@
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     }
 
-    /* Area Scroll Khusus Foto (Hanya Bagian Ini yang Bisa Di-Scroll) */
+    /* Tombol Tambah Foto Ringkas di Filter Bar */
+    .add-photo-btn {
+      height: 31px;
+      padding: 0 11px;
+      border: 1px solid var(--primary);
+      border-radius: 5px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 0.74rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.18s ease, transform 0.18s var(--ease-out);
+    }
+
+    .add-photo-btn:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    .add-photo-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Area Scroll Khusus Foto */
     .gallery-scroll-area {
       flex: 1 1 auto;
       min-height: 0;
@@ -537,6 +585,32 @@
 
     .gallery-scroll-area::-webkit-scrollbar-thumb:hover {
       background: var(--text-subtle);
+    }
+
+    /* Loading State Supabase */
+    .loading-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 64px 20px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .loading-state.visible {
+      display: flex;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
     }
 
     .photo-grid {
@@ -650,7 +724,6 @@
       overflow: hidden;
     }
 
-    /* Tombol Download Murni Ikon (Tanpa Kotak/Card) */
     .card-icon-btn {
       background: transparent;
       border: none;
@@ -674,7 +747,7 @@
       transform: scale(0.92);
     }
 
-    /* Empty State saat Pencarian Tidak Ditemukan */
+    /* Empty State */
     .empty-state {
       display: none;
       text-align: center;
@@ -694,7 +767,15 @@
       margin-bottom: 14px;
     }
 
-    /* Footer Ringkas & Rapi (Tetap / Tidak Ikut Scroll) */
+    .empty-state .empty-sub {
+      color: var(--text-subtle);
+      font-size: 0.82rem;
+      font-weight: 400;
+      max-width: 480px;
+      margin: -6px auto 16px;
+    }
+
+    /* Footer Ringkas & Rapi (Tetap) */
     .footer {
       flex-shrink: 0;
       border-top: 1px solid var(--border);
@@ -711,6 +792,370 @@
       font-weight: 500;
       color: var(--text-subtle);
       letter-spacing: 0.01em;
+    }
+
+    /* Modal Form Tambah / Edit Foto Supabase (Mendukung Multi-Upload) */
+    .form-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 230;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .form-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .form-card {
+      width: 100%;
+      max-width: 540px;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+      border-radius: 8px;
+      box-shadow: var(--shadow-lg);
+      padding: 20px;
+      transform: translateY(12px) scale(0.98);
+      transition: transform 0.25s var(--ease-out);
+    }
+
+    .form-backdrop.open .form-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .form-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .form-close {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--text-muted);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .form-close:hover {
+      background: var(--surface-alt);
+      color: var(--text);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-label-row .form-label {
+      margin-bottom: 0;
+    }
+
+    .clear-queue-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--danger);
+      cursor: pointer;
+    }
+
+    .clear-queue-btn.visible {
+      display: inline-block;
+    }
+
+    .clear-queue-btn:hover {
+      text-decoration: underline;
+    }
+
+    .form-hint {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-top: 4px;
+    }
+
+    .file-dropzone {
+      position: relative;
+      border: 1.5px dashed var(--border-strong);
+      border-radius: 6px;
+      background: var(--bg);
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .file-dropzone:hover,
+    .file-dropzone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .file-dropzone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-dropzone-text {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .file-dropzone-sub {
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-top: 3px;
+    }
+
+    /* Pratinjau Multi-Foto yang Dipilih */
+    .multi-preview-wrap {
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      padding: 10px;
+    }
+
+    .multi-preview-wrap.visible {
+      display: block;
+    }
+
+    .multi-preview-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .multi-preview-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      max-height: 240px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .multi-preview-item {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--gold-border);
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .multi-preview-thumb {
+      position: relative;
+      height: 92px;
+      background: var(--surface-alt);
+    }
+
+    .multi-preview-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .remove-file-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 22px;
+      height: 22px;
+      border: none;
+      border-radius: 4px;
+      background: rgba(15, 23, 42, 0.78);
+      color: #ffffff;
+      font-size: 0.9rem;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .remove-file-btn:hover {
+      background: var(--danger);
+    }
+
+    .multi-preview-info {
+      padding: 6px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .multi-file-name {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .multi-file-size {
+      font-size: 0.66rem;
+      color: var(--text-subtle);
+    }
+
+    .multi-item-caption {
+      width: 100%;
+      padding: 4px 6px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 0.7rem;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+    }
+
+    .multi-item-caption:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    /* Single Preview untuk Mode Edit / URL */
+    .preview-box {
+      display: none;
+      margin-top: 10px;
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--gold-border);
+      background: var(--surface-alt);
+    }
+
+    .preview-box.visible {
+      display: block;
+    }
+
+    .preview-box img {
+      width: 100%;
+      max-height: 190px;
+      object-fit: cover;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--border-strong);
+      border-radius: 5px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.84rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 74px;
+    }
+
+    /* Progress Bar Upload Banyak Foto */
+    .upload-progress-wrap {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(37, 99, 235, 0.25);
+    }
+
+    .upload-progress-wrap.visible {
+      display: block;
+    }
+
+    .upload-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .upload-progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(29, 78, 216, 0.15);
+      overflow: hidden;
+    }
+
+    .upload-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--gold));
+      transition: width 0.25s ease;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
     }
 
     /* Lightbox Modal dengan Latar Foto Blur Dinamis */
@@ -736,7 +1181,6 @@
       pointer-events: auto;
     }
 
-    /* Latar Belakang Menampilkan Seluruh Foto Utama & Tetap Blur */
     .lightbox-bg {
       position: absolute;
       inset: 16px;
@@ -807,10 +1251,9 @@
     .lightbox-tools {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
-    /* Tombol Aksi Lightbox Murni Ikon (Tanpa Kotak/Card) */
     .lb-icon-btn {
       background: transparent;
       border: none;
@@ -827,6 +1270,10 @@
     .lb-icon-btn:hover {
       color: var(--gold-light);
       transform: scale(1.15);
+    }
+
+    .lb-icon-btn.danger:hover {
+      color: #fca5a5;
     }
 
     .lb-icon-btn:active {
@@ -908,6 +1355,8 @@
       opacity: 0;
       pointer-events: none;
       transition: transform 0.3s var(--ease-out), opacity 0.25s ease;
+      text-align: center;
+      max-width: 90vw;
     }
 
     .toast.show {
@@ -1035,7 +1484,7 @@
         <div class="filter-panel" aria-label="Filter pencarian foto">
           <div class="filter-bar">
             <div class="filter-status-group">
-              <span class="filter-summary" id="filterSummary">7 Momen</span>
+              <span class="filter-summary" id="filterSummary">Memuat...</span>
               <button type="button" class="filter-reset-link" id="resetFilterLink">Reset</button>
             </div>
 
@@ -1063,11 +1512,20 @@
                 >&times;</button>
               </div>
 
-              <!-- Segmented Control Urutan Tepat di Samping Pencarian -->
+              <!-- Segmented Control Urutan -->
               <div class="sort-segmented" role="group" aria-label="Urutkan momen">
                 <button type="button" class="sort-seg-btn active" data-sort="newest">Terbaru</button>
                 <button type="button" class="sort-seg-btn" data-sort="oldest">Terlama</button>
               </div>
+
+              <!-- Tombol Tambah Foto ke Supabase -->
+              <button type="button" class="add-photo-btn" id="openAddModalBtn" title="Unggah satu atau banyak foto ke Supabase">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Tambah</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1077,13 +1535,20 @@
     <!-- Area Scroll Khusus Grid Foto -->
     <div class="gallery-scroll-area" id="galleryScrollArea">
       <div class="container">
-        <!-- Masonry Grid Foto (Mendukung Foto Portrait Tegak & Landscape) -->
+        <!-- Indikator Memuat Data Supabase -->
+        <div class="loading-state visible" id="loadingState">
+          <div class="spinner"></div>
+          <span>Memuat galeri dari Supabase...</span>
+        </div>
+
+        <!-- Masonry Grid Foto -->
         <div class="photo-grid" id="photoGrid"></div>
 
-        <!-- Tampilan Kosong jika Pencarian Tidak Cocok -->
+        <!-- Tampilan Kosong -->
         <div class="empty-state" id="emptyState">
-          <p>Tidak ada foto yang cocok dengan kata kunci pencarian.</p>
-          <button type="button" class="btn btn-primary btn-sm" id="emptyResetBtn">Tampilkan Semua Foto</button>
+          <p id="emptyTitle">Belum ada foto tersimpan di galeri.</p>
+          <p class="empty-sub" id="emptySub">Klik tombol "+ Tambah" di atas untuk mengunggah satu atau banyak foto sekaligus ke Supabase.</p>
+          <button type="button" class="btn btn-primary btn-sm" id="emptyActionBtn">+ Tambah Foto Pertama</button>
         </div>
       </div>
     </div>
@@ -1096,20 +1561,125 @@
     </div>
   </footer>
 
-  <!-- Lightbox Foto dengan Latar Blur Foto Utama, Geser Kiri/Kanan & Download -->
+  <!-- Modal Tambah / Edit Foto Supabase (Mendukung Banyak File Sekaligus) -->
+  <div class="form-backdrop" id="photoFormModal" aria-hidden="true">
+    <div class="form-card" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+      <div class="form-header">
+        <h2 class="form-title" id="formModalTitle">Unggah Foto ke Supabase</h2>
+        <button type="button" class="form-close" id="closeFormModalBtn" aria-label="Tutup form">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="photoForm">
+        <input type="hidden" id="editPhotoId" value="" />
+
+        <div class="form-group">
+          <div class="form-label-row">
+            <label class="form-label" for="photoFileInput" id="fileFieldLabel">Pilih File Foto (Bisa Banyak Sekaligus)</label>
+            <button type="button" class="clear-queue-btn" id="clearSelectedFilesBtn">Hapus Semua Pilihan</button>
+          </div>
+          <div class="file-dropzone" id="fileDropzone">
+            <input
+              type="file"
+              id="photoFileInput"
+              accept="image/*,.png,.jpg,.jpeg,.webp,.gif,.avif,.bmp,.svg,.heic,.heif,.tiff,.tif"
+              multiple
+            />
+            <div class="file-dropzone-text" id="dropzoneText">Klik atau seret banyak foto ke sini</div>
+            <div class="file-dropzone-sub">Format: PNG, JPG, JPEG, WebP, GIF, AVIF, SVG, dll. &bull; Maks. 50 MB per foto</div>
+          </div>
+
+          <!-- Daftar Pratinjau Multi-Foto -->
+          <div class="multi-preview-wrap" id="multiPreviewWrap">
+            <div class="multi-preview-meta">
+              <span id="multiPreviewCount">0 foto dipilih</span>
+              <span id="multiPreviewTotalSize">0 MB</span>
+            </div>
+            <div class="multi-preview-list" id="multiPreviewList"></div>
+          </div>
+
+          <!-- Pratinjau Tunggal (Untuk Mode Edit / Input URL) -->
+          <div class="preview-box" id="previewBox">
+            <img id="previewImg" src="" alt="Pratinjau foto" />
+          </div>
+        </div>
+
+        <div class="form-group" id="urlInputGroup">
+          <label class="form-label" for="photoUrlInput">Atau Tautan URL Foto (Opsional)</label>
+          <input
+            type="url"
+            id="photoUrlInput"
+            class="form-control"
+            placeholder="https://contoh.com/foto.jpg"
+          />
+          <span class="form-hint">Isi URL jika tidak mengunggah file dari perangkat.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="photoDateInput">Tanggal Momen</label>
+          <input type="date" id="photoDateInput" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="photoDescInput" id="descFieldLabel">Deskripsi Foto</label>
+          <textarea
+            id="photoDescInput"
+            class="form-control"
+            placeholder="Tulis keterangan momen (berlaku untuk semua foto yang dipilih, atau isi keterangan khusus pada tiap foto di atas)..."
+            required
+          ></textarea>
+        </div>
+
+        <!-- Bar Progres Unggah Banyak Foto -->
+        <div class="upload-progress-wrap" id="uploadProgressWrap">
+          <div class="upload-progress-label">
+            <span id="uploadProgressText">Mengunggah foto...</span>
+            <span id="uploadProgressPercent">0%</span>
+          </div>
+          <div class="upload-progress-track">
+            <div class="upload-progress-bar" id="uploadProgressBar"></div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline btn-sm" id="cancelFormBtn">Batal</button>
+          <button type="submit" class="btn btn-primary btn-sm" id="submitFormBtn">Simpan ke Supabase</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lightbox Foto dengan Latar Blur Foto Utama, Geser Kiri/Kanan, Edit, Hapus & Download -->
   <div class="modal-backdrop" id="lightboxModal" aria-hidden="true">
-    <!-- Latar Belakang Mengikuti Seluruh Foto Utama & Di-Blur -->
     <div class="lightbox-bg" id="lightboxBg" aria-hidden="true"></div>
 
     <!-- Toolbar Atas -->
     <div class="lightbox-topbar">
       <div class="lightbox-status">
-        <span class="lightbox-badge" id="lightboxCounter">1 / 7</span>
-        <span class="lightbox-badge gold" id="lightboxDate">18 Nov 2026</span>
+        <span class="lightbox-badge" id="lightboxCounter">1 / 1</span>
+        <span class="lightbox-badge gold" id="lightboxDate">-</span>
         <span class="lightbox-badge zoom-pill" id="zoomLevel" title="Klik untuk reset zoom">100%</span>
       </div>
 
       <div class="lightbox-tools">
+        <button class="lb-icon-btn" id="editPhotoBtn" title="Edit tanggal & deskripsi" aria-label="Edit foto">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
+
+        <button class="lb-icon-btn danger" id="deletePhotoBtn" title="Hapus foto dari Supabase" aria-label="Hapus foto">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+
         <button class="lb-icon-btn" id="downloadBtn" title="Unduh foto" aria-label="Unduh foto">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1139,66 +1709,48 @@
   </div>
 
   <!-- Toast Notifikasi -->
-  <div class="toast" id="toast">Mengunduh foto...</div>
+  <div class="toast" id="toast">Memproses...</div>
 
   <script>
-    // Daftar Foto, Tanggal & Deskripsi Momen
-    const photos = [
-      {
-        src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=85',
-        date: '18 Nov 2026',
-        isoDate: '2026-11-18',
-        desc: 'Tampilan antarmuka analitik dan pemantauan performa sistem berbasis web.'
-      },
-      {
-        src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=85',
-        date: '11 Nov 2026',
-        isoDate: '2026-11-11',
-        desc: 'Sesi dokumentasi potret kasual dengan pencahayaan alami.'
-      },
-      {
-        src: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=85',
-        date: '04 Nov 2026',
-        isoDate: '2026-11-04',
-        desc: 'Eksplorasi struktur kode dan pengembangan fitur antarmuka responsif.'
-      },
-      {
-        src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1400&q=85',
-        date: '22 Okt 2026',
-        isoDate: '2026-10-22',
-        desc: 'Pengujian alur transaksi digital dan integrasi sistem pembayaran.'
-      },
-      {
-        src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=85',
-        date: '10 Okt 2026',
-        isoDate: '2026-10-10',
-        desc: 'Diskusi kolaborasi tim dalam merancang solusi produk digital.'
-      },
-      {
-        src: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1400&q=85',
-        date: '28 Sep 2026',
-        isoDate: '2026-09-28',
-        desc: 'Suasana ruang kerja yang tenang untuk fokus merancang desain UI.'
-      },
-      {
-        src: 'https://sitenexs.com/assets/founder/founder.png?auto=format&fit=crop&w=1200&q=85',
-        date: '15 Sep 2026',
-        isoDate: '2026-09-15',
-        desc: 'Potret profil founder dan pengembang utama di balik Sitenexs.'
-      }
+    // =========================================================================
+    // KONFIGURASI SUPABASE
+    // =========================================================================
+    const SUPABASE_URL = 'https://ixfokmldbkmgjsjcuxpy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_65c36nE8s8kER37H-vQOUg_a06QfX_4';
+    const STORAGE_BUCKET = 'galeri';
+    const TABLE_NAME = 'galeri_foto';
+
+    // Batas Ukuran Upload (50 MB) & Tipe File Gambar
+    const MAX_FILE_SIZE_MB = 50;
+    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+    const ALLOWED_IMAGE_EXTENSIONS = [
+      'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'avif', 'heic', 'heif', 'ico', 'tiff', 'tif'
     ];
 
+    const isSupabaseConfigured =
+      SUPABASE_URL.startsWith('https://') &&
+      !SUPABASE_URL.includes('YOUR_PROJECT_ID') &&
+      SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+
+    const supabaseClient = isSupabaseConfigured
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+
+    // Elemen DOM Utama
     const galleryScrollArea = document.getElementById('galleryScrollArea');
+    const loadingState = document.getElementById('loadingState');
     const photoGrid = document.getElementById('photoGrid');
     const emptyState = document.getElementById('emptyState');
+    const emptyTitle = document.getElementById('emptyTitle');
+    const emptySub = document.getElementById('emptySub');
+    const emptyActionBtn = document.getElementById('emptyActionBtn');
+
     const filterSummary = document.getElementById('filterSummary');
     const resetFilterLink = document.getElementById('resetFilterLink');
-
     const searchBox = document.getElementById('searchBox');
     const searchInput = document.getElementById('searchInput');
     const clearSearchBtn = document.getElementById('clearSearchBtn');
     const sortButtons = document.querySelectorAll('.sort-seg-btn');
-    const emptyResetBtn = document.getElementById('emptyResetBtn');
 
     const menuBtn = document.getElementById('menuBtn');
     const mobileNav = document.getElementById('mobileNav');
@@ -1206,6 +1758,37 @@
     const siteHeader = document.getElementById('siteHeader');
     const toast = document.getElementById('toast');
 
+    // Elemen Modal Form Tambah/Edit Foto
+    const openAddModalBtn = document.getElementById('openAddModalBtn');
+    const photoFormModal = document.getElementById('photoFormModal');
+    const formModalTitle = document.getElementById('formModalTitle');
+    const closeFormModalBtn = document.getElementById('closeFormModalBtn');
+    const cancelFormBtn = document.getElementById('cancelFormBtn');
+    const photoForm = document.getElementById('photoForm');
+    const editPhotoIdInput = document.getElementById('editPhotoId');
+    const fileFieldLabel = document.getElementById('fileFieldLabel');
+    const clearSelectedFilesBtn = document.getElementById('clearSelectedFilesBtn');
+    const fileDropzone = document.getElementById('fileDropzone');
+    const photoFileInput = document.getElementById('photoFileInput');
+    const dropzoneText = document.getElementById('dropzoneText');
+    const multiPreviewWrap = document.getElementById('multiPreviewWrap');
+    const multiPreviewCount = document.getElementById('multiPreviewCount');
+    const multiPreviewTotalSize = document.getElementById('multiPreviewTotalSize');
+    const multiPreviewList = document.getElementById('multiPreviewList');
+    const previewBox = document.getElementById('previewBox');
+    const previewImg = document.getElementById('previewImg');
+    const urlInputGroup = document.getElementById('urlInputGroup');
+    const photoUrlInput = document.getElementById('photoUrlInput');
+    const photoDateInput = document.getElementById('photoDateInput');
+    const descFieldLabel = document.getElementById('descFieldLabel');
+    const photoDescInput = document.getElementById('photoDescInput');
+    const uploadProgressWrap = document.getElementById('uploadProgressWrap');
+    const uploadProgressText = document.getElementById('uploadProgressText');
+    const uploadProgressPercent = document.getElementById('uploadProgressPercent');
+    const uploadProgressBar = document.getElementById('uploadProgressBar');
+    const submitFormBtn = document.getElementById('submitFormBtn');
+
+    // Elemen Lightbox
     const lightboxModal = document.getElementById('lightboxModal');
     const lightboxBg = document.getElementById('lightboxBg');
     const lightboxStage = document.getElementById('lightboxStage');
@@ -1214,15 +1797,19 @@
     const lightboxDate = document.getElementById('lightboxDate');
     const lightboxDesc = document.getElementById('lightboxDesc');
     const zoomLevelEl = document.getElementById('zoomLevel');
-
+    const editPhotoBtn = document.getElementById('editPhotoBtn');
+    const deletePhotoBtn = document.getElementById('deletePhotoBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const lightboxClose = document.getElementById('lightboxClose');
 
-    // State Filter & Lightbox
+    // State Data, Antrean File & Filter
+    let photos = [];
+    let filteredPhotos = [];
+    let selectedUploadQueue = []; // [{ uid, file, previewUrl, customDesc }]
     let searchQuery = '';
     let sortOrder = 'newest';
-    let filteredPhotos = [...photos];
     let currentIndex = 0;
+    let isUploading = false;
 
     // State Zoom, Geser (Swipe) & Pan
     let scale = 1;
@@ -1242,15 +1829,42 @@
     let touchUsed = false;
     let isTransitioningSlide = false;
 
+    const bulanDisplay = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     const bulanShort = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
     const bulanFull = [
       'januari', 'februari', 'maret', 'april', 'mei', 'juni',
       'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
     ];
 
-    // Bangun indeks teks pencarian lengkap (tanggal, bulan singkat/lengkap, tahun, deskripsi)
+    function formatIndoDate(isoDate) {
+      if (!isoDate) return '-';
+      const parts = isoDate.split('-');
+      if (parts.length !== 3) return isoDate;
+      const [year, monthStr, dayStr] = parts;
+      const monthIdx = Number(monthStr) - 1;
+      const monthName = bulanDisplay[monthIdx] || monthStr;
+      return `${dayStr} ${monthName} ${year}`;
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return '0 B';
+      const mb = bytes / (1024 * 1024);
+      if (mb >= 1) return `${mb.toFixed(2)} MB`;
+      const kb = bytes / 1024;
+      return `${Math.round(kb)} KB`;
+    }
+
+    function isValidImageFile(file) {
+      if (!file) return false;
+      if (file.type && file.type.startsWith('image/')) return true;
+      const ext = (file.name.split('.').pop() || '').toLowerCase();
+      return ALLOWED_IMAGE_EXTENSIONS.includes(ext);
+    }
+
     function buildSearchIndex(item) {
-      const [year, monthStr, dayStr] = item.isoDate.split('-');
+      const parts = (item.isoDate || '').split('-');
+      if (parts.length !== 3) return `${item.date} ${item.desc}`.toLowerCase();
+      const [year, monthStr, dayStr] = parts;
       const monthIdx = Number(monthStr) - 1;
       const dayNum = String(Number(dayStr));
       const mShort = bulanShort[monthIdx] || '';
@@ -1275,7 +1889,7 @@
       toast.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toast._timer);
-      toast._timer = setTimeout(() => toast.classList.remove('show'), 2600);
+      toast._timer = setTimeout(() => toast.classList.remove('show'), 3200);
     }
 
     function updateScrollUI() {
@@ -1286,7 +1900,482 @@
       siteHeader.classList.toggle('is-scrolled', scrollTop > 8);
     }
 
-    // Terapkan Filter Pencarian Otomatis & Render Ulang Galeri
+    // =========================================================================
+    // MANAJEMEN ANTREAN MULTI-FOTO (PILIH & VALIDASI HINGGA 50 MB PER FILE)
+    // =========================================================================
+
+    function clearUploadQueue() {
+      selectedUploadQueue.forEach(entry => {
+        if (entry.previewUrl) URL.revokeObjectURL(entry.previewUrl);
+      });
+      selectedUploadQueue = [];
+      photoFileInput.value = '';
+      renderUploadQueue();
+    }
+
+    function addFilesToQueue(fileList) {
+      const incoming = Array.from(fileList || []);
+      if (!incoming.length) return;
+
+      const isEditMode = Boolean(editPhotoIdInput.value.trim());
+      if (isEditMode) {
+        // Saat mode edit 1 foto, ambil 1 file saja
+        clearUploadQueue();
+      }
+
+      const rejectedFormat = [];
+      const rejectedSize = [];
+      let addedCount = 0;
+
+      const filesToProcess = isEditMode ? [incoming[0]] : incoming;
+
+      for (const file of filesToProcess) {
+        if (!isValidImageFile(file)) {
+          rejectedFormat.push(file.name);
+          continue;
+        }
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+          rejectedSize.push(`${file.name} (${formatBytes(file.size)})`);
+          continue;
+        }
+
+        const uid = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        selectedUploadQueue.push({
+          uid,
+          file,
+          previewUrl: URL.createObjectURL(file),
+          customDesc: ''
+        });
+        addedCount++;
+      }
+
+      photoFileInput.value = '';
+      renderUploadQueue();
+
+      if (rejectedSize.length && rejectedFormat.length) {
+        showToast(`Sebagian file dilewati: melebihi batas ${MAX_FILE_SIZE_MB} MB atau bukan format gambar.`);
+      } else if (rejectedSize.length) {
+        showToast(`${rejectedSize.length} file dilewati karena ukuran melebihi batas ${MAX_FILE_SIZE_MB} MB.`);
+      } else if (rejectedFormat.length) {
+        showToast(`${rejectedFormat.length} file dilewati karena tipe file bukan gambar.`);
+      } else if (addedCount > 1) {
+        showToast(`${addedCount} foto siap diunggah.`);
+      }
+    }
+
+    function removeFileFromQueue(uid) {
+      const idx = selectedUploadQueue.findIndex(item => item.uid === uid);
+      if (idx === -1) return;
+      if (selectedUploadQueue[idx].previewUrl) {
+        URL.revokeObjectURL(selectedUploadQueue[idx].previewUrl);
+      }
+      selectedUploadQueue.splice(idx, 1);
+      renderUploadQueue();
+    }
+
+    function renderUploadQueue() {
+      const isEditMode = Boolean(editPhotoIdInput.value.trim());
+      const count = selectedUploadQueue.length;
+
+      if (count === 0) {
+        multiPreviewWrap.classList.remove('visible');
+        clearSelectedFilesBtn.classList.remove('visible');
+        multiPreviewList.innerHTML = '';
+        dropzoneText.textContent = isEditMode
+          ? 'Klik atau seret 1 foto pengganti ke sini'
+          : 'Klik atau seret banyak foto ke sini (bisa tambah lagi)';
+        if (!isEditMode) {
+          urlInputGroup.style.display = 'block';
+          submitFormBtn.textContent = 'Simpan ke Supabase';
+        }
+        return;
+      }
+
+      // Sembunyikan single preview jika sedang menampilkan antrean file baru
+      previewBox.classList.remove('visible');
+      multiPreviewWrap.classList.add('visible');
+      clearSelectedFilesBtn.classList.toggle('visible', !isEditMode);
+
+      const totalBytes = selectedUploadQueue.reduce((sum, item) => sum + item.file.size, 0);
+      multiPreviewCount.textContent = `${count} foto dipilih`;
+      multiPreviewTotalSize.textContent = `Total: ${formatBytes(totalBytes)}`;
+      dropzoneText.textContent = isEditMode
+        ? selectedUploadQueue[0].file.name
+        : `${count} foto dipilih — klik untuk menambah foto lagi`;
+
+      if (!isEditMode) {
+        urlInputGroup.style.display = 'none';
+        submitFormBtn.textContent = count > 1
+          ? `Unggah & Simpan ${count} Foto`
+          : 'Simpan ke Supabase';
+      }
+
+      multiPreviewList.innerHTML = selectedUploadQueue.map((item, idx) => `
+        <div class="multi-preview-item" data-uid="${item.uid}">
+          <div class="multi-preview-thumb">
+            <img src="${item.previewUrl}" alt="${item.file.name}" />
+            <button type="button" class="remove-file-btn" data-uid="${item.uid}" title="Hapus foto ini dari daftar">&times;</button>
+          </div>
+          <div class="multi-preview-info">
+            <div class="multi-file-name" title="${item.file.name}">${idx + 1}. ${item.file.name}</div>
+            <div class="multi-file-size">${formatBytes(item.file.size)}</div>
+            ${!isEditMode ? `
+              <input
+                type="text"
+                class="multi-item-caption"
+                data-uid="${item.uid}"
+                value="${item.customDesc.replace(/"/g, '&quot;')}"
+                placeholder="Keterangan khusus (opsional)..."
+              />
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    multiPreviewList.addEventListener('click', (e) => {
+      const removeBtn = e.target.closest('.remove-file-btn');
+      if (!removeBtn) return;
+      e.stopPropagation();
+      removeFileFromQueue(removeBtn.dataset.uid);
+    });
+
+    multiPreviewList.addEventListener('input', (e) => {
+      const captionInput = e.target.closest('.multi-item-caption');
+      if (!captionInput) return;
+      const target = selectedUploadQueue.find(item => item.uid === captionInput.dataset.uid);
+      if (target) target.customDesc = captionInput.value;
+    });
+
+    clearSelectedFilesBtn.addEventListener('click', clearUploadQueue);
+
+    // =========================================================================
+    // OPERASI DATABASE & STORAGE SUPABASE
+    // =========================================================================
+
+    async function loadPhotosFromSupabase() {
+      loadingState.classList.add('visible');
+      photoGrid.innerHTML = '';
+      emptyState.classList.remove('visible');
+
+      if (!supabaseClient) {
+        loadingState.classList.remove('visible');
+        filterSummary.textContent = '0 Momen';
+        emptyTitle.textContent = 'Konfigurasi Supabase Belum Diisi';
+        emptySub.textContent = 'Masukkan SUPABASE_URL dan SUPABASE_ANON_KEY pada script.';
+        emptyActionBtn.style.display = 'none';
+        emptyState.classList.add('visible');
+        return;
+      }
+
+      try {
+        const { data, error } = await supabaseClient
+          .from(TABLE_NAME)
+          .select('id, image_url, storage_path, tanggal, deskripsi, created_at')
+          .order('tanggal', { ascending: false })
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        photos = (data || []).map(row => ({
+          id: row.id,
+          src: row.image_url,
+          storagePath: row.storage_path || null,
+          isoDate: row.tanggal,
+          date: formatIndoDate(row.tanggal),
+          desc: row.deskripsi
+        }));
+
+        loadingState.classList.remove('visible');
+        applyFiltersAndRender();
+      } catch (err) {
+        console.error('Gagal memuat data Supabase:', err);
+        loadingState.classList.remove('visible');
+        filterSummary.textContent = 'Gagal memuat';
+        emptyTitle.textContent = 'Gagal terhubung ke Supabase';
+        emptySub.textContent = err.message || 'Periksa kembali tabel galeri_foto dan kebijakan RLS pada proyek Supabase Anda.';
+        emptyActionBtn.textContent = 'Coba Muat Ulang';
+        emptyActionBtn.style.display = 'inline-flex';
+        emptyActionBtn.onclick = loadPhotosFromSupabase;
+        emptyState.classList.add('visible');
+      }
+    }
+
+    async function uploadFileToStorage(file, indexOffset = 0) {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const safeBase = file.name
+        .replace(/\.[^/.]+$/, '')
+        .replace(/[^a-zA-Z0-9-_]/g, '-')
+        .slice(0, 36);
+      const uniqueSuffix = `${Date.now()}-${indexOffset}-${Math.random().toString(36).slice(2, 7)}`;
+      const storagePath = `momen/${uniqueSuffix}-${safeBase || 'foto'}.${ext}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from(STORAGE_BUCKET)
+        .upload(storagePath, file, {
+          contentType: file.type || undefined,
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = supabaseClient.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(storagePath);
+
+      return {
+        imageUrl: publicData.publicUrl,
+        storagePath
+      };
+    }
+
+    function setUploadProgress(visible, labelText = '', percent = 0) {
+      uploadProgressWrap.classList.toggle('visible', visible);
+      if (visible) {
+        uploadProgressText.textContent = labelText;
+        uploadProgressPercent.textContent = `${Math.round(percent)}%`;
+        uploadProgressBar.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+      } else {
+        uploadProgressBar.style.width = '0%';
+      }
+    }
+
+    async function savePhotoToSupabase(e) {
+      e.preventDefault();
+      if (isUploading) return;
+      if (!supabaseClient) {
+        showToast('Konfigurasi Supabase belum diisi.');
+        return;
+      }
+
+      const editId = editPhotoIdInput.value.trim();
+      const manualUrl = photoUrlInput.value.trim();
+      const tanggal = photoDateInput.value;
+      const defaultDeskripsi = photoDescInput.value.trim();
+
+      if (!tanggal || !defaultDeskripsi) {
+        showToast('Tanggal dan deskripsi wajib diisi.');
+        return;
+      }
+
+      if (!editId && selectedUploadQueue.length === 0 && !manualUrl) {
+        showToast('Pilih minimal satu file foto atau masukkan tautan URL foto.');
+        return;
+      }
+
+      isUploading = true;
+      submitFormBtn.disabled = true;
+      cancelFormBtn.disabled = true;
+
+      try {
+        if (editId) {
+          // MODE EDIT 1 FOTO
+          submitFormBtn.textContent = 'Menyimpan...';
+          const existing = photos.find(p => String(p.id) === String(editId));
+          const updatePayload = {
+            tanggal,
+            deskripsi: defaultDeskripsi
+          };
+
+          if (selectedUploadQueue.length > 0) {
+            setUploadProgress(true, 'Mengunggah foto pengganti...', 45);
+            const uploaded = await uploadFileToStorage(selectedUploadQueue[0].file, 0);
+            updatePayload.image_url = uploaded.imageUrl;
+            updatePayload.storage_path = uploaded.storagePath;
+
+            if (existing && existing.storagePath) {
+              await supabaseClient.storage.from(STORAGE_BUCKET).remove([existing.storagePath]);
+            }
+          } else if (manualUrl && (!existing || manualUrl !== existing.src)) {
+            updatePayload.image_url = manualUrl;
+            updatePayload.storage_path = null;
+          }
+
+          setUploadProgress(true, 'Menyimpan perubahan ke database...', 85);
+          const { data, error } = await supabaseClient
+            .from(TABLE_NAME)
+            .update(updatePayload)
+            .eq('id', editId)
+            .select()
+            .single();
+
+          if (error) throw error;
+
+          const idx = photos.findIndex(p => String(p.id) === String(editId));
+          if (idx !== -1) {
+            photos[idx] = {
+              id: data.id,
+              src: data.image_url,
+              storagePath: data.storage_path || null,
+              isoDate: data.tanggal,
+              date: formatIndoDate(data.tanggal),
+              desc: data.deskripsi
+            };
+          }
+
+          setUploadProgress(true, 'Selesai!', 100);
+          closePhotoFormModal();
+          applyFiltersAndRender();
+
+          if (lightboxModal.classList.contains('open')) {
+            const updatedFilteredIdx = filteredPhotos.findIndex(p => String(p.id) === String(editId));
+            if (updatedFilteredIdx !== -1) {
+              updateLightbox(updatedFilteredIdx);
+            } else {
+              closeLightbox();
+            }
+          }
+          showToast('Perubahan berhasil disimpan ke Supabase!');
+        } else if (selectedUploadQueue.length > 0) {
+          // MODE UNGGAH BANYAK FOTO SEKALIGUS
+          const totalFiles = selectedUploadQueue.length;
+          const newlyInserted = [];
+          const failedFiles = [];
+
+          for (let i = 0; i < totalFiles; i++) {
+            const entry = selectedUploadQueue[i];
+            const progressPct = (i / totalFiles) * 100;
+            setUploadProgress(
+              true,
+              `Mengunggah foto ${i + 1} dari ${totalFiles} (${entry.file.name})...`,
+              progressPct
+            );
+            submitFormBtn.textContent = `Mengunggah ${i + 1}/${totalFiles}...`;
+
+            try {
+              const uploaded = await uploadFileToStorage(entry.file, i);
+              const caption = (entry.customDesc || '').trim() || defaultDeskripsi;
+
+              const { data, error } = await supabaseClient
+                .from(TABLE_NAME)
+                .insert([
+                  {
+                    image_url: uploaded.imageUrl,
+                    storage_path: uploaded.storagePath,
+                    tanggal,
+                    deskripsi: caption
+                  }
+                ])
+                .select()
+                .single();
+
+              if (error) throw error;
+
+              newlyInserted.push({
+                id: data.id,
+                src: data.image_url,
+                storagePath: data.storage_path || null,
+                isoDate: data.tanggal,
+                date: formatIndoDate(data.tanggal),
+                desc: data.deskripsi
+              });
+            } catch (fileErr) {
+              console.error(`Gagal unggah ${entry.file.name}:`, fileErr);
+              failedFiles.push({ name: entry.file.name, reason: fileErr.message });
+            }
+          }
+
+          setUploadProgress(true, 'Menyelesaikan proses...', 100);
+
+          if (newlyInserted.length > 0) {
+            photos = [...newlyInserted.reverse(), ...photos];
+          }
+
+          closePhotoFormModal();
+          applyFiltersAndRender();
+
+          if (failedFiles.length === 0) {
+            showToast(
+              newlyInserted.length > 1
+                ? `${newlyInserted.length} foto berhasil diunggah & disimpan ke Supabase!`
+                : 'Foto berhasil diunggah & disimpan ke Supabase!'
+            );
+          } else {
+            showToast(
+              `${newlyInserted.length} berhasil, ${failedFiles.length} gagal (${failedFiles[0].reason}).`
+            );
+          }
+        } else {
+          // MODE TAMBAH VIA URL
+          submitFormBtn.textContent = 'Menyimpan...';
+          setUploadProgress(true, 'Menyimpan tautan foto...', 60);
+
+          const { data, error } = await supabaseClient
+            .from(TABLE_NAME)
+            .insert([
+              {
+                image_url: manualUrl,
+                storage_path: null,
+                tanggal,
+                deskripsi: defaultDeskripsi
+              }
+            ])
+            .select()
+            .single();
+
+          if (error) throw error;
+
+          photos.unshift({
+            id: data.id,
+            src: data.image_url,
+            storagePath: null,
+            isoDate: data.tanggal,
+            date: formatIndoDate(data.tanggal),
+            desc: data.deskripsi
+          });
+
+          closePhotoFormModal();
+          applyFiltersAndRender();
+          showToast('Foto berhasil disimpan ke Supabase!');
+        }
+      } catch (err) {
+        console.error('Gagal menyimpan ke Supabase:', err);
+        showToast(`Gagal menyimpan: ${err.message || 'Terjadi kesalahan'}`);
+      } finally {
+        isUploading = false;
+        submitFormBtn.disabled = false;
+        cancelFormBtn.disabled = false;
+        setUploadProgress(false);
+        submitFormBtn.textContent = 'Simpan ke Supabase';
+      }
+    }
+
+    async function deleteCurrentPhoto() {
+      const item = filteredPhotos[currentIndex];
+      if (!item || !supabaseClient) return;
+
+      const confirmed = confirm(`Hapus foto momen "${item.date}" secara permanen dari Supabase?`);
+      if (!confirmed) return;
+
+      showToast('Menghapus foto dari Supabase...');
+
+      try {
+        if (item.storagePath) {
+          await supabaseClient.storage.from(STORAGE_BUCKET).remove([item.storagePath]);
+        }
+
+        const { error } = await supabaseClient
+          .from(TABLE_NAME)
+          .delete()
+          .eq('id', item.id);
+
+        if (error) throw error;
+
+        photos = photos.filter(p => String(p.id) !== String(item.id));
+        closeLightbox();
+        applyFiltersAndRender();
+        showToast('Foto berhasil dihapus dari Supabase.');
+      } catch (err) {
+        console.error('Gagal menghapus foto:', err);
+        showToast(`Gagal menghapus: ${err.message || 'Terjadi kesalahan'}`);
+      }
+    }
+
+    // =========================================================================
+    // RENDER & FILTER GALERI
+    // =========================================================================
+
     function applyFiltersAndRender() {
       let list = [...photos];
       const keyword = searchQuery.trim().toLowerCase();
@@ -1317,6 +2406,19 @@
 
       if (!list.length) {
         photoGrid.innerHTML = '';
+        if (keyword) {
+          emptyTitle.textContent = 'Tidak ada foto yang cocok dengan kata kunci pencarian.';
+          emptySub.textContent = 'Coba gunakan kata kunci tanggal, bulan, tahun, atau deskripsi yang berbeda.';
+          emptyActionBtn.textContent = 'Tampilkan Semua Foto';
+          emptyActionBtn.style.display = 'inline-flex';
+          emptyActionBtn.onclick = resetAllFilters;
+        } else {
+          emptyTitle.textContent = 'Belum ada foto tersimpan di Supabase.';
+          emptySub.textContent = 'Klik tombol "+ Tambah" untuk mengunggah satu atau banyak foto sekaligus.';
+          emptyActionBtn.textContent = '+ Tambah Foto Pertama';
+          emptyActionBtn.style.display = 'inline-flex';
+          emptyActionBtn.onclick = () => openPhotoFormModal();
+        }
         emptyState.classList.add('visible');
         updateScrollUI();
         return;
@@ -1324,7 +2426,7 @@
 
       emptyState.classList.remove('visible');
       photoGrid.innerHTML = list.map((item, idx) => `
-        <div class="photo-card" data-index="${idx}" style="animation-delay: ${idx * 0.05}s">
+        <div class="photo-card" data-index="${idx}" style="animation-delay: ${Math.min(idx, 12) * 0.05}s">
           <img src="${item.src}" alt="${item.desc}" loading="lazy" />
           <div class="card-overlay">
             <div class="card-meta">
@@ -1346,7 +2448,6 @@
       requestAnimationFrame(updateScrollUI);
     }
 
-    // Filter Otomatis Saat Mengetik Kata Kunci
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value;
       applyFiltersAndRender();
@@ -1359,7 +2460,6 @@
       applyFiltersAndRender();
     });
 
-    // Event Segmented Control Urutan (Terbaru / Terlama)
     sortButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         sortOrder = btn.dataset.sort;
@@ -1377,11 +2477,118 @@
     }
 
     resetFilterLink.addEventListener('click', resetAllFilters);
-    emptyResetBtn.addEventListener('click', resetAllFilters);
 
-    // Fungsi Unduh Foto Langsung
+    // =========================================================================
+    // MODAL FORM TAMBAH & EDIT FOTO
+    // =========================================================================
+
+    function openPhotoFormModal(itemToEdit = null) {
+      if (isUploading) return;
+      photoForm.reset();
+      clearUploadQueue();
+      setUploadProgress(false);
+      previewBox.classList.remove('visible');
+      previewImg.src = '';
+
+      if (itemToEdit) {
+        formModalTitle.textContent = 'Edit Momen Foto';
+        editPhotoIdInput.value = itemToEdit.id;
+        photoFileInput.removeAttribute('multiple');
+        fileFieldLabel.textContent = 'Ganti File Foto (Opsional, Maks. 50 MB)';
+        dropzoneText.textContent = 'Klik atau seret 1 foto pengganti ke sini';
+        urlInputGroup.style.display = 'block';
+        photoUrlInput.value = itemToEdit.src;
+        photoDateInput.value = itemToEdit.isoDate;
+        descFieldLabel.textContent = 'Deskripsi Foto';
+        photoDescInput.value = itemToEdit.desc;
+        previewImg.src = itemToEdit.src;
+        previewBox.classList.add('visible');
+        submitFormBtn.textContent = 'Simpan Perubahan';
+      } else {
+        formModalTitle.textContent = 'Unggah Foto ke Supabase';
+        editPhotoIdInput.value = '';
+        photoFileInput.setAttribute('multiple', 'multiple');
+        fileFieldLabel.textContent = 'Pilih File Foto (Bisa Banyak Sekaligus)';
+        dropzoneText.textContent = 'Klik atau seret banyak foto ke sini (bisa tambah lagi)';
+        urlInputGroup.style.display = 'block';
+        photoDateInput.value = new Date().toISOString().split('T')[0];
+        descFieldLabel.textContent = 'Deskripsi Foto (Utama / Default untuk Semua Foto)';
+        submitFormBtn.textContent = 'Simpan ke Supabase';
+      }
+
+      photoFormModal.classList.add('open');
+      photoFormModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePhotoFormModal() {
+      if (isUploading) return;
+      clearUploadQueue();
+      photoFormModal.classList.remove('open');
+      photoFormModal.setAttribute('aria-hidden', 'true');
+    }
+
+    openAddModalBtn.addEventListener('click', () => openPhotoFormModal());
+    closeFormModalBtn.addEventListener('click', closePhotoFormModal);
+    cancelFormBtn.addEventListener('click', closePhotoFormModal);
+
+    photoFormModal.addEventListener('click', (e) => {
+      if (e.target === photoFormModal) closePhotoFormModal();
+    });
+
+    photoFileInput.addEventListener('change', () => {
+      if (photoFileInput.files && photoFileInput.files.length > 0) {
+        addFilesToQueue(photoFileInput.files);
+      }
+    });
+
+    photoUrlInput.addEventListener('input', () => {
+      const url = photoUrlInput.value.trim();
+      if (url && selectedUploadQueue.length === 0) {
+        previewImg.src = url;
+        previewBox.classList.add('visible');
+      } else if (!url && selectedUploadQueue.length === 0) {
+        previewBox.classList.remove('visible');
+      }
+    });
+
+    ['dragenter', 'dragover'].forEach(evtName => {
+      fileDropzone.addEventListener(evtName, (e) => {
+        e.preventDefault();
+        fileDropzone.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(evtName => {
+      fileDropzone.addEventListener(evtName, (e) => {
+        e.preventDefault();
+        fileDropzone.classList.remove('dragover');
+      });
+    });
+
+    fileDropzone.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        addFilesToQueue(e.dataTransfer.files);
+      }
+    });
+
+    photoForm.addEventListener('submit', savePhotoToSupabase);
+
+    // =========================================================================
+    // UNDUH FOTO & LIGHTBOX SWIPE / ZOOM
+    // =========================================================================
+
+    function getExtensionFromUrl(url) {
+      try {
+        const cleanPath = new URL(url).pathname;
+        const ext = (cleanPath.split('.').pop() || '').toLowerCase();
+        if (ALLOWED_IMAGE_EXTENSIONS.includes(ext)) return ext;
+      } catch (_) {}
+      return 'jpg';
+    }
+
     async function downloadPhoto(item, index) {
-      const fileName = `galeri-syafaat-${item.isoDate || index + 1}.jpg`;
+      const ext = getExtensionFromUrl(item.src);
+      const fileName = `galeri-syafaat-${item.isoDate || index + 1}.${ext}`;
       showToast('Menyiapkan unduhan foto...');
 
       try {
@@ -1412,7 +2619,6 @@
       }
     }
 
-    // Klik Kartu Foto atau Tombol Download di Grid
     photoGrid.addEventListener('click', (e) => {
       const dlBtn = e.target.closest('.card-download');
       if (dlBtn) {
@@ -1427,7 +2633,6 @@
       openLightbox(Number(card.dataset.index));
     });
 
-    // Terapkan Transform Zoom, Geser & Efek Latar Blur
     function applyTransform() {
       if (scale <= 1) {
         scale = 1;
@@ -1456,7 +2661,6 @@
       applyTransform();
     }
 
-    // Lightbox Open / Close / Navigate (Mengikuti Hasil Filter Aktif)
     function updateLightbox(index) {
       if (!filteredPhotos.length) return;
       currentIndex = (index + filteredPhotos.length) % filteredPhotos.length;
@@ -1471,7 +2675,6 @@
       lightboxDesc.textContent = item.desc;
     }
 
-    // Perpindahan Foto Halus Saat Digeser ke Kiri (direction = 1) atau Kanan (direction = -1)
     function switchSlide(direction) {
       if (filteredPhotos.length <= 1) {
         resetZoom();
@@ -1531,17 +2734,17 @@
     }
 
     zoomLevelEl.addEventListener('click', resetZoom);
+    editPhotoBtn.addEventListener('click', () => openPhotoFormModal(filteredPhotos[currentIndex]));
+    deletePhotoBtn.addEventListener('click', deleteCurrentPhoto);
     downloadBtn.addEventListener('click', () => downloadPhoto(filteredPhotos[currentIndex], currentIndex));
     lightboxClose.addEventListener('click', closeLightbox);
 
-    // Zoom dengan Scroll Mouse
     lightboxStage.addEventListener('wheel', (e) => {
       e.preventDefault();
       const delta = e.deltaY < 0 ? 0.35 : -0.35;
       setZoom(scale + delta);
     }, { passive: false });
 
-    // Geser (Swipe) & Drag dengan Mouse (Desktop)
     lightboxStage.addEventListener('mousedown', (e) => {
       if (touchUsed || e.button !== 0 || isTransitioningSlide) return;
       e.preventDefault();
@@ -1599,7 +2802,6 @@
       }
     });
 
-    // Dukungan Sentuh: Pinch-to-Zoom (2 jari), Tap Zoom & Geser Kiri/Kanan (1 jari)
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
@@ -1680,8 +2882,11 @@
       setTimeout(() => { touchUsed = false; }, 350);
     }, { passive: true });
 
-    // Shortcut Keyboard Lightbox
     document.addEventListener('keydown', (e) => {
+      if (photoFormModal.classList.contains('open')) {
+        if (e.key === 'Escape') closePhotoFormModal();
+        return;
+      }
       if (!lightboxModal.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowLeft' && scale === 1) switchSlide(-1);
@@ -1691,7 +2896,6 @@
       if (e.key === '0') resetZoom();
     });
 
-    // Toggle Menu Mobile
     menuBtn.addEventListener('click', () => {
       mobileNav.classList.toggle('open');
       menuBtn.classList.toggle('open');
@@ -1704,13 +2908,12 @@
       });
     });
 
-    // Scroll Progress Khusus Area Foto
     galleryScrollArea.addEventListener('scroll', updateScrollUI, { passive: true });
     window.addEventListener('resize', updateScrollUI, { passive: true });
 
     // Inisialisasi Awal
     document.getElementById('year').textContent = new Date().getFullYear();
-    applyFiltersAndRender();
+    loadPhotosFromSupabase();
   </script>
 </body>
 </html>
